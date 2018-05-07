@@ -8,3 +8,5 @@ Basta utilizar o seguinte filtro:
     EdArquivo.text := AbrirArquivo.filename;    
     btnCarregar.Enabled := true;     
   end; 
+
+CCCC
