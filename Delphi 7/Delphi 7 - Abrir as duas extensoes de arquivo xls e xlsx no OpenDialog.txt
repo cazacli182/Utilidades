@@ -1,0 +1,10 @@
+Basta utilizar o seguinte filtro:
+
+  AbrirArquivo.filter     :='Excel|*.xl*';
+  AbrirArquivo.DefaultExt :='*.xl*'; 
+
+  if AbrirArquivo.Execute then
+  begin
+    EdArquivo.text := AbrirArquivo.filename;    
+    btnCarregar.Enabled := true;     
+  end; 
