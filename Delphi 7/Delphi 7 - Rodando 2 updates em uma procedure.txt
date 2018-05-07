@@ -1,0 +1,68 @@
+  procedure AtualizaTabelaCX_VDA_E_CX_VDA_IT;
+  var
+  TD: TTransactionDesc;
+
+    procedure RodaQuery1;
+    const
+      cstQryUpd1 = 'update '+
+                     'cx_vda '+
+                   'set  '+
+                     'ecf = ecf_1, '+
+                     'ecf_cro = ecf_cro_1, '+
+                     'ecf_red_z = ecf_red_z_1, '+
+                     'ecf_1 = null, '+
+                     'ecf_cro_1 = null, '+
+                     'ecf_red_z_1 = null '+
+                   'where '+
+                     'ecf_1 is not null and '+
+                     'empresa = :p0';
+    var
+      S: String;
+    begin
+      S := cstQryUpd1;
+      S := StringReplace(S, ':p0', IntToStr(FEmpresa), [rfReplaceAll, rfIgnoreCase]);
+      DM.SDS.Close;
+      DM.SDS.CommandText := S;
+      DM.SDS.ExecSQL;
+    end;
+
+    procedure RodaQuery2;
+    const
+      cstQryUpd2 = 'update '+
+                   'cx_vda_it '+
+                 'set  '+
+                   'ecf = ecf_1, '+
+                   'ecf_cro = ecf_cro_1, '+
+                   'ecf_red_z = ecf_red_z_1, '+
+                   'ecf_1 = null, '+
+                   'ecf_cro_1 = null, '+
+                   'ecf_red_z_1 = null '+
+                 'where '+
+                   'ecf_1 is not null and '+
+                   'empresa = :p0';
+    var
+      S: String;
+    begin
+      S := cstQryUpd2;
+      S := StringReplace(S, ':p0', IntToStr(FEmpresa), [rfReplaceAll, rfIgnoreCase]);
+      DM.SDS.Close;
+      DM.SDS.CommandText := S;
+      DM.SDS.ExecSQL;
+    end;
+
+  begin
+    TD.TransactionID  := 1;
+    TD.IsolationLevel := xilREADCOMMITTED;
+    DM.SQLCON.StartTransaction(TD);
+    try
+      RodaQuery1;
+      RodaQuery2;
+      DM.SQLCON.Commit(TD);
+    except
+      on E: Exception do
+      begin
+        DM.SQLCON.Rollback(TD);
+        ShowMessage(E.Message);
+      end;
+    end;
+  end;

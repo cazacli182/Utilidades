@@ -1,0 +1,9 @@
+  function DefineBinCartao: String;
+  begin
+    Result := 'Null';
+    if frmPromocoes_CadastroPromocao.BinCartao <> '' then
+      Result := frmPromocoes_CadastroPromocao.BinCartao;
+  end;
+
+Será passada a string Null na query, mas o banco de dados entenderá que a palavra Null é um
+valor nulo e no banco de dados o valor ficará <null> que é o desejado.

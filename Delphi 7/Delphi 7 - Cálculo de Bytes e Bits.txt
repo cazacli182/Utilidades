@@ -1,0 +1,33 @@
+    { Cálculo de Bytes / Bits:
+
+      Este cálculo será implementado somente quando for necessário informar em apenas
+      um(a) relatório/tela as pendências. Por enquanto somente a estrutura está montada.
+      O cálculo ocorrerá da seguinte forma:
+      1 byte = 8 bits ( |_|_|_|_|_|_|_|_| ) sendo que de trás para frente as posições
+      são definidas da seguinte forma: Na 8ª posição é 2 elevado a Zero, a 7ª posição é 2
+      elevado a um e assim por diante.
+      
+      |___|___|___|___|___|___|___|___|
+       128 64  32  16   8   4   2   1
+
+      Existe uma função IntToStrBit do CRS na unit untFuncoes1
+      que faz o cálculo. Como no Delphi a primeira posição da lista é zero, eu preciso vir
+      testando de trás para frente, então o uso da função deve ser feita da seguinte forma:
+
+      S := IntToStrBit(Flag);
+      if S[8] = '1' then
+      begin
+        faz algo
+      end
+      if S[7] = '1' then
+      begin
+        faz algo
+      end
+      etc...
+
+      Se por acaso ao passar pelas verificações acima e o Flag estiver com valor igual a 3,
+      eu já sei que a primeira e a segunda verificação retornaram false (a primeira vale 1 e a
+      segunda vale 2 por isso 1 + 2 = 3). Com o uso desta função poderei saber quais foram as
+      verificações que retornaram false, permitindo assim fazer posteriormente uma tela contendo
+      uma espécie de relatório, ao invés de ir informando o usuário a cada erro encontrado.
+    }

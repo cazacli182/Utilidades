@@ -1,0 +1,10 @@
+Copiar algo para a memória para usar no ctrl + v:
+
+dá um uses da classe clipbrd.pas que fica em c:program files/borland/delphi7/source/vcl/
+clipbrd.pas e usa a linha abaixo:
+
+
+  Clipboard.AsText := FSenha1515(variável que fornecerá o conteúdo do texto);
+
+
+

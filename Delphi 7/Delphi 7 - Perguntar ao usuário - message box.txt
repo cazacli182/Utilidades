@@ -1,0 +1,5 @@
+  if Application.MessageBox(PChar('Deseja Excluir este Coordenador ?'),
+     'Igreja São Pedro - Informa',MB_IconError + MB_YESNO + MB_DEFBUTTON2 ) = IDYES then
+  begin
+     ...
+  end;

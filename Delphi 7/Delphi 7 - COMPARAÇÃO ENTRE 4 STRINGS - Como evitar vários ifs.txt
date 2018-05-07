@@ -1,0 +1,53 @@
+function TfrmProdutos_Consultas_Vendas_Grupos_Filtros.NomesDosTurnosSaoDiferentes: Boolean;
+
+  function EncontrouStr(Procurar, Conteudo1, Conteudo2, Conteudo3: TLabeledEdit): Boolean;
+  var
+    I: Integer;
+    SL, SL_Label: TStringList;
+  begin
+    Result := False;
+    SL := TStringList.Create;
+    SL_Label := TStringList.Create;
+    try
+      SL_Label.Add(Conteudo1.EditLabel.Caption);
+      SL_Label.Add(Conteudo2.EditLabel.Caption);
+      SL_Label.Add(Conteudo3.EditLabel.Caption);
+
+      SL.Add(Conteudo1.Text);
+      SL.Add(Conteudo2.Text);
+      SL.Add(Conteudo3.Text);
+
+      I := SL.IndexOf(Procurar.Text);
+
+      if I > 0 then
+      begin
+        Mensagem_Informa(Format( 'ATENÇÃO: O campo: ' + CRLF +
+                                 '  ==> "%s" '+ CRLF +
+                                 'possui o conteúdo:' + CRLF +
+                                 '  ==> "%s" '+ CRLF +
+                                 CRLF +
+                                 'que está repetido no campo:' + CRLF +
+                                 '  ==> "%s" ' + CRLF +
+                                 'conteúdo: ' + CRLF +
+                                 '  ==> "%s"' + CRLF +
+                                 CRLF +
+                                 'Para o correto funcionamento do relatório é necessário que os nomes dos turnos sejam diferentes,' +
+                                 '  por favor verifique... ', [ Procurar.EditLabel.Caption, Procurar.Text, SL_Label[I], SL[I]]));
+        Result := True;
+      end;
+    finally
+      SL.Free;
+      SL_Label.Free;
+    end;
+  end;
+
+
+begin
+  Result := false;
+
+  if (not EncontrouStr(LabeledEdit4, LabeledEdit5, LabeledEdit6, LabeledEdit7)) then
+    if (not EncontrouStr(LabeledEdit5, LabeledEdit4, LabeledEdit6, LabeledEdit7)) then
+      if (not EncontrouStr(LabeledEdit6, LabeledEdit4, LabeledEdit5, LabeledEdit7)) then
+        if (not EncontrouStr(LabeledEdit7, LabeledEdit4, LabeledEdit5, LabeledEdit6)) then
+          Result := true;
+end;

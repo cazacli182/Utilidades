@@ -1,0 +1,7 @@
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  V: Real;
+begin
+  V := 1150123;
+  ShowMessage(FormatFloat('#,##.00', V));
+end;

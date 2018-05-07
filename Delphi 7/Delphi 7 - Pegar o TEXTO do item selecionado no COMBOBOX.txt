@@ -1,0 +1,3 @@
+Pegar o texto do item selecionado no combobox
+
+cbOrdenacao.Items[cbOrdenacao.ItemIndex];

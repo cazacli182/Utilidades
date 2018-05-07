@@ -1,0 +1,23 @@
+select
+  pe.grupo_fiscal ,p.*
+from
+  produtos p
+left outer join produtos_emp pe on pe.produto = p.codigo
+where
+  p.grupo = 6 and pe.grupo_fiscal = 3;
+
+
+update
+  produtos_emp
+set
+  grupo_fiscal = 10
+where
+  produto in (select
+               pe.produto
+             from
+               produtos p
+             left outer join produtos_emp pe on pe.produto = p.codigo
+             where
+               p.grupo = 6 and
+               pe.grupo_fiscal = 3);
+

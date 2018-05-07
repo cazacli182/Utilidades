@@ -1,0 +1,4 @@
+FCdsTmpEstoque.FieldByName('Cla_fiscal').AsString := FSDS.FieldByName('cla_fiscal').AsString;
+
+
+Coloca o campo que deveria ser AsInteger como AsString que dá certo. Se vier null ele coloca " ".

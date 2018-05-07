@@ -1,0 +1,7 @@
+    DBLookupComboBox2.ListSource := FInsEst.DTS;
+    DBLookupComboBox2.KeyField   := 'insce';
+    DBLookupComboBox2.ListField  := 'insce';
+    DBLookupComboBox2.KeyValue   := FInsEst.CDS.FieldByName('insce').AsString;
+    DBLookupComboBox2.Refresh;
+
+O KeyValue deve ser equivalente ao campo que falei que é o mandante no KeyField. Como o insce do KeyField é um string cadastrado no banco, então o Key Value deve corresponder ao mesmo campo, só que usando o componente que contém o retorno da query executada.

@@ -1,0 +1,3 @@
+na propriedade Set do componente uso:
+
+  cbxEstados.ItemIndex := cbxEstados.Items.IndexOf(Value);

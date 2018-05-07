@@ -1,0 +1,36 @@
+Salvar o registro onde estou posicionado em um DBGrid:
+
+Caso ocorreu na versão 96 do BO no Ortona.
+
+A funcionária Jaqueline não tinha direito para cadastrar uma agência em um banco. Então aparecia a tela de login para liberar este cadastro. Ao se logar como Administrador, o sistema ia para a função FORM ACTIVATE da uni untBancos_Pesquisa, fazendo com que fossem carregados novamente os dados do DBGrid, perdendo a posição do registro. 
+
+Solução:
+
+Ao clicar no botão que chama a tela de cadastro da agência é chamado o procedimento Image5Click. Dentro deste procedimento é que é analisado o direito do funcionário. Então ANTES da verificação deste direito, foi criada uma variável (SavePlace : TBookmark) do tipo TBookMark que precisa do uses da unit BD e a mesma foi usada da seguinte forma:
+
+******************************************************************
+
+// unit untBancos_Pesquisa
+procedure TfrmBancos_Pesquisa.Image5Click(Sender: TObject);
+var
+  SavePlace: TBookMark;
+begin
+  inherited;
+  // posiciona no registro antes da verificação do direito
+  SavePlace := frmBancos_Dtm.cdsBancos.GetBookmark;
+  if BO_VerifDireito(cstTD1, cstTDOAcs, ttdBancosAgencias ) then
+  begin
+    // após a verificação do direito posiciona novamente no grid
+    frmBancos_Dtm.cdsBancos.GotoBookmark(SavePlace);
+    frmAgencias_Dtm := TfrmAgencias_Dtm.Create(Self);
+    frmAgencias_Dtm.sqldsAgencias.SQLConnection := frmDataModulo.sqlcSP;
+    frmAgencias_Pesquisa := TfrmAgencias_Pesquisa.Create(Self);
+    frmAgencias_Pesquisa.Formulario   := tf_Cadastro;
+    frmAgencias_Pesquisa.Nro_Banco    := frmBancos_Dtm.cdsBancos.FieldValues['NUMERO'];
+    frmAgencias_Pesquisa.Nome_Banco   := frmBancos_Dtm.cdsBancos.FieldValues['NOME'];
+    frmAgencias_Pesquisa.Codigo_Banco := frmBancos_Dtm.cdsBancos.FieldValues['CODIGO'];
+    frmAgencias_Pesquisa.ShowModal;
+    frmAgencias_Pesquisa.Free;
+    frmAgencias_Dtm.Free;
+  end
+end;

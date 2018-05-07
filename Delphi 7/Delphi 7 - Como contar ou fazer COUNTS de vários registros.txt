@@ -1,0 +1,6 @@
+select
+  count(*) as total,
+  (select count(*) from vendas v1 where v1.pago=0) as quitadas,
+  (select count(*) from vendas v2 where v2.pago=1) as abertas
+from
+  vendas v;
