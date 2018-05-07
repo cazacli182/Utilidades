@@ -1,0 +1,17 @@
+Para fazer isto tem que usar o evento onkeyup do dbgrid.
+
+procedure TfrmPrincipal.DBGrid2KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  {Fecha a conexão do componente}
+  lblMensagem.Caption := '';
+  lblMensagem.Visible := True;
+  Dbf1.Close;
+
+  {Carrega o arquivo .DBF posicionado no segundo grid}
+  Dbf1.FilePath  := CDSListaArquivos.FieldByName('caminho').AsString;
+  Dbf1.TableName := CDSListaArquivos.FieldByName('nome').AsString;
+  Dbf1.Open;
+
+  {Totaliza a quantidade de registros do arquivo DBF no lblMensagem}
+  lblMensagem.Caption := IntToStr(Dbf1.RecordCount) + ' registro(s)';
+end;

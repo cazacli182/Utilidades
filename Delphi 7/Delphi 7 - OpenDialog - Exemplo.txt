@@ -1,0 +1,9 @@
+Não esquecer de colocar o componente da paleta Dialogs:
+
+OpenDialog1.InitialDir := ExtractFilePath(application.ExeName);
+
+    if OpenDialog1.Execute then
+    begin
+      FNomeDoArquivoXML        := OpenDialog1.FileName;
+      edtCaminhoDoArquivo.Text := FNomeDoArquivoXML;
+    end;

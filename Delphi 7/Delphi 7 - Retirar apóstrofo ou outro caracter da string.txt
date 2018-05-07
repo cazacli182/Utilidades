@@ -1,0 +1,8 @@
+    function RetiraCaracterDaString(caracterAPesquisar, texto: String): String;
+    begin
+
+     if pos('''',texto) > 0 then
+       delete(texto, pos('''', texto),1);
+
+     Result := texto;
+    end;

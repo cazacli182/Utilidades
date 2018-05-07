@@ -1,0 +1,16 @@
+function TForm1.Randomstring(strLen: Integer): string;
+var
+  str: string;
+begin
+  Randomize;
+  str := 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  Result := '';
+  repeat
+    Result := Result + str[Random(Length(str)) + 1];
+  until (Length(Result) = strLen);
+end;
+
+
+Para usar:
+
+S.SaveToFile('c:\1_' + Randomstring(10) + '.txt') sendo que o 10 é a quantidade de letras a serem utilizadas.

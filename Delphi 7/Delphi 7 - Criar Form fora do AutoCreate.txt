@@ -1,0 +1,9 @@
+var
+  Form:TForm2;
+
+Form2 := TForm2.Create(Nil);
+try
+  Form2.ShowModal;
+finally
+  FreeAndNil(Form2);
+end;

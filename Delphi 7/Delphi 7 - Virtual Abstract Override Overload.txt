@@ -1,0 +1,111 @@
+Boas práticas de programação em Delphi #6 – Diretivas de binding
+ 27/02/2014 by Breno Martinusso	/ 0 Comments
+O Delphi nos possibilita tratar métodos com uma série de diretivas de amarrações (binding).
+
+dynamic: Permite que um método possa ser substituído em classes derivadas
+virtual: Permite que um método possa ser substituído em classes derivadas
+abstract: Define um método para ser implementado apenas nas classes derivadas
+override: Define um método como substituto a um método virtual ou dinâmico da classe pai
+reintroduce: Reintroduz os métodos virtuais declarados na superclasse
+overload: Permite que dois ou mais métodos tenham o mesmo nome
+override: A diretiva override define um método como substituto do mesmo método declarado em uma classe pai.
+
+Importante: Os métodos só podem ser redeclarados usando a diretiva override se forem derivados de métodos virtuais (virtual) ou dinâmicos (dynamic). Caso contrário, será gerado um erro em tempo de compilação: [DCC Error] Cannot override a non-virtual method
+
+******************************************************************************************
+dynamic e virtual
+As diretivas virtual e dynamic são semanticamente equivalentes. A diferença é que a diretiva virtual otimiza a velocidade e a diretiva dynamic o uso da memória.
+
+Essas diretivas permitem que um método possa ser substituído (usando a diretiva override) numa classe derivada.
+
+  TClassePai = class
+  public
+    procedure FazAlgo(); virtual;
+  end;
+ 
+  TClasseFilho = class(TClassePai)
+  public
+    procedure FazAlgo(); override;
+  end;
+ 
+implementation
+ 
+{ TClassePai }
+ 
+procedure TClassePai.FazAlgo;
+begin
+  // faz algo na classe Pai
+end;
+ 
+{ TClasseFilho }
+ 
+procedure TClasseFilho.FazAlgo;
+begin
+  // faz algo na classe Filho
+end;
+
+******************************************************************************************
+abstract
+A diretiva abstract define um método (obrigatoriamente virtual ou dynamic) que não possui implementação na classe onde foi declarado, delegando sua implementação em todas as classes derivadas.
+
+  TClassePai = class
+  public
+    procedure FazAlgo(); virtual; abstract;
+  end;
+ 
+  TClasseFilho = class(TClassePai)
+  public
+    procedure FazAlgo(); override;
+  end;
+ 
+implementation
+ 
+{ TClasseFilho }
+ 
+procedure TClasseFilho.FazAlgo;
+begin
+  // faz algo
+end;
+
+Importante: Métodos usando a diretiva abstract devem ser virtual ou dynamic. Caso contrário, será gerado um erro em tempo de compilação:
+[DCC Error] Abstract methods must be virtual or dynamic
+
+******************************************************************************************
+reintroduce
+A diretiva reintroduce oculta as mensagens do compilador sobre os métodos virtuais declarados na superclasse. Uma diferença significativa entre as diretivas override e reintroduce é que o reintroduce permite declarar um método com mesmo nome da superclasse com parâmetros diferentes.
+
+  TClassePai = class
+  public
+    procedure FazAlgo(); virtual;
+  end;
+ 
+  TClasseFilho = class(TClassePai)
+  public
+    procedure FazAlgo(const S: string); reintroduce;
+  end;
+ 
+implementation
+ 
+{ TClassePai }
+ 
+procedure TClassePai.FazAlgo;
+begin
+  // faz algo na classe Pai
+end;
+ 
+{ TClasseFilho }
+ 
+procedure TClasseFilho.FazAlgo(const S: string);
+begin
+  // faz algo na classe Filho
+end;
+
+******************************************************************************************
+overload
+A diretiva overload permite a sobrecarga de métodos. Com ele é possível declarar métodos de mesmo nome, desde que tenham parâmetros diferentes.
+  TClasse = class
+  public
+    procedure FazAlgo(); overload;
+    procedure FazAlgo(const S: string); overload;
+  end;
+Importante: Você deve codificar a diretiva de sobrecarga overload antes de quaisquer outras.

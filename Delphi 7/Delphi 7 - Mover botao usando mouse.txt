@@ -1,0 +1,12 @@
+procedure TfrmPrincipal.btn1MouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+const
+
+  SC_Move = $F012;
+
+begin
+
+  ReleaseCapture;
+
+  (Sender as TWinControl).Perform(WM_SYSCOMMAND, SC_MOVE, 0);
+end;

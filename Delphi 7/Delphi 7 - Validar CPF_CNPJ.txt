@@ -1,0 +1,51 @@
+function ValidaCpfCnpj(Numero: String; Tipo: Char): Boolean;
+
+var
+i,d,b,
+Digito : Byte;
+Soma : Integer;
+CNPJ : Boolean;
+DgPass,
+DgCalc : String;
+
+  function IIf(pCond:Boolean;pTrue,pFalse:Variant): Variant;
+  begin
+    if pCond then Result := pTrue
+    else
+      Result := pFalse;
+  end;
+
+begin
+  Result := False;
+  Numero := ApenasNumerosStr(Numero);
+  // Caso o número não seja 11 (CNPJ) ou 14 (CNPJ), aborta
+  if (Length(numero)<>11) and (Length(numero)<>14) then exit;
+  case Tipo of
+    'F','f': CNPJ := False;
+    'J','j': CNPJ := True;
+  else
+    Exit;
+  end;
+  // Separa o número do digito
+  DgCalc := '';
+  DgPass := Copy(Numero,Length(Numero)-1,2);
+  Numero := Copy(Numero,1,Length(Numero)-2);
+  // Calcula o digito 1 e 2
+  for d := 1 to 2 do
+  begin
+    B := IIF(D=1,2,3); // BYTE
+    SOMA := IIF(D=1,0,STRTOINTDEF(DGCALC,0)*2);
+    for i := Length(Numero) downto 1 do
+    begin
+      Soma := Soma + (Ord(Numero[I])-Ord('0'))*b;
+      Inc(b);
+      if (b > 9) and CNPJ then
+        b := 2;
+    end;
+    Digito := 11 - Soma mod 11;
+    if Digito >= 10 then
+      Digito := 0;
+    DgCalc := DgCalc + Chr(Digito + Ord('0'));
+  end;
+  Result := DgCalc = DgPass;
+end;

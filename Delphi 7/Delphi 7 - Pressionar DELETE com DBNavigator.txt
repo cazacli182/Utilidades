@@ -1,0 +1,18 @@
+procedure Form2KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);                                                                                            
+begin
+  if Key = Vk_Escape then                                                                                
+    Close; 
+    
+  if key = VK_DELETE then
+  begin
+    if not CDSProcessos.IsEmpty then
+    begin
+      DBNavigator1.BtnClick(nbDelete);
+    end;
+  end;  
+  
+end;                
+
+
+O código acima irá acionar o botão delete do DBNavigator, ou seja, será exibida a mensagem ao usuário
+se o mesmo deseja deletar o registro, porém só quando o grid estiver preenchido!!!

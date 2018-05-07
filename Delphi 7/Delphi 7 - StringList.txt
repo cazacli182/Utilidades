@@ -1,0 +1,15 @@
+Criar: 
+
+var SL: TStringList
+
+procedure CriaStringList(texto, diretorioENomeArquivo: String);
+begin
+  SL := TStringList.Create;
+  SL.Clear;
+  SL.Add(texto);
+  SL.SaveToFile(diretorioENomeArquivo);
+  SL.Free;
+end;
+
+
+Se deixar em local público server para vários arquivos e locais diferentes.

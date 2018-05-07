@@ -1,0 +1,4 @@
+  if pBtf then
+    sbSalvarPerfil.Font.Style:=[fsbold]
+  else
+    sbSalvarPerfil.Font.Style:=[];

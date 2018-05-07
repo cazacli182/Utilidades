@@ -1,0 +1,474 @@
+**************************************************************************************************************************
+Função para formatar strings
+
+{ Função muito útil para a geração de arquivos de texto para diversos layouts. Para utilizar a função é necessário criar um tipo enumerado.
+  TLocal = (lcLeft, lcRight, lcCenter); Como usar a função:
+O primeiro parametro é a String a ser formatada, o segundo é o caracter que irá preencher a string, o terceiro indica o tamanho 
+da string a ser retornada, e o quarto indica a posição do preenchimento.   }
+function StrFormat(AText, Caracter: String; Size: Word; Local: TLocal): String;
+var
+  X: Integer;
+begin
+  Result := Copy(AText, 1, Size);
+  for X := Length( AText ) to Size - 1 do
+  begin
+    case Local of
+      lcLeft: Result := Caracter + Result;
+      lcRight: Result := Result + Caracter;
+      lcCenter: if (X mod 2) = 0 then
+                  Result := Result + Caracter
+                else
+                  Result := Caracter + Result;
+    end;
+  end;
+end;
+Topo
+
+**************************************************************************************************************************
+Função para validar CPF
+
+function IsValidCPF(pCPF : string) : Boolean;
+var
+  v: array[0..1] of Word;
+  cpf: array[0..10] of Byte;
+  I: Byte;
+begin
+  try
+    for I := 1 to 11 do
+      cpf[i-1] := StrToInt(pCPF[i]);
+    //Nota: Calcula o primeiro dígito de verificação.
+    v[0] := 10*cpf[0] + 9*cpf[1] + 8*cpf[2];
+    v[0] := v[0] + 7*cpf[3] + 6*cpf[4] + 5*cpf[5];
+    v[0] := v[0] + 4*cpf[6] + 3*cpf[7] + 2*cpf[8];
+    v[0] := 11 - v[0] mod 11;
+    v[0] := IfThen(v[0] >= 10, 0, v[0]);  
+    //Nota: Calcula o segundo dígito de verificação.
+    v[1] := 11*cpf[0] + 10*cpf[1] + 9*cpf[2];
+    v[1] := v[1] + 8*cpf[3] +  7*cpf[4] + 6*cpf[5];
+    v[1] := v[1] + 5*cpf[6] +  4*cpf[7] + 3*cpf[8];
+    v[1] := v[1] + 2*v[0];
+    v[1] := 11 - v[1] mod 11;
+    v[1] := IfThen(v[1] >= 10, 0, v[1]); 
+    //Nota: Verdadeiro se os dígitos de verificação são os esperados.
+    Result :=  ((v[0] = cpf[9]) and (v[1] = cpf[10]));
+  except on E: Exception do
+    Result := False;
+  end;
+end;
+Topo
+
+**************************************************************************************************************************
+Função para validar CNPJ
+
+function IsValidCNPJ(pCNPJ : string) : Boolean;
+var
+  v: array[1..2] of Word;
+  cnpj: array[1..14] of Byte;
+  I: Byte;
+begin
+  try
+    for I := 1 to 14 do
+      cnpj[i] := StrToInt(pCNPJ[i]);
+    //Nota: Calcula o primeiro dígito de verificação.
+    v[1] := 5*cnpj[1] + 4*cnpj[2]  + 3*cnpj[3]  + 2*cnpj[4];
+    v[1] := v[1] + 9*cnpj[5] + 8*cnpj[6]  + 7*cnpj[7]  + 6*cnpj[8];
+    v[1] := v[1] + 5*cnpj[9] + 4*cnpj[10] + 3*cnpj[11] + 2*cnpj[12];
+    v[1] := 11 - v[1] mod 11;
+    v[1] := IfThen(v[1] >= 10, 0, v[1]);
+    //Nota: Calcula o segundo dígito de verificação.
+    v[2] := 6*cnpj[1] + 5*cnpj[2]  + 4*cnpj[3]  + 3*cnpj[4];
+    v[2] := v[2] + 2*cnpj[5] + 9*cnpj[6]  + 8*cnpj[7]  + 7*cnpj[8];
+    v[2] := v[2] + 6*cnpj[9] + 5*cnpj[10] + 4*cnpj[11] + 3*cnpj[12];
+    v[2] := v[2] + 2*v[1];
+    v[2] := 11 - v[2] mod 11;
+    v[2] := IfThen(v[2] >= 10, 0, v[2]);
+    //Nota: Verdadeiro se os dígitos de verificação são os esperados.
+    Result := ((v[1] = cnpj[13]) and (v[2] = cnpj[14]));
+  except on E: Exception do
+    Result := False;
+  end;  
+end;
+
+**************************************************************************************************************************
+Função para arredondar valores. Testada e aprovada
+
+{ É necessário declarar Math no uses }
+function TBRound(Value: Extended; Decimals: Integer): Extended;
+var
+  Factor, Fraction: Extended;
+begin
+  Factor := IntPower(10, Decimals);
+  Value := StrToFloat(FloatToStr(Value * Factor));
+  Result := Int(Value);
+  Fraction := Frac(Value);
+  if Fraction >= 0.5 then
+    Result := Result + 1
+  else
+    if Fraction <= -0.5 then
+      Result := Result - 1;
+  Result := Result / Factor;
+end;
+**************************************************************************************************************************
+Verificar se uma classe possui a propriedade informada como published.
+
+// Declarar no Uses a unit TypInfo.
+
+// Utilize a função IsPublishedProp.
+
+{ Informe a classe e a propriedade. }
+IsPublishedProp( Classe, Propriedade );
+
+
+// Exemplo de uso:
+
+  if (IsPublishedProp(TEdit, 'Color')) then
+    ShowMessage('TEdit possui a propriedade Color visível no Object Inspector.');
+**************************************************************************************************************************
+
+Verificar/Validar valores de entrada em um TEdit.
+
+{ Com a Função é possível permitir a entrada de somente letras, números ou letras e números. }
+
+// É necessário declarar Windows no Uses.
+
+function ValidateField(var Key: Char; TipoFiltro: Byte = 0): Boolean;
+
+// Explicando a Função:
+
+{  Key é a variável que contém o caracter a ser válidado. 
+   Tipo de Filtro Indica a validação a ser aplicada. (Opcional) }
+
+function ValidateField(var Key: Char; TipoFiltro: Byte = 0): Boolean;
+  function IsDigit(Key : Char) : Boolean;
+  begin
+    Result := (Key in ['0'..'9']);
+  end;
+begin
+  if not (Key in [#8, #37, #38, #39, #40, #46]) then
+    case TipoFiltro of
+      0 : if not (IsCharAlphaNumeric(Key)) then Key := #0; // Aceita letras e números
+      1 : if not (IsCharAlpha(Key)) then Key := #0;        // Aceita letras
+      2 : if not (IsDigit(Key)) then Key := #0;            // Aceita Números
+      else
+        raise Exception.Create('Tipo de filtro inválido.');
+    end;
+  Result := (not (Key = #0));
+end;
+
+// Exemplos de uso
+
+procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  { Alterando o tipo de filtro. }
+  ValidateField(Key, 2);
+end;
+
+procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  { Utilizando valores default. }
+  ValidateField(Key); 
+end;
+
+**************************************************************************************************************************
+Função para converter qualquer número em extenso.
+
+function Extenso(Valor : Extended; Moeda: Boolean; Tipo : integer): String;
+var
+    Centavos, Centena, Milhar, Milhao, Bilhao, Texto : string;
+const
+    Unidades: array [1..9] of string = ('um', 'dois', 'três','quatro','cinco',
+    'seis', 'sete', 'oito','nove');
+    Dez     : array [1..9] of string = ('onze', 'doze', 'treze', 'quatorze', 'quinze', 
+    'dezesseis', 'dezessete', 'dezoito', 'dezenove');
+    Dezenas : array [1..9] of string = ('dez', 'vinte', 'trinta', 'quarenta', 'cinqüenta', 
+    'sessenta', 'setenta', 'oitenta', 'noventa');
+    Centenas: array [1..9] of string = ('cento', 'duzentos', 'trezentos', 'quatrocentos', 
+    'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos');
+   function ifs( Expressao: Boolean; CasoVerdadeiro, CasoFalso:String): String;
+   begin
+      if Expressao then
+         Result := CasoVerdadeiro
+      else
+         Result :=CasoFalso;
+   end;
+   function MiniExtenso( Valor: ShortString ): string;
+   var Unidade, Dezena, Centena: String;
+   begin
+      if (Valor[2] = '1') and (Valor[3] <> '0') then
+      begin
+          Unidade := Dez[StrToInt(Valor[3])];
+          Dezena := '';
+      end
+      else
+      begin
+         if Valor[2] <> '0' then
+            Dezena := Dezenas[StrToInt(Valor[2])];
+         if Valor[3] <> '0' then
+            unidade := Unidades[StrToInt(Valor[3])];
+      end;
+      if (Valor[1] = '1') and (Unidade = '') and (Dezena = '') then
+         Centena := 'cem'
+      else
+         if Valor[1] <> '0' then
+            Centena := Centenas[StrToInt(Valor[1])]
+         else
+            Centena := '';
+      Result := Centena + ifs( (Centena <> '') and ((Dezena <> '') or 
+      (Unidade <> '')),' e ', '') + Dezena + ifs( (Dezena <> '') and (Unidade <> ''), ' e ','') + Unidade;
+   end;
+begin
+   if Valor = 0 then
+   begin
+      if Moeda then
+        Result := ''
+      else
+        Result := 'zero';
+      Exit;
+   end;
+   Texto := FormatFloat( '000000000000.00', Valor );
+   Centavos := MiniExtenso( '0' + Copy( Texto, 14, 2 ) );
+   Centena  := MiniExtenso( Copy( Texto, 10, 3 ) );
+   Milhar   := MiniExtenso( Copy( Texto,  7, 3 ) );
+   if Milhar <> '' then
+      Milhar := Milhar + ' mil';
+   Milhao   := MiniExtenso( Copy( Texto,  4, 3 ) );
+   if Milhao <> '' then
+      Milhao := Milhao
+      + ifs( Copy( Texto, 4,
+      3 ) = '001', ' milhão', ' milhões');
+   Bilhao   := MiniExtenso( Copy( Texto,  1, 3 ) );
+   if Bilhao <> '' then
+      Bilhao := Bilhao + ifs( Copy( Texto, 1, 3 ) = '001', ' bilhão', ' bilhões');
+   
+   Result := Bilhao + ifs( (Bilhao <> '') and (Milhao + Milhar + Centena <> ''), 
+   ifs((Pos(' e ', Bilhao) > 0) or (Pos( ' e ', Milhao + Milhar + Centena ) > 0), ', ', ' e '), '') + 
+   Milhao + ifs( (Milhao <> '') and (Milhar + Centena <> ''), ifs((Pos(' e ', Milhao) > 0) or 
+  (Pos( ' e ', Milhar + Centena ) > 0 ),', ',    ' e '), '') + Milhar + ifs( (Milhar <> '') and 
+  (Centena <> ''), ifs(Pos( ' e ', Centena ) > 0, ', ', ' e '),'') + Centena;
+   
+   if Moeda then
+   begin
+      if Tipo=0 then
+      begin
+        if (Bilhao <> '') and (Milhao + Milhar + Centena = '') then
+           Result := Bilhao + ' de reais'
+        else
+        if (Milhao <> '') and (Milhar + Centena = '') then
+           Result := Milhao + ' de reais'
+        else
+           Result := Bilhao + ifs( (Bilhao <> '') and (Milhao + Milhar + Centena <> ''), 
+           ifs((Pos(' e ', Bilhao) > 0) or (Pos( ' e ', Milhao + Milhar + Centena ) > 0),
+           ', ', ' e '), '') + Milhao + ifs( (Milhao <> '') and (Milhar + Centena <> ''), 
+           ifs((Pos(' e ', Milhao) > 0) or (Pos( ' e ', Milhar + Centena ) > 0 ),', ',   
+           ' e '), '') + Milhar + ifs( (Milhar <> '') and (Centena <> ''), 
+           ifs(Pos( ' e ', Centena ) > 0, ', ', ' e '),'') + 
+           Centena + ifs( Int(Valor) = 1, ' real', ' reais');
+        if Centavos <> '' then
+           if Valor > 1 then
+              Result := Result + ' e ' + Centavos + ifs( Copy( Texto, 14, 2 )= '01', ' centavo', ' centavos' )
+           else
+              Result := Centavos + ifs( Copy( Texto, 14, 2 )= '01', ' centavo', ' centavos' );
+      end
+      else
+      begin
+        if (Bilhao <> '') and (Milhao + Milhar + Centena = '') then
+          Result := Bilhao + ' de dolares americanos'
+        else
+        if (Milhao <> '') and (Milhar + Centena = '') then
+          Result := Milhao + ' de dolares americanos'
+        else
+          Result := Bilhao + ifs( (Bilhao <> '') and (Milhao + Milhar + Centena <> ''), 
+          ifs((Pos(' e ', Bilhao) > 0) or (Pos( ' e ', Milhao + Milhar + Centena ) > 0),
+          ', ', ' e '), '') + Milhao + ifs( (Milhao <> '') and (Milhar + Centena <> ''), 
+          ifs((Pos(' e ', Milhao) > 0) or (Pos( ' e ', Milhar + Centena ) > 0 ),', ',    ' e '), '') + 
+          Milhar + ifs( (Milhar <> '') and (Centena <> ''), ifs(Pos( ' e ', Centena ) > 0,
+          ', ', ' e '),'') + Centena + ifs( Int(Valor) = 1, ' dolar americano', ' dolares americanos');
+        if Centavos <> '' then
+          if Valor > 1 then
+             Result := Result + ' e ' + Centavos + ifs( Copy( Texto, 14, 2 )= '01', ' cent', ' cents' )
+          else
+             Result := Centavos + ifs( Copy( Texto, 14, 2 )= '01', ' cent', ' cents' );
+      end;
+   end;
+end;
+**************************************************************************************************************************
+
+Função para montar uma string de caracteres
+
+// StringOfChar( Caracter, Quantidade )
+
+// Exemplo de uso
+
+ShowMessage(StringOfChar('a', 10));
+**************************************************************************************************************************
+
+Função para duplicar / replicar uma string
+
+{ É necessário declarar StrUtils }
+
+// DupeString(texto, nº de repetições);
+  
+// Exemplo de uso
+ShowMessage(DupeString('texto', 3));
+**************************************************************************************************************************
+
+Como substituir caracteres dentro de uma string
+
+{ É necessário declarar SysUtils }
+
+// StringReplace(texto, caractar antigo, novo caracter, [filtros])
+
+{ Exemplo de uso }
+
+// Substitui todos caracteres de mesma caixa
+ShowMessage(StringReplace('abAcate', 'a', '@', [rfReplaceAll]));
+   
+// Substitui todos caracteres ignorando a caixa
+ShowMessage(StringReplace('abAcate', 'a', '@', [rfIgnoreCase, rfReplaceAll]));
+
+// Substitui o primeiro caracter de mesma caixa 
+ShowMessage(StringReplace('abAcate', 'a', '@', []));
+**************************************************************************************************************************
+
+Como copiar partes de uma string
+
+// Copy('texto', posição inicial, quantidade de caractares a serem copiados)
+
+{ Exemplo de uso }
+ShowMessage(Copy('texto', 2, 3));
+**************************************************************************************************************************
+
+Como descobrir a posição de um caracter dentro de uma string
+
+// Função: Pos(Caracter a ser localizado, texto);
+
+{ Exemplo de uso }
+ShowMessage(IntToStr(Pos('x', 'texto')));
+**************************************************************************************************************************
+
+Como converter os caracteres de uma string para maiúsculo
+
+// Função: UpperCase(texto);
+
+{ Exemplo de uso }
+ShowMessage(UpperCase('Teste'));
+**************************************************************************************************************************
+
+
+ 
+
+
+
+Como converter os caracteres de uma string para minúsculo
+
+// Função: LowerCase(texto);
+
+{ Exemplo de uso }
+ShowMessage(LowerCase('TESTE'));
+Topo
+
+Como converter um Char para maiúsculo
+
+// Função: UpCase(caracter);
+
+{ Exemplo de uso }
+ShowMessage(UpCase('x'));
+Topo
+
+Como converter um Char para minúsculo
+
+// Função: LoCase(caracter);
+function LoCase( ch : Char ) : Char;
+asm
+        CMP     AL,'A'
+        JB      @@exit
+        CMP     AL,'Z'
+        JA      @@exit
+        SUB     AL,'A' - 'a'
+@@exit:
+end;
+
+{ Exemplo de uso }
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  ShowMessage(LoCase('X'));
+end;
+Topo
+
+Função que retorna uma string ao contrário
+
+{ É necessário declarar StrUtils }
+
+// Função ReverseString(Texto)
+
+{ Exemplo de uso. }
+ShowMessage( ReverseString('Texto') );
+Topo
+
+Como descobrir a posição de um caracter dentro de uma string a partir de uma posição inicial
+
+// Função: PosEx(Caracter a ser localizado, texto, posição inicial);
+
+{ Exemplo de uso }
+ShowMessage(IntToStr(PosEx('t', 'texto', 3)));
+Topo
+
+Função que testa se um valor de uma String foi convertido para inteiro(integer) com sucesso
+
+// Função: TryStrToInt(String, variavel que recebera o número convertido);
+
+{ Exemplo de uso }
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  valor : Integer;
+begin
+  if TryStrToInt('5', valor) then
+    showmessage('Sucesso')
+  else
+    showmessage('erro');
+end;
+Topo
+
+Função que testa se um valor de uma String foi convertido para ponto flutuante(Double) com sucesso
+
+// Função: TryStrToFloat(String, variavel que recebera o número convertido);
+
+{ Exemplo de uso }
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  valor : Double;
+begin
+  if TryStrToFloat('9,7', valor) then
+    showmessage('Sucesso')
+  else
+    showmessage('erro');
+end;
+Topo
+
+Função para remover acentos de uma string
+
+// RemoveAcento( Texto )
+
+function RemoveAcento(aText : string) : string;
+const
+  ComAcento = 'àâêôûãõáéíóúçüñýÀÂÊÔÛÃÕÁÉÍÓÚÇÜÑÝ';
+  SemAcento = 'aaeouaoaeioucunyAAEOUAOAEIOUCUNY';
+var
+  x: Cardinal;
+begin;
+  for x := 1 to Length(aText) do
+  try
+    if (Pos(aText[x], ComAcento) <> 0) then
+      aText[x] := SemAcento[ Pos(aText[x], ComAcento) ];
+  except on E: Exception do
+    raise Exception.Create('Erro no processo.');
+  end;
+
+  Result := aText;
+end;
+
+
+{ Exemplo de uso }
+ShowMessage(  RemoveAcento('Árvore')  );
+Topo
+

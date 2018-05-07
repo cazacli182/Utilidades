@@ -1,0 +1,2 @@
+Existe uma propriedade no componente encontrada em Options chamada dgRowSelect.  Basta ativar esta propriedade!!!!!
+É a forma mais simples de fazer isto sem ficar repintando o componente em tempo de execução.

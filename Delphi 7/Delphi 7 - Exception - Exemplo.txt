@@ -1,0 +1,7 @@
+except
+    on e: exception do
+      begin
+      result := false;
+      ShowMessage(e.message + ' na rotina Alterar');
+      end;
+  end;

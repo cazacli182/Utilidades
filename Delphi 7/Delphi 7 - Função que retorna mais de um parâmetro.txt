@@ -1,0 +1,81 @@
+Posso criar também uma procedure que retorna parâmetros.... 
+
+
+
+function ConsultaParametro(pTabela,pCampo:string; out pLog:string):string;
+var
+  sTabela, sCodSig, sDesNom, sCampo1, sCampo2:string;
+  iPos : integer;
+begin
+  fa.cdsParam.Close;
+  fa.cdsParam.Filter := 'tabela = '+QuotedStr(pTabela);
+  fa.cdsParam.Filtered := True;
+  fa.cdsParam.Open;
+  sC_Erro:=''; sC_RetSigla:='';
+  sCampo1 := pCampo;
+  sCampo2 := '';
+  if pTabela = 'Ação' then begin sTabela:='tab_acao'; sCodSig:='sigla'; sDesNom:='descricao'; end;
+  if pTabela = 'Fase' then begin sTabela:='tab_fase'; sCodSig:='codigo'; sDesNom:='descricao'; end;
+  if pTabela = 'Formato' then begin sTabela:='tab_formato'; sCodSig:='codigo'; sDesNom:='descricao'; end;
+  if pTabela = 'Grupo Trabalho' then begin sTabela:='tab_grupo_trabalho'; sCodSig:='codigo'; sDesNom:='descricao'; end;
+  if pTabela = 'Localizador' then begin sTabela:='tab_localizador'; sCodSig:='sigla'; sDesNom:='descricao'; end;
+  if pTabela = 'Matéria' then begin sTabela:='tab_materia'; sCodSig:='codigo'; sDesNom:='descricao'; end;
+  if pTabela = 'Órgão Julgador' then begin sTabela:='tab_orgao_julgador'; sCodSig:='sigla'; sDesNom:='descricao'; end;
+  if pTabela = 'Rito' then begin sTabela:='tab_rito'; sCodSig:='id_rito'; sDesNom:='descricao'; end;
+  if pTabela = 'Tema' then begin sTabela:='tab_tema'; sCodSig:='id_tema'; sDesNom:='descricao'; end;
+  if pTabela = 'Sigla Integração' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'Tipo Ação' then begin sTabela:='tab_ap'; sCodSig:='codigo'; sDesNom:='descricao'; end;
+  if pTabela = 'Eletrônico' then begin sTabela:='tab_sn'; sCodSig:='codigo'; sDesNom:='descricao'; end;
+  if pTabela = 'Valor Causa' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 01' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 02' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 03' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 04' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 05' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 06' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 07' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 08' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 09' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'PréTexto Ass 10' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'Número OJ' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'Responsável' then begin sTabela:='cad_pessoa'; sCodSig:='codigo'; sDesNom:='nome'; end;
+  if (pTabela = 'Qualificação 1') or (pTabela = 'Qualificação 2') or (pTabela = 'Qualificação 3') or (pTabela = 'Qualificação 4') or (pTabela = 'Qualificação   5') then
+  begin sTabela:='tab_qualificacao'; sCodSig:='codigo'; sDesNom:='descricao'; end;
+  
+  if copy(pTabela,1,16) = 'Pessoa - Campo P' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'Pedido' then begin sTabela:='tab_assunto'; sCodSig:='sigla'; sDesNom:='descricao'; end;
+  if pTabela = 'Arquivo' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if pTabela = 'Juízo' then
+  begin
+    sTabela:='tab_juizo'; sCodSig:='sigla'; sDesNom:='descricao';
+    iPos := pos('/',pCampo);
+    if iPos > 0 then
+    begin
+      sCampo1 := trim(copy(pCampo,1,iPos-1));
+      sCampo2 := trim(copy(pCampo,iPos+1,length(pCampo)));
+    end;
+  end;
+  if Copy(pTabela,1,7) = 'NomePes' then begin sTabela:=''; sCodSig:=''; sDesNom:=''; end;
+  if not fa.cdsParam.IsEmpty then
+  begin
+    if fa.cdsParamusaEquivalencia.AsBoolean then
+    begin
+      FormEquivalencia.Valida_CDS_Equivalencia(sCampo1, sCampo2, sTabela,pTabela,sCodSig, '', sCodSig,sDesNom, sDesNom,
+                                               sC_Erro, sC_RetSigla, bB_Erro);
+      Result := sC_RetSigla;
+      pLog := sC_Erro;
+    end
+    else
+    if fa.cdsParampadrao.AsBoolean then
+      Result := fa.cdsParamValorPadrao.AsString;
+    if fa.cdsParamImportaDireto.AsBoolean then
+      Result := pCampo;
+  end;
+end;
+
+
+
+
+Para usar: 
+fa.cdsPlanilhaCPJ_Arquivo.AsString := ConsultaParametro('Arquivo',fa.cdsPlanilhaArquivo.AsString,sC_Erro);
+sLogErro := gravaTexto(sLogErro,sC_Erro);

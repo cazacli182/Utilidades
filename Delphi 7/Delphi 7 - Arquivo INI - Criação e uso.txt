@@ -1,0 +1,125 @@
+Uses IniFiles
+
+Colocar em um local público:
+  public
+    {CAZ 03/10/2014}
+    ArquivoINI: TIniFile;
+    procedure GravaArquivoIni;
+    procedure LeArquivoIni;
+
+
+No formcreate colocar:
+LeArquivoIni;
+
+A estrutura do LeArquivoIni é:
+
+procedure TForm1.LeArquivoIni;
+begin
+  {CAZ 03/10/2014}
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+'Migracao.ini');
+  chbConverterTabelas.Checked     := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'tabelas', ''),      false);
+  chkConverterTer.Checked         := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'terceiros', ''),    false);
+  chbConverterPessoas.Checked     := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'pessoa', ''),       false);
+  chbConverterProcessos.Checked   := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'processo', ''),     false);
+  chbConverterEnvolvido.Checked   := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'envolvido', ''),    false);
+  ckbReanalisarEnvolvidos.Checked := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'ADV_PROCESSO', ''), false);
+  chkConverterParte.Checked       := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'Parte', ''),        false);
+  cbAndamentos.Checked            := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'Andamentos', ''),   false);
+  CheckBox1.Checked               := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'Documentos', ''),   false);
+  cbLimpa.Checked                 := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'LimpaTabelas', ''), false);
+  cbLimpaDePara.Checked           := StrToBoolDef(ArquivoINI.ReadString('Checkbox', 'LimpaDePara', ''),  false);
+end;
+
+No botão que inicia o processo e que irá gravar o INI colocar:
+
+begin
+  GravaArquivoIni;
+
+
+A estrutura do GravaArquivoIni é:
+
+procedure TForm1.GravaArquivoIni;
+begin
+  if chbConverterTabelas.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'tabelas', 'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'tabelas', 'false');
+
+  if chkConverterTer.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'terceiros',   'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'terceiros',   'false');
+
+  if chbConverterPessoas.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'pessoa',   'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'pessoa',   'false');
+
+  if chbConverterProcessos.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'processo', 'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'processo', 'false');
+
+  if chbConverterEnvolvido.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'envolvido', 'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'envolvido', 'false');
+
+  if ckbReanalisarEnvolvidos.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'ADV_PROCESSO', 'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'ADV_PROCESSO', 'false');
+
+  if chkConverterParte.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'Parte', 'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'Parte', 'false');
+
+  if cbAndamentos.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'Andamentos',   'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'Andamentos',   'false');
+
+  if CheckBox1.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'Documentos',   'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'Documentos',   'false');
+
+  if cbLimpa.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'LimpaTabelas', 'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'LimpaTabelas', 'false');
+
+  if cbLimpaDePara.Checked = True then
+    ArquivoINI.WriteString('Checkbox', 'LimpaDePara',  'true')
+  else
+    ArquivoINI.WriteString('Checkbox', 'LimpaDePara',  'false');
+
+end;
+
+
+
+
+E para finalizar tem que destruir o arquivo INI no destroy do form:
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  ArquivoINI.Free;
+end;
+
+
+Para usar em combobox:
+
+  Na leitura: 
+ 
+  if ArquivoINI.ReadString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]) = '=' then
+    ckbCondicaoWhere.ItemIndex := 0
+  else if ArquivoINI.ReadString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]) = 'in' then
+    ckbCondicaoWhere.ItemIndex := 1
+  else if ArquivoINI.ReadString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]) = '>=' then
+    ckbCondicaoWhere.ItemIndex := 2;
+
+  Na escrita:
+  ArquivoINI.WriteString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]);
+
+

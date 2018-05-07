@@ -1,0 +1,1 @@
+Basta selecionar a tabsheet no object inspector e alterar a propriedade pageindex. Inicia em 0 a primeira posição.

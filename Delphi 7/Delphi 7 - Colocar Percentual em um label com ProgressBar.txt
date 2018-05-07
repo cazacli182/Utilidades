@@ -1,0 +1,4 @@
+ProgressBar1.Position := nLidos * 100 div nTotal;
+
+nPercent := (nLidos/nTotal)*100;
+lblPercent.Caption := Formatfloat('#,###.#0',nPercent)+'%';

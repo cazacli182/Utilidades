@@ -1,0 +1,9 @@
+function ApenasNumerosStr(pStr: String): String;
+var
+I: Integer;
+begin
+  Result := '';
+  for I := 1 to Length(pStr) do
+   if pStr[I] in ['1','2','3','4','5','6','7','8','9','0'] then
+     Result := Result + pStr[I];
+end;

@@ -1,0 +1,12 @@
+criar as variáveis:
+  FHoraInicio, FHoraFim, FDiferencaEntreTempos: TDateTime;
+
+
+  WriteLn(FArq,'Início do Processo em: ' + FormatDateTime('HH:MM:NN',Now()));
+  FHoraInicio := Now();
+
+  FHoraFim := Now();
+  FDiferencaEntreTempos := FHoraFim - FHoraInicio;
+
+  WriteLn(FArq,'Término do Processo em: ' + FormatDateTime('HH:MM:NN',FHoraFim));
+  WriteLn(FArq,'Tempo total do Processo de Migração: ' + FormatDateTime('HH:MM:NN',FDiferencaEntreTempos));

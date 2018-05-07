@@ -1,0 +1,97 @@
+procedure CopyHTMLToClipBoard(const str: ansistring; const htmlStr: ansistring = '');
+var
+  gMem: HGLOBAL;
+  lp: PChar;
+  Strings: array[0..1] of ansistring;
+  Formats: array[0..1] of UINT;
+  i: integer;
+
+  function FormatHTMLClipboardHeader(HTMLText: string): string;
+  const
+    CrLf = #13#10;
+  begin
+    Result:= 'Version:0.9' + CrLf;
+    Result:= Result + 'StartHTML:-1' + CrLf;
+    Result:= Result + 'EndHTML:-1' + CrLf;
+    Result:= Result + 'StartFragment:000081' + CrLf;
+    Result:= Result + 'EndFragment:°°°°°°' + CrLf;
+    Result:= Result + HTMLText + CrLf;
+    Result:= StringReplace(Result, '°°°°°°', Format('%.6d', [Length(Result)]), []);
+  end;
+  
+begin
+  gMem:= 0;
+  {$IFNDEF USEVCLCLIPBOARD}
+  Win32Check(OpenClipBoard(0));
+  {$ENDIF}
+  try
+    //most descriptive first as per api docs
+    Strings[0]:= FormatHTMLClipboardHeader(htmlStr);
+    Strings[1]:= str;
+    Formats[0]:= RegisterClipboardFormat('HTML Format');
+    Formats[1]:= CF_TEXT;
+    {$IFNDEF USEVCLCLIPBOARD}
+    Win32Check(EmptyClipBoard);
+    {$ENDIF}
+    for i:= 0 to High(Strings) do
+    begin
+      if Strings[i] = '' then Continue;
+      //an extra "1" for the null terminator
+      gMem:= GlobalAlloc(GMEM_DDESHARE + GMEM_MOVEABLE, Length(Strings[i]) + 1);
+      {Succeeded, now read the stream contents into the memory the pointer points at}
+      try
+        Win32Check(gmem <> 0);
+        lp:= GlobalLock(gMem);
+        Win32Check(lp <> nil);
+        CopyMemory(lp, PChar(Strings[i]), Length(Strings[i]) + 1);
+      finally
+        GlobalUnlock(gMem);
+      end;
+      Win32Check(gmem <> 0);
+      SetClipboardData(Formats[i], gMEm);
+      Win32Check(gmem <> 0);
+      gmem:= 0;
+    end;
+  finally
+    {$IFNDEF USEVCLCLIPBOARD}
+    Win32Check(CloseClipBoard);
+    {$ENDIF}
+  end;
+end;
+
+procedure Tfrm_pil_rel_tab.CopiarHtml;
+var
+  Linhas, Header: AnsiString;
+  i: integer;
+begin
+  Linhas:= '<tr><td bgcolor="Yellow"><B><font color="red">Nome</font><B/></td>' +
+    '<td bgcolor="Yellow"><B><font color="red">Em Join</font><B/></td>' +
+    '<td bgcolor="Yellow"><B><font color="red">Em Select</font><B/></td>' +
+    '<td bgcolor="Yellow"><B><font color="red">Utilizada</font><B/></td>' +
+    '<td bgcolor="Yellow"><B><font color="red">Registros</font><B/></td>' +
+    '<td bgcolor="Yellow"><B><font color="red">Descrição</font><B/></td></tr>';
+
+  for i:= 1 to grd.RowCount - 1 do
+  begin
+    if Linhas <> '' then Linhas:= Linhas + #13;
+    Linhas:= Linhas + '<tr><td>' + grd.Cells[0, i] + '</td>' + //Nome
+    '<td>' + grd.Cells[1, i] + '</td>' + //Em Join
+    '<td>' + grd.Cells[2, i] + '</td>' + //Em Select
+    '<td>' + grd.Cells[3, i] + '</td>' + //Utilizada
+    '<td>' + grd.Cells[4, i] + '</td>' + //QT Registros
+    '<td>' + grd.Cells[5, i] + '</td></tr>'; //Descrição
+  end;
+
+  Header:= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">';
+  {$IFDEF FPC THEN}
+  Header:= Header + #13 + '<meta charset="UTF-8">';
+  {$ELSE}
+   Header:= Header + #13 + '<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">';
+  {$ENDIF}
+
+  Linhas:= '<table style="width:100%">' + #13 + Linhas;
+  Linhas:= Linhas + '</table>';
+  Linhas:= Header + Linhas;
+
+  CopyHTMLToClipBoard(Linhas,linhas);
+end;

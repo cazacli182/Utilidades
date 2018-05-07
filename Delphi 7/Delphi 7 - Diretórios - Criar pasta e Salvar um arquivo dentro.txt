@@ -1,0 +1,40 @@
+procedure TfrmXML.CriarPastaESalvarAnexos(NumeroSequenciaAnexo: Integer);
+var
+  Diretorio: String;
+  SL: TStringlist;
+
+  function MontaStringDoDiretorio: String;
+  begin
+    Result := ExtractFilePath(Application.ExeName) +
+              FormatDateTime('yyyymmdd', StrToDate(FData)) + '\' +
+              FProcesso + '_' +
+              FId       + '_' +
+              IntToStr(NumeroSequenciaAnexo);
+  end;
+
+begin
+  try
+    SL := TStringList.Create;
+
+    Diretorio := MontaStringDoDiretorio;
+    if not DirectoryExists(Diretorio) then
+    begin
+      {Cria os diretórios conforme regras para nome (Data + Num Processo + Id + quantidade por data)}
+      ForceDirectories(Diretorio);
+
+      {Salva os anexos no diretório criado...}
+      FNomeDoArquivoEmAnexo := StringReplace(FNomeDoArquivoEmAnexo, '/tmp/attachment-', '',[rfReplaceAll, rfIgnoreCase]);
+      SL.Add(FConteudoDoArquivoEmAnexo);
+      SL.SaveToFile(Diretorio + '\' + FNomeDoArquivoEmAnexo);
+    end
+    else
+    begin
+      {Se o diretório já existe, apenas salvo o anexo.. Ver se é esta a regra para mais de um XML}
+      FNomeDoArquivoEmAnexo := StringReplace(FNomeDoArquivoEmAnexo, '/tmp/attachment-', '',[rfReplaceAll, rfIgnoreCase]);
+      SL.Add(FConteudoDoArquivoEmAnexo);
+      SL.SaveToFile(Diretorio + '\' + FNomeDoArquivoEmAnexo);
+    end;
+  finally
+    FreeAndNil(SL);
+  end;
+end;

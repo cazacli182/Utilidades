@@ -1,0 +1,10 @@
+  AbrirArquivo.InitialDir := ExtractFilePath(Application.ExeName); {Uses em SysUtils} 
+  AbrirArquivo.Filter     := 'Planilha (*.xls)|*.XLS|Planilha (*.xlsx)|*.XLSX';
+  AbrirArquivo.DefaultExt := '*.xlsx';
+                            
+  if AbrirArquivo.Execute then
+  begin                   
+    edtArquivoXLS.Text  := AbrirArquivo.filename;    
+    btnCarregar.Enabled := True;
+    lblMensagem.Caption := 'Aguardando carregamento do arquivo XML';
+  end;  

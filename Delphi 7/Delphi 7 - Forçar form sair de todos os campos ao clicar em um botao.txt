@@ -1,0 +1,3 @@
+Perform(WM_NEXTDLGCTL,0,0);
+
+Ai não preciso ficar chamando eventos onexit dos campos para validar o form....

@@ -1,0 +1,6 @@
+Copiar de Aux, a partir do 1, encontrar as na string até o fim e copiar tudo que vier após ela.
+Copy(Aux, 1, Pos('às', Aux) -1)
+
+OU
+
+if Copy(LinhaFB,1,7)='DRIVER=' then

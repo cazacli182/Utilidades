@@ -1,0 +1,8 @@
+procedure TfrmXML.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if Key = Vk_Escape then
+    Application.Terminate;
+end;
+
+
+uses Windows

@@ -1,0 +1,17 @@
+function DateToFireBird(pData:TDateTime):String;
+var
+  sData: String;
+begin
+  if pData <> 0 then
+  begin
+    sData := IntTostr(DayOF(pData))+'.'+
+             IntTostr(MonthOF(pData))+'.'+
+             IntTostr(YearOf(pData));
+    Result := sData;
+  end
+  else
+  begin
+    Result := '';
+  end;
+
+end;

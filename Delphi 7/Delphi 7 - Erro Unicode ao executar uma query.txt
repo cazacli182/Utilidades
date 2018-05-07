@@ -1,0 +1,8 @@
+Quando ocorrer o erro:
+
+Unicode data in a Unicode-only collation or ntext data cannot be sent to clients using DB-Library (such as ISQL) or ODBC version 3.7 or earlier
+
+Provavelmente existe algum campo que precisa de conversão. Fazer o seguinte:
+
+cast(campo as text) apelido
+

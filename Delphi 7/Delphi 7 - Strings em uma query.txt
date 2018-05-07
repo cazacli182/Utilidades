@@ -1,0 +1,5 @@
+Em alguns casos é necessário concatenar uma variável string em uma query. As vezes ocorriam erros de abertura
+e fechamento de apóstrofos... para solucionar basta colocar 4 apóstrofos pois o delphi entende isso e transforma em apenas um (fazendo corretamente o 'variavelxxxx').
+
+Fa.QESelectCadProcesso.SQL.Text := 'select pj, arquivo, ficha, incidente from cad_processo where '+
+                                   'pj = ' + '''' + LinhaStr2[0] + ''';';

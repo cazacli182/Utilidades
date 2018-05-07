@@ -1,0 +1,48 @@
+function SaTiraAcentos(Entrada:String):String;
+var
+  Saida  : String;
+  I      : Byte;
+
+begin
+  {nao modificar esta sendo usada de forma específica na pesquisa}
+  Entrada:=AnsiUpperCase(Entrada);
+  Saida:='';
+  for I:=1 to Length(Entrada) do
+  begin
+    case Entrada[I] of
+      'Ã' : Saida:=Saida+'A';
+      'Á' : Saida:=Saida+'A';
+      'À' : Saida:=Saida+'A';
+      'Â' : Saida:=Saida+'A';
+      'É' : Saida:=Saida+'E';
+      'È' : Saida:=Saida+'E';
+      'Ê' : Saida:=Saida+'E';
+      'Í' : Saida:=Saida+'I';
+      'Ì' : Saida:=Saida+'I';
+      'Î' : Saida:=Saida+'I';
+      'Õ' : Saida:=Saida+'O';
+      'Ó' : Saida:=Saida+'O';
+      'Ò' : Saida:=Saida+'O';
+      'Ô' : Saida:=Saida+'O';
+      'Ú' : Saida:=Saida+'U';
+      'Ù' : Saida:=Saida+'U';
+      'Û' : Saida:=Saida+'U';
+      'Ä' : Saida:=Saida+'A';
+      'Ë' : Saida:=Saida+'E';
+      'Ï' : Saida:=Saida+'I';
+      'Ö' : Saida:=Saida+'O';
+      'Ü' : Saida:=Saida+'U';
+      'Ç' : Saida:=Saida+'C';
+      '+' : Saida:=Saida+' ';
+      ' ',
+      '*',
+      '-',
+      '/',
+      'A'..
+      'Z',
+      '0'..
+      '9' : Saida:=Saida+Entrada[I];
+    end;
+  end;
+  SaTiraAcentos:=Saida;
+end;

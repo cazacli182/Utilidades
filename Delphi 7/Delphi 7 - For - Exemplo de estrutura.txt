@@ -1,0 +1,4 @@
+for I := 0 to FxmlDados.ChildNodes.Count - 1 do
+begin
+
+end;

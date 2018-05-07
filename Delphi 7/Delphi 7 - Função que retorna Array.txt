@@ -1,0 +1,54 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  TResultArray = array of string; //<== Definição do tipo
+  TForm1 = class(TForm)
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    function RetornarArray(FParametro: integer): TResultArray;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+function TForm1.RetornarArray(FParametro: integer): TResultArray;
+var
+  i: integer;
+begin
+  if FParametro > 0 then
+  begin
+    SetLength(Result, FParametro);
+    for i := 0 to FParametro - 1 do
+    begin
+      Result[i] := ´Pos´+IntToStr(i);
+    end;
+  end;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  lCaracteres: TResultArray;
+begin
+  Setlength(lCaracteres, 10);
+  lCaracteres := RetornarArray(10);
+  ShowMessage(´´);
+end;
+
+end.
+
+
+Coloque um BreakPoint na linha ShowMessage e você verá o conteúdo de lCaracteres. Que deverá ser: ´Pos0´, ´Pos1´, ´Pos2´, ´Pos3´, ´Pos4´, ´Pos5´, ´Pos6´, ´Pos7´, ´Pos8´, ´Pos9´

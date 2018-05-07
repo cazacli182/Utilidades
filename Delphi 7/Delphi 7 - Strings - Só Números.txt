@@ -1,0 +1,60 @@
+FUNCIONOU:
+ACEITA NÚMEROS E BACKSPACE...O RESTO NÃO ESCREVE:
+procedure TForm1.edtQtd2KeyPress(Sender: TObject; var Key: Char);
+begin
+  if (key in ['0'..'9', #8] = false) then
+  begin
+    Key := #0;
+  end;
+end;
+
+
+Para usar:
+procedure edtPerfilCustKeyPress(Sender: TObject; var Key: Char);
+begin
+  SoNumeros(Sender, Key);    
+end;                                       
+
+
+*******************************************************************
+
+
+function SoNumero(Texto:String):String;
+var                             
+  I: integer;
+  S: String;                     
+begin
+  S := '';                                            
+  for I := 1 To Length(Texto) Do
+  begin                          
+    if ((Texto[I] = '1') or               
+        (Texto[I] = '2') or    
+        (Texto[I] = '3') or    
+        (Texto[I] = '4') or    
+        (Texto[I] = '5') or    
+        (Texto[I] = '6') or                                                     
+        (Texto[I] = '7') or    
+        (Texto[I] = '8') or  
+        (Texto[I] = '9') or    
+        (Texto[I] = '0')) then  
+    begin
+      S := S + Copy(Texto, I, 1);
+    end;       
+  end;
+  result := S;
+end;  
+
+
+ou
+
+
+
+var
+s:String;
+i:integer;
+begin
+s:='';
+  for I := 1 to length(edit1.Text) do
+    if CharInSet(edit1.Text[i],['0'..'9']) then
+         s:=s+edit1.Text[i];
+  showmessage(s);

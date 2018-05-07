@@ -1,0 +1,48 @@
+eu já passei por isso, com geração e manutenção de arquivos de sped...
+existem várias formas de se carregar um arquivo mas como você mesmo disse no tópico é um arquivo extenso, então tem que utilizar da mais leve possível...
+faz assim, cria dinâmico ^^ sem vetor com tamanho fixo, vai alocando na medida em que vai lendo, se for da maneira certa leitura binaria funciona certinho hehe...
+vamos a um exemplo rapido, olha...
+
+var
+iFileHandle, iFileLength, iBytesRead, i : Integer;
+Buffer: PChar;
+TxtDirName, str : String;
+begin
+
+TxtDirName := 'caminho e nome do arquivo que você pretende carregar para leitura';
+
+agora vou abrir e modo leitura
+iFileHandle := FileOpen(TxtDirName, fmOpenRead);
+
+vou pegar o tamanho e posicionar no inicio 
+iFileLength := FileSeek(iFileHandle,0,2);
+FileSeek(iFileHandle,0,0);
+
+
+Buffer := PChar(AllocMem(iFileLength + 1));
+
+vou carregar agora minha variavel de Buffer 
+iBytesRead := FileRead(iFileHandle, Buffer^, iFileLength);
+
+fecho o arquivo, daqui pra frente não preciso mais dele
+FileClose(iFileHandle);
+
+agora por fim a leitura do meu buffer e jogo para a string final que vai conter o conteudo do arquivo 
+for i := 0 to iBytesRead-1 do
+begin
+str := str + Buffer[i];
+end;
+
+limpo da memoria a minha variavel de Buffer que até então ainda continua carregada
+FreeMem(Buffer);
+
+agora pode utilizar normal... por exemplo
+Memo1.Text := str;
+
+end;
+
+eu tive inumeros problemas com leitura de arquivos grandes, desenvolvi alguns sisteminhas para comparação de arquivos fiscais
+sintegra, sped, etc... por fim encontrei algumas formas de obter desempenho e evitar erros de memoria... 
+
+espero que ajude, qualquer dúvida só postar ^^ 
+Editado por Samara, 13 February 2012 - 00:31 AM.

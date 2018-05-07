@@ -1,0 +1,93 @@
+Efetuando cálculos de porcentagem em Delphi
+
+Cálculos de porcentagens estão presentes em boa parte das aplicações que desenvolvemos. Porém, há momentos em que a mente trava e não conseguimos lembrar com clareza como estes cálculos são feitos, principalmente em Delphi.
+
+Esta anotação tem o objetivo de ser uma fonte de pesquisa para os momentos em que suas habilidades matemáticas insistirem em continuar ocultas.
+
+Ex: 1 - Suponhamos que um produto que custe R$ 178,00 sofra um acréscimo de 15%. Qual o valor final do produto? Veja o código em Delphi: 
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  valor, percentual, valor_final: double;
+begin
+  valor := 178.00; // valor original
+  percentual := 15.0 / 100.0; // 15%
+  valor_final := valor + (percentual * valor);
+
+  ShowMessage('O valor final do produto é: ' +
+    FloatToStr(valor_final));
+
+  // O resultado será 204,70
+end;
+
+Ex: 2 - Um produto, cujo valor original era de R$ 250,00, teve um desconto de 8%. Qual foi seu valor final? Veja o código em Delphi:
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  valor, percentual, valor_final: double;
+begin
+  valor := 250.00; // valor original
+  percentual := 8.0 / 100.0; // 8%
+  valor_final := valor - (percentual * valor);
+
+  ShowMessage('O valor final do produto é: ' +
+    FloatToStr(valor_final));
+
+  // O resultado será 230,00
+end;
+
+Ex: 3 - Em um concurso de perguntas e respostas, um jovem acertou 72 das 90 perguntas apresentadas. Qual foi a porcentagem de acertos? E a porcentagem de erros? Veja o código em Delphi: 
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  perguntas, acertos: double;
+begin
+  perguntas := 90.0;
+  acertos := 72.0;
+
+  ShowMessage('Porcentagem de acertos: ' +
+    FloatToStr(((acertos / perguntas) * 100)) + '%');
+
+  ShowMessage('Porcentagem de erros: ' +
+    FloatToStr((((perguntas - acertos) / perguntas) * 100)) + '%');
+
+  // Os resultados serão 80% e 20%
+end;
+
+Ex: 4 - Um aparelho de CD foi adquirido por R$ 300,00 e revendido por R$ 240,00. Qual foi a porcentagem de lucro na transação? Veja o código em Delphi:
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  v_ant, v_nov, p_lucro: double;
+begin
+  v_ant := 300.0; // valor anterior
+  v_nov := 340.0; // valor novo
+  p_lucro := 0.0; // porcentagem de lucro
+
+  while(v_ant + ((p_lucro / 100.0) * v_ant) < v_nov) do
+    begin
+      p_lucro := p_lucro + 0.1;
+    end;
+
+  ShowMessage('A porcentagem de lucro foi de: ' +
+    FloatToStr(p_lucro) + '%');
+
+  // O resultado será 13,39
+end;
+
+Ex: 5 - Uma loja repassa 5% do lucro a seus vendedores. Se um produto custa R$ 70,00, qual o valor em reais repassado a um determinado vendedor? Veja o código em Delphi: 
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  valor, porcent, comissao: double;
+begin
+  valor := 70.0; // valor do produto
+  porcent := 5.0 / 100.0; // 5%
+
+  comissao := porcent * valor;
+
+  ShowMessage('O valor repassado ao vendedor é: ' +
+    FloatToStr(comissao));
+
+  // O resultado será 3,5
+end;

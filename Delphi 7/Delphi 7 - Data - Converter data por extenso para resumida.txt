@@ -1,0 +1,29 @@
+
+Se a data está vindo '18 de Agosto de 2014 às 10:00' ela ficará 18/08/2014.
+
+
+function TfrmXML.ConverterDataPorExtensoParaResumida(DataPorExtenso: String): String;
+var
+  Aux: String;
+begin
+  Aux := StringReplace(DataPorExtenso, ' de ', '/', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, ' ', '', [rfReplaceAll, rfIgnoreCase]);
+
+  if Pos('às', Aux) > 0 then
+    Aux := Copy(Aux, 1, Pos('às', Aux) -1);
+
+  Aux := StringReplace(Aux, 'Janeiro',  '01', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Fevereiro','02', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Março',    '03', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Abril',    '04', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Maio',     '05', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Junho',    '06', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Julho',    '07', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Agosto',   '08', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Setembro', '09', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Outubro',  '10', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Novembro', '11', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Dezembro', '12', [rfReplaceAll, rfIgnoreCase]);
+
+  Result := Aux;
+end;

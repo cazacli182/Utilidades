@@ -1,0 +1,79 @@
+Verificar se o erro está ocorrendo na unit ZAbstractRODataset.
+
+Se estiver ocorrendo nesta unit e na function TZAbstractRODataset.InternalInitFieldDefs então basta comentar as seguintes linhas conforme exemplo abaixo:
+
+procedure TZAbstractRODataset.InternalInitFieldDefs;
+var
+  I, J, Size: Integer;
+  AutoInit: Boolean;
+  FieldType: TFieldType;
+  ResultSet: IZResultSet;
+  FieldName: string;
+  FName: string;
+begin
+  FieldDefs.Clear;
+  ResultSet := Self.ResultSet;
+  AutoInit := ResultSet = nil;
+
+  try
+    { Opens an internal result set if query is closed. }
+    if AutoInit then
+    begin
+      CheckSQLQuery;
+      CheckConnected;
+      ResultSet := CreateResultSet(FSQL.Statements[0].SQL, 0);
+    end;
+    if not Assigned(ResultSet) then
+      raise Exception.Create(SCanNotOpenResultSet);
+
+    { Reads metadata from resultset. }
+    with ResultSet.GetMetadata do
+    begin
+      for I := 1 to GetColumnCount do
+      begin
+        FieldType := ConvertDbcToDatasetType(GetColumnType(I));
+
+        if FieldType in [ftString, ftWidestring, ftBytes] then
+          Size := GetPrecision(I)
+        else Size := 0;
+
+        J := 0;
+        FieldName := GetColumnLabel(I);
+        FName := FieldName;
+        while FieldDefs.IndexOf(FName) >= 0 do
+        begin
+          Inc(J);
+          FName := Format('%s_%d', [FieldName, J]);
+        end;
+
+        with TFieldDef.Create(FieldDefs, FName, FieldType,
+          Size, False, I) do
+        begin
+   ==> Comentar     //  Required := IsNullable(I) = ntNoNulls;
+   ==> Comentar     //  if IsReadOnly(I) then
+   ==> Comentar     //    Attributes := Attributes + [faReadonly];
+          Precision := GetPrecision(I);
+          DisplayName := FName;
+        end;
+      end;
+    end;
+
+  finally
+    { Closes localy opened resultset. }
+    if AutoInit then
+    begin
+      if ResultSet <> nil then
+      begin
+        ResultSet.Close;
+        ResultSet := nil;
+      end;
+      if Statement <> nil then
+      begin
+        Statement.Close;
+        Statement := nil;
+      end;
+    end;
+  end;
+end;
+
+

@@ -1,0 +1,38 @@
+public
+  function iif(Teste: boolean; RetornoTrue, RetornoFalse: string): string; overload;    //==> trata retornos String
+  function iif(Teste: boolean; RetornoTrue, RetornoFalse: integer): integer; overload;  //==> trata retornos Integer
+
+function TForm1.iif(Teste: boolean; RetornoTrue, RetornoFalse: string): string;
+begin
+  if Teste then
+    Result := RetornoTrue
+  else
+    Result := RetornoFalse;
+end;
+
+function TForm1.iif(Teste: boolean; RetornoTrue, RetornoFalse: integer): integer;
+begin
+  if Teste then
+    Result := RetornoTrue
+  else
+    Result := RetornoFalse;
+end;
+
+{######### Exemplo de uso em um clique de botão #########}
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  B: Boolean;
+
+begin
+  B := True;
+  {O if abaixo é um exemplo de como um código pode ser simplificado com o IIF
+  if ComboBox1.ItemIndex = 0 then B := True else B := False;}
+
+  ShowMessage(iif(B = True, 'OK', 'Erro'));
+  ShowMessage(IntToStr(iif(B = True, 1, 0)));
+
+  {OBSERVAÇÃO: No Delphi também existe uma função chamada IfThen que faz praticamente a mesma coisa!
+   A implementação desta minha função é mais para fins didáticos}
+
+end;

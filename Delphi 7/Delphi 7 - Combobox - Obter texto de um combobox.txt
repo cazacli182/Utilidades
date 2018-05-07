@@ -1,0 +1,10 @@
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  item: string;
+begin
+  // vamos obter o valor do item selecionado no ComboBox
+  item := ComboBox1.Items[ComboBox1.ItemIndex];
+
+  // mostra o resultado
+  ShowMessage('O item selecionado é: ' + item);
+end;

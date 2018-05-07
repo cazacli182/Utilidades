@@ -1,0 +1,33 @@
+function SaDelBrancos(Campo:String):String;
+var
+  I           : Byte;
+
+begin
+  I:=Length(Campo);
+  while (I>0) And (Campo[I]=' ') Do
+  begin
+    Delete(Campo,I,1);
+    Dec(I);
+  end;
+  I:=1;
+  while (I<Length(Campo)) and (Campo[1]=' ') do Delete(Campo,1,1);
+  while pos('  ',Campo)>0 do delete(Campo,pos('  ',Campo),1);
+  SaDelBrancos:=Campo;
+end;
+
+
+
+ou
+
+
+function TiraBrancos(Campo:String):String;
+var
+  I : Longint;
+begin
+  for I:=1 to Length(Campo) do
+  begin
+    if Campo[I]=' ' then
+     Delete(Campo,I,1);
+  end;
+  result:=Campo;
+end;

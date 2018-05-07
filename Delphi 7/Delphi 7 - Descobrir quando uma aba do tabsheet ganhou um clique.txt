@@ -1,0 +1,9 @@
+procedure PageControlPrincipalChange(Sender: TObject);
+begin
+  case PageControlPrincipal.ActivePageIndex of
+    0: 
+    begin
+      TabSheetImportacaoShow(Sender);
+    end;
+  end;
+end;

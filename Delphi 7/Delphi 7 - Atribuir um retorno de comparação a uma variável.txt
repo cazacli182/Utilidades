@@ -1,0 +1,4 @@
+variavelboolean := variavel = 'XXX';
+
+Resumindo:
+  se variavel for igual a 'XXX' o retorno será true para a variavelboolean.

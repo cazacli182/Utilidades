@@ -1,0 +1,12 @@
+Os que irão ser marcados estão todos agrupados em um GroupBox1:
+
+procedure TForm1.SpeedButton1Click(Sender: TObject);
+var
+  x : integer;
+begin
+  for x:=0 to GroupBox1.ControlCount-1 do
+  begin
+    if (GroupBox1.Controls[x] is  TCheckBox)  then
+      TCheckBox(GroupBox1.Controls[x]).checked:=true
+  end;
+end;

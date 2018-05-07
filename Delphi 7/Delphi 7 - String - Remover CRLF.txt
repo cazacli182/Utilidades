@@ -1,0 +1,3 @@
+          sNomeClientePrincipal := StringReplace(sNomeClientePrincipal, cstCR,   '', [rfReplaceAll, rfIgnoreCase]);
+          sNomeClientePrincipal := StringReplace(sNomeClientePrincipal, cstLF,   '', [rfReplaceAll, rfIgnoreCase]);
+          sNomeClientePrincipal := StringReplace(sNomeClientePrincipal, cstCRLF, '', [rfReplaceAll, rfIgnoreCase]);

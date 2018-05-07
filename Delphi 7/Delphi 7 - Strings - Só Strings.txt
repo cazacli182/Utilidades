@@ -1,0 +1,21 @@
+function SoString( sStr: string ) : string;
+var                                   
+  i     : integer;
+  letra : string;                                                                                                    
+begin                                    
+  letra  := '';
+  for i := 1 to length(sStr) do begin
+    if ((sStr[I] <>'1') and               
+        (sStr[I] <>'2') and    
+        (sStr[I] <>'3') and    
+        (sStr[I] <>'4') and    
+        (sStr[I] <>'5') and    
+        (sStr[I] <>'6') and                                                     
+        (sStr[I] <>'7') and    
+        (sStr[I] <>'8') and  
+        (sStr[I] <>'9') and    
+        (sStr[I] <>'0')) then  
+       letra := letra + sStr[i];   
+  end;
+  Result := letra;
+end;

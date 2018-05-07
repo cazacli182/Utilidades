@@ -1,0 +1,10 @@
+Para ordenar o conteúdo de um stringlist basta usar o comando:
+
+StringList.Sorted := True 
+
+O conteúdo da memória ficará mais ou menos assim:
+192.168.0.10 
+192.168.0.11 
+192.168.0.22 
+192.168.0.5 
+192.168.0.6 

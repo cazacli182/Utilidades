@@ -1,0 +1,65 @@
+procedure TForm1.btnBuscarClick(Sender: TObject);
+var
+  jsonStream: TStringStream;
+  url: String;
+
+  procedure TrataJsonStream(json: TStringStream);
+  var
+    jsonArray: TJSONArray;
+    jsonObject: TJSONObject;
+    i,x: Integer;
+
+  begin
+    jsonArray  := TJSONArray.create(json.DataString);
+    for i := 0 to jsonArray.toList.Count-1 do
+    begin
+      jsonObject := jsonArray.getJSONObject(i);
+      cdsPublicacao.Insert;
+      for x := 0 to jsonObject.keys.Count-1 do
+      begin
+        if (cdsPublicacao.FindField(jsonObject.Keys.Strings[x]) <> nil) then
+        begin
+          case cdsPublicacao.FieldByName(jsonObject.Keys.Strings[x]).DataType of
+            ftInteger : cdsPublicacao.FieldByName(jsonObject.Keys.Strings[x]).AsInteger := jsonObject.getInt(jsonObject.Keys.Strings[x]);
+            ftString,
+            ftMemo    : cdsPublicacao.FieldByName(jsonObject.Keys.Strings[x]).AsString  := UTF8Decode(jsonObject.getString(jsonObject.Keys.Strings[x]));
+            ftBoolean : cdsPublicacao.FieldByName(jsonObject.Keys.Strings[x]).AsBoolean := jsonObject.getString(jsonObject.Keys.Strings[x]) = 'true';
+          end;
+        end;
+      end;
+      cdsPublicacao.Post;
+    end;
+  end;
+
+begin
+  jsonStream := TStringStream.Create('');
+  try
+    //http://acessows.sytes.net:9090/WebApiPublicacoes/api/ControllerApi/Publicacoes/getPublicacoesPeriodo?
+    //      nomeRelacional=PREAMBULO
+    //      &token=930cbf7a5852600d6287f7166621b845
+    //      &dataInicio=2017-08-10
+    //      &dataFinal=2017-08-10
+    case PC.ActivePageIndex of
+      0: url := edtApi.Text+edtMetodoPeriodo.Text+
+           '?nomeRelacional='+edtNomeRelacional.Text+
+           '&token='+edtToken.Text+
+           '&dataInicio='+edtDataInicio.Text+
+           '&dataFinal='+edtDataFinal.Text;
+      1: url := edtApi.Text+edtMetodoEstado.Text+
+           '?nomeRelacional='+edtNomeRelacional.Text+
+           '&token='+edtToken.Text+
+           '&estado='+Trim(cbxEstado.Text);
+    end;
+
+    idHttp.Request.ContentType := 'application/json';
+    //idhttp.Request.Charset := 'UTF-8';
+    idHttp.Get(url, jsonStream);
+
+    cdsPublicacao.EmptyDataSet;
+
+    TrataJsonStream(jsonStream);
+
+  finally
+    jsonStream.Free;
+  end;
+end;

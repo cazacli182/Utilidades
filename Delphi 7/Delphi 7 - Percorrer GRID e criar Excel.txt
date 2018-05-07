@@ -1,0 +1,29 @@
+procedure TFormIni.BitBtn6Click(Sender: TObject);
+  var linha, coluna : integer;
+  var planilha : variant;
+  var valorcampo : string;
+begin
+
+ planilha:= CreateoleObject('Excel.Application'); //ComObj
+ planilha.WorkBooks.add(1);
+ planilha.caption := caption;
+ planilha.visible := true;
+
+ cdsProcessos.First;
+ for linha := 0 to cdsProcessos.RecordCount - 1 do
+ begin
+   for coluna := 1 to cdsProcessos.FieldCount do
+   begin
+     valorcampo := cdsProcessos.Fields[coluna - 1].AsString;
+     planilha.cells[linha + 2,coluna] := valorCampo;
+   end;
+   cdsProcessos.Next;
+ end;
+ for coluna := 1 to cdsProcessos.FieldCount do
+ begin
+   valorcampo :=cdsProcessos.Fields[coluna - 1].DisplayLabel;
+   planilha.cells[1,coluna] := valorcampo;
+ end;
+ planilha.columns.Autofit;
+
+end;

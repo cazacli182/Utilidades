@@ -1,0 +1,105 @@
+procedure CriaCDSUnidade;
+begin
+  FCDSUnidade := TClientDataSet.Create(Nil);
+  with FCDSUnidade do
+  begin
+    FieldDefs.Clear;
+    with FieldDefs.AddFieldDef do
+    begin
+      DataType := ftInteger;
+      Name     := 'id_unidade';
+    end;
+    with FieldDefs.AddFieldDef do
+    begin
+      DataType := ftInteger;
+      Name     := 'id_pessoa';
+    end;
+    with IndexDefs.AddIndexDef do
+    begin
+      Fields   := 'id_pessoa';
+      Name     := 'Idx1';
+      Options  := [];
+    end;
+    CreateDataSet;
+    IndexName := 'Idx1';
+  end;
+end;
+
+procedure AlimentaCDSUnidade;
+var
+//SL : TStringList;
+//iMaxPes,
+  iMaxCod: Integer;
+//  S: String;
+
+  function GetMaxUnidade: Integer;
+  begin
+    fa.QeAux.Close;
+    fa.QeAux.SQL.Text := 'select max(id_unidade) + 1 as max from unidade';
+    fa.QeAux.Open;
+
+    Result := fa.QeAux.FieldByName('max').AsInteger;
+  end;
+
+begin
+  {Zero a variável global que irá receber o código de cadastro da unidade padrão}
+  FUnidadePadrao := 0;
+
+  try
+    iMaxCod := 0;
+
+    {Select max código da unidade}
+    iMaxCod        := GetMaxUnidade;
+    FUnidadePadrao := iMaxCod;
+
+    {Verifico se já existe cadastrada uma unidade para a pessoa 1. Se não existir cadastro, se existir alimento a variável pública para usar em outros locais...}
+    fa.QeAux.Close;
+    fa.QeAux.SQL.Text := 'select id_unidade from unidade where id_pessoa = 1';
+    fa.QeAux.Open;
+
+    if not fa.QeAux.IsEmpty then
+    begin
+      FUnidadePadrao := fa.QeAux.FieldByName('id_unidade').AsInteger;
+    end
+    else
+    begin
+      fa.QeAux.Close;
+      fa.QeAux.SQL.Text := 'INSERT INTO unidade (id_unidade, id_pessoa, possui_financeiro, update_usuario, update_Data_hora) VALUES '+
+                           '('+ IntToStr(iMaxCod) +', 1 , 0, -888, '''+ FormatDateTime('yyyy-mm-dd hh:nn:ss', Now) +''')';
+      fa.QeAux.ExecSQL;
+    end;
+  except
+    Form1.Memo2.Lines.Add('Não foi possível cadastrar a unidade padrão! Erro ao executar query: ' + fa.QeAux.SQL.Text);
+  end;
+
+  {Alimenta o CDS com as informações que já estão no Banco de Dados}
+  fa.QeAux.Close;
+  fa.QeAux.SQL.Text := 'select id_unidade, id_pessoa from unidade';
+  fa.QeAux.Open;
+
+  fa.QeAux.First;
+  while not fa.QeAux.Eof do
+  begin
+    FCDSUnidade.Append;
+    FCDSUnidade.FieldByName('id_unidade').AsString := fa.QeAux.FieldByName('id_unidade').AsString;
+    FCDSUnidade.FieldByName('id_pessoa').AsString  := fa.QeAux.FieldByName('id_pessoa').AsString;
+    FCDSUnidade.Post;
+    fa.QeAux.Next;
+  end;
+  fa.QeAux.Close;
+
+  {SL := TStringList.Create;
+  FCDSUnidade.First;
+  while not FCDSUnidade.Eof do
+  begin
+    SL.Add(FCDSUnidade.FieldByName('id_unidade').AsString + '|' + FCDSUnidade.FieldByName('id_pessoa').AsString);
+    FCDSUnidade.Next;
+  end;
+  SL.SaveToFile(ExtractFilePath(Application.ExeName)+'Log\'+ 'FCDSUnidade.txt');}
+end;
+
+procedure DestroyCDSUnidade;
+begin
+  FreeAndNil(FCDSUnidade);
+end;
+

@@ -1,0 +1,37 @@
+Como instalar o ZeosLib no Delphi e onde baixar?
+ 
+
+Até hoje(05/02/2016) a versão estável é a 7.1.4 e pode ser baixada neste link:
+http://sourceforge.net/projects/zeoslib/
+
+Caso preferir, pode baixar os fontes diretamente do repositório svn:
+svn://svn.code.sf.net/p/zeoslib/code-0
+
+Particularmente prefiro sempre pegar direto do repositório.
+
+Após baixar o componente, vamos à instalação:
+
+Na pasta baixada, haverá uma pasta packages, dentro dela terá os arquivos
+para cada versão do Delphi, desde a 7 até a atual, inclusive para Lazarus.
+
+Abra os pacotes e os compile com Build nesta sequencia:
+
+ZCore.dpk
+ZParseSql.dpk
+ZPlain.dpk
+ZDbc.dpk
+ZComponent.dpk
+ZComponentDesign.dpk
+
+Após ter compilado todos, instale o ZComponentDesign.dpk.
+
+Depois só faltará adicionar os caminhos do componente no Library do Delphi.
+
+Exemplo:
+C:\Zeos\src\core
+C:\Zeos\src\parsesql
+C:\Zeos\src\plain
+C:\Zeos\src\dbc
+C:\Zeos\src\component
+
+Fazendo assim, é para estar tudo funcionando!

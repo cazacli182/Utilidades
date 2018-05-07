@@ -1,0 +1,154 @@
+function Tfa.GetVariavel(pArquivo, pFicha, pIncidente: String;
+  pNumero: Integer): String;
+var
+  nPos: Integer;
+  sVariavel : String;
+
+begin
+
+  Qe4.close;
+  Qe4.SQL.Text:= 'select variavel from cad_processo where '+
+                        ' arquivo = '+QuotedStr(pArquivo)+
+                        ' and ficha = '+QuotedSTr(pFicha)+
+                        ' and incidente = '+pIncidente;
+  Qe4.Open;
+
+  sVariavel := TiraEnter(Qe4.fieldbyname('variavel').AsString);
+
+  case pNumero of
+      1 : begin
+            nPos := Pos(Char(1)+'A',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'B',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+      2 : begin
+            nPos := Pos(Char(1)+'B',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'C',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+
+      3 : begin
+            nPos := Pos(Char(1)+'C',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'D',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+
+      4 : begin
+            nPos := Pos(Char(1)+'D',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'E',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+      5 : begin
+            nPos := Pos(Char(1)+'E',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'F',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+      6 : begin
+            nPos := Pos(Char(1)+'F',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'G',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+      7 : begin
+            nPos := Pos(Char(1)+'G',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'H',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+      8 : begin
+            nPos := Pos(Char(1)+'H',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'I',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+      9 : begin
+            nPos := Pos(Char(1)+'I',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'J',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+
+      10: begin
+            nPos := Pos(Char(1)+'J',sVariavel)+2;
+            if  nPos > 0 then
+            begin
+               sVariavel := Copy(sVariavel,nPos,Length(sVariavel)-nPos);
+               nPos      := POS(Char(1)+'K',sVariavel)-1;
+               Result    := Copy(sVariavel,1,nPos);
+            end
+            else
+            begin
+               Result := '';
+            end;
+          end;
+  end;
+
+end;

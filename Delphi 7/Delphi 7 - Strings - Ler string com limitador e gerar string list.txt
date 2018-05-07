@@ -1,0 +1,23 @@
+procedure TFormImpCRAU.LerLinha(const Limitador: Char; Entrada: string; const Strings: TStrings);
+begin
+  Assert(Assigned(Strings)) ;
+  Strings.Clear;
+  Entrada:=StringReplace(Entrada,char(39),' ',[rfReplaceAll]);
+  ExtractStrings2([Char(Limitador)],[],PChar(Entrada),Strings);
+end;
+
+
+Exemplo do uso:
+LerLinha('|',Linha,LinhaStr);
+
+Ai crio uma variável assim:
+LinhaStr      : TStringList;
+
+
+E para ler o conteúdo que desejo dentro da string lista basta passar a 
+posição do mesmo, lembrando que inicia em zero:
+
+x := LinhaStr[05];
+
+
+

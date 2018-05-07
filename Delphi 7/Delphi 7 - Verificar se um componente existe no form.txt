@@ -1,0 +1,6 @@
+colocar no form show...
+
+if assigned(Form1.FindComponent(´Seucomponente´´)) then
+begin
+  seus comandos...
+end;

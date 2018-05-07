@@ -1,0 +1,11 @@
+DirLogs := DirExe + 'logs';
+
+  if not DirectoryExists(DirLogs) then CreateDir(DirLogs);
+
+  DecodeDate(Now,A, M, D);
+
+  DirLogs := DirLogs + '\' +Formatfloat('00',D)+ '_'+Formatfloat('00',M) + '_'+Formatfloat('0000',A) ;
+
+  if not DirectoryExists(DirLogs) then CreateDir(DirLogs);
+
+  DecodeTime(Now,Hour, Min, Sec, MSec);

@@ -1,0 +1,31 @@
+function GetUltimoDiaMesAno(pMes,pAno:String): String;
+begin
+  if (pMes = '01') or
+     (pMes = '03') or
+     (pMes = '05') or
+     (pMes = '07') or
+     (pMes = '08') or
+     (pMes = '10') or
+     (pMes = '12') then
+  begin
+     Result := '31';
+  end
+  else
+  begin
+     if (pMes = '04') or
+        (pMes = '06') or
+        (pMes = '09') or
+        (pMes = '11') then
+     begin
+        Result := '30'
+     end
+     else
+     begin
+        if (pMes = '02') and (strToInt(pAno) Mod 4 <> 0)then
+           Result := '28'
+        else
+           Result := '29';
+     end;
+  end;
+
+end;

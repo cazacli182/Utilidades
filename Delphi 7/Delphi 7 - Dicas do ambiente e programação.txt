@@ -1,0 +1,314 @@
+Pequenos Segredos do Delphi
+
+Por Anderson Haertel Rodrigues
+
+Artigo publicado na revista The Club - Edição Nr. 102 - Março/2003
+
+Introdução
+
+O artigo deste mês não tem a intenção de manter uma lógica e nem falar em apenas um assunto em específico. Então se mudarmos de assunto radicalmente no próximo tópico, não estranhe!
+
+Irei falar sobre algumas palavras que vemos no Delphi e às vezes não sabemos de onde a mesma vem e nem o que existe por trás da mesma. Mas também, falarei de algumas palavras chaves do Delphi.
+
+Result
+
+A primeira delas que veremos é a palavra Result. Quando implementamos uma função (método):
+
+{...}
+
+type
+
+  TForm1 = class(TForm)
+
+  private
+
+    { Private declarations }
+
+    function Soma(pnSoma1, pnSoma2: Double): Double;
+
+  public
+
+    { Public declarations }
+
+  end;
+
+{...}
+
+function TForm1.Soma(pnSoma1, pnSoma2: Double): Double;
+
+begin
+
+  Result := pnSoma1 + pnSoma2;
+
+end;
+
+Já parou para pensar de onde vem Result?
+
+R. Eu já :-).
+
+Result é uma variável. Cada função (ou método) declara implicitamente a variável Result, cujo, o tipo da variável é o mesmo tipo de retorno da função declarada. No exemplo acima, é do tipo Double. Result não é uma variável Local ela é semelhante a um parâmetro var oculto, já declarado no cabeçalho da function (isso ocorre nos bastidores).
+
+Uma dica: O Delphi pode falhar ao inicializar a variável Result, principalmente em alguns casos envolvendo o retorno de String, Arrays Dinâmicos e Variant. Nesses casos, por segurança, deve-se inicializar a mesma com: String Vazia, Array Vazio e ou Unassigned (declarada na Uses Variants do Delphi 7).
+
+Self
+
+E Self?
+
+R. Eu já (de novo) :-).
+
+Self assim como Result é uma variável. Self só é visível em Métodos que pertencem a uma Classe e não é visível em Functions e Procedures normais. Self é um parâmetro oculto e tem como valor a Referência ao Objeto ou, se for o caso de um Método de Classe (Class methods) Self é a Referência da Classe.
+
+No exemplo acima do método Soma, Self receberia o valor de: TForm1. Uma coisa interessante é, os métodos possuem um with Self do implícito no corpo do método, isto é, é por isso que quando fizemos o seguinte no corpo de um método não precisamos colocar Self:
+
+function TForm1.Soma(pnSoma1, pnSoma2: Double): Double;
+
+begin
+
+  Caption := 'Artigo escrito por AHR';
+
+  Close;
+
+  {...}
+
+end;
+
+Como o método está envolvido num with Self do implícito (como já explicado) não precisamos fazer:
+
+Self.Caption, Self.Close, etc, etc.
+
+Const
+
+E const?
+
+R. Você deve estar cansado de ler (Eu já)......
+
+Const é uma palavra chave, não é uma variável inicializada implicitamente (pelo compilador) como Self e Result (explicados mais acima). A palavra Const não possui mistério algum para explicar. O que tem de mistério para explicar na palavra chave const é como a mesma se comporta conforme a sua declaração e se ligarmos (no Delphi 7) a diretiva de compilação {$J+} ou {$WRITEABLECONST ON}. Const pode ser de dois tipos:
+
+Constantes (propriamente dita) ou Constantes Tipificadas.
+
+Constantes (constantes mesmo!) é como estamos acostumados a trabalhar, isto é, não podemos modificar o seu valor dentro de rotinas, por que, o próprio compilador impõe essa restrição, onde, se você tentar mudar o valor da mesma, o compilador irá emitir uma mensagem de erro.
+
+Constantes Tipificadas não é realmente uma constante, e sim, uma variável inicializada, isto é, o Delphi trata a mesma como sendo uma variável. Mas, existe uma diferença entre constantes tipificadas e variáveis normais locais, Constantes tipificadas mantém o seu valor entre as chamadas de rotinas, coisa que não acontece com uma variável local normal, onde, a mesma sempre será “inicializada” conforme o seu tipo.
+
+Vamos aos exemplos para ficar mais claro:
+
+implementation
+
+{$J+}
+
+// Ou {$WRITEABLECONST ON}
+
+const constMesmo = 42;
+
+      constTipificada: Integer = 7;
+
+      consObjeto: TForm = nil;
+
+{$J-}
+
+// Ou {$WRITEABLECONST OFF}
+
+{$R *.dfm}
+
+No exemplo acima eu liguei a diretiva de compilação {$J+} (também poderia ser: {$WRITEABLECONST ON}), do qual indica que poderemos mudar o valor da “constante” (mas lembre-se, mesmo ligando a diretiva, ainda necessito especificar o Tipo para a mesma ser realmente Constante Tipificada):
+
+procedure TForm1.Button1Click(Sender: TObject);
+
+begin
+
+  //constMesmo := 10;
+
+  constTipificada := 10;
+
+  consObjeto := TForm1.Create(Self);
+
+  consObjeto.Name := 'TESTE';
+
+  ShowMessage(IntToStr(constTipificada));
+
+  ShowMessage(consObjeto.Name);
+
+end;
+
+Ao colocarmos o código no Evento OnClik do Botão (que foi adicionado no Form), podemos perceber que nem o compilador e muito menos em tempo de execução tivemos alguma mensagem de erro. Mas, como citado, só podemos modificar o valor de constTipificada e consObjeto, pois, ambas foram declaradas com o seu tipo, tornando assim, ambas como constantes tipificadas. Quis também usar um Objeto para vermos que também podemos fazer o uso de variáveis incializadas com Objetos.
+
+Mesmo ligando as diretivas acima, constMesmo é constante mesmo, isto é, não podemos modificar o seu valor, se tentarmos, receberemos uma mensagem de erro do compilador do Delphi. Para fazermos o teste, basta retirarmos o comentário de constMesmo.
+
+Vamos colocar um novo botão no Form para testarmos outro aspecto das constantes tipificadas, que é (como já citado) o fato de Constantes tipificadas manterem o seu valor entre as chamadas de rotinas.
+
+Exemplo:
+
+procedure TForm1.Button2Click(Sender: TObject);
+
+begin
+
+ ShowMessage(IntToStr(constTipificada));
+
+ constTipificada := constTipificada + 10;
+
+end;
+
+ 
+
+Ao clicarmos novamente no Botão:
+
+ 
+
+E se clicarmos novamente, irá sempre adicionar mais 10 (Dez) ao valor da constante tipificada, conforme o código do exemplo do Button2.
+
+No Delphi 7 tanto {$J} como {$WRITEABLECONST OFF} por Default estão desligados, então (isso não acontecia em versões anteriores), sendo assim, constantes tipificadas são verdadeiramente constantes.
+
+Class
+
+A palavra chave Class também não tem mistérios. O que existe de diferente é a forma como a mesma pode ser declarada. Isto é, conforme a declaração podemos ter muitas nuances com a mesma palavra, exemplo:
+
+type
+
+  TForm1 = class(TForm)
+
+  private
+
+  public
+
+  end;
+
+{...}
+
+É a forma normal que usamos no dia a dia, e estamos apenas indicando (a IDE fez este trabalho acima por nós) que TForm1 herda da Classe TForm.
+
+Já:
+
+TCustomForm = class;
+
+É uma declaração antecipada (chamada de: Forward declarations), onde estamos apenas dizendo ao compilador que a classe será declarada mais adiante na rotina. Se olharmos o fonte da unit: Forms.pas veremos muitas declarações deste tipo.
+
+Já:
+
+TFormClass = class of TForm;
+
+É uma declaração do tipo MetaClasse. Onde, uma MetaClasse é uma variável que pode armazenar uma referência da classe que poderá ser usada em qualquer expressão que exija a referência de classe, como ao chamar um construtor ou método de classe.
+
+Observação: Citei em várias partes do Artigo Referência de Classe, não se preocupe, mais a frente eu explico com detalhes o que é uma Referência de Classe.
+
+Já:
+
+type
+
+  TAlgumaClasse = class
+
+  public
+
+    class function AlgumaFunction(Operation: string): Boolean; virtual;
+
+    class procedure AlgumaProcedure(var Info: TFigureInfo); virtual;
+
+    {...}
+
+  end;
+
+O principal da declaração é:
+
+    class function AlgumaFunction(Operation: string): Boolean; virtual;
+
+    class procedure AlgumaProcedure(var Info: TFigureInfo); virtual;
+
+O cabeçalho e o corpo da implementação devem começar com: class function.
+
+Class method é um método que opera sobre a classe e não sobre a instância dessa classe. Eles podem ser executados sem a necessidade se criar o objeto da classe.
+
+IS
+
+O operador is não tem mistérios, is é uma palavra chave e ele apenas testa se o tipo de referência do objeto é igual a uma referência de classe e ou de uma das suas classes derivadas. Mas, nas internas o operador is chama o método InheritsFrom do Objeto para saber o seu tipo correto. A dica do operador is é, ao testar o objeto com is não é necessário usar o operador as, neste caso, faça um type casting simples para conseguir um melhor desempenho.
+
+NIL
+
+É um valor do tipo Pointer especial (Pointer(0)). Seu valor numérico é 0 (Zero). O uso mais comum para NIL é marcar variáveis do tipo Pointer e métodos para um valor desconhecido. Um exemplo seria o manipulador de eventos, onde, podemos atribuir o mesmo para nil:
+
+Button1.OnClick := nil;
+
+Não fizemos nada de mais no exemplo acima, apenas “matamos” o endereço do método.
+
+Uma característica e curiosidade, o Delphi armazena um Array Dinâmico e String longa como um ponteiro nil.
+
+with
+
+O que with faz é apenas acrescentar uma referência de registro, Objeto, Classe e ou Interface ao escopo para resolver nomes de símbolo.
+
+Diferença entre TStrings e TStringList
+
+Já parou para pensar qual a real diferença entre TStrings e TStringList?
+
+R. Eu já ;-).
+
+Listas de Strings estão por toda a parte, na VCL, no Mar, no Ar e até mesmo em Marte! ;-). Brincadeiras a parte, elas estão por todo o lugar mesmo: Caixa de Listas, Controles de Edições, Controle de Menu, Listas de Strings, etc, etc. Apesar de serem fáceis de usar e bastante funcional, ela vitima muitos desenvolvedores com a seguinte pergunta:
+
+E agora? Uso TStrings ou TStringList? No fundo, qual a diferença entre elas?
+
+R.: A combinação de ambas!
+
+TStrings é uma classe que define todo o comportamento associado a lista de Strings. Entretanto, TStrings não tem qualquer método e/ou recursos para realmente manter a lista de Strings. Os descendentes de TStrings é que são responsáveis por isso, neste caso, TStringList. Ok, Ok.... então agora não necessito mais usar TStrings e apartir de agora só usarei TStringList! Certo?
+
+R.: Errado!
+
+Fazendo isso você perde um poderoso recurso da Classe TStrings, que é o recurso de cópia de uma Lista de String para outra Lista de String, usando o método Assign. Diante disso, você deve declarar a variável como TStrings e na criação da mesma, criar usando a referência de classe TStringList, já que TStringList é herdada de TStrings.
+
+Algo como:
+
+procedure TForm1.FormCreate(Sender: TObject);
+
+var
+
+  sStrings: TStrings;
+
+begin
+
+  sStrings := TStringList.Create;
+
+  {...}
+
+end;
+
+Um exemplo do que estou falando seria observar o comportamento da Classe TCustomRadioGroup (Extctrls.pas), onde, o campo de armazenamento interno FItems é declarado como TStrings, mas, ao observarmos o constructor do mesmo, podemos ver que FItems é atribuída a uma ocorrência de TStringList.
+
+A dica de TStrings x TStringList pode servir mais para os criadores de componentes!
+
+Diferença entre Objetos e Classes
+
+Um outro fato que eu vejo em alguns colegas, é a dúvida do que é uma Classe, Um Objeto e até mesmo um Componente?
+
+Classes
+
+Classes são (pelo menos pense assim) como um Super Registro, onde podemos declarar e descrever métodos, propriedades e campos. Quando declaramos uma classe em Delphi (como em quase toda linguagem de programação que conheço, seja: C#, C++, etc) definimos níveis diferentes de acesso aos “dados” contidos na classe, através de Private, Protected, Public, Published (ou até mesmo Automated). Uma classe (em Delphi) herda de outra classe, onde desta forma, herda todos os campos, métodos e propriedades. Se não declaramos uma classe ancestral o Delphi automaticamente coloca TObject como sendo a classe ancestral.
+
+Quando cito e falo em Referências de Classes (citado algumas vezes nesse artigo) ela é na realidade uma expressão que denomina uma classe específica. Referências de Classes são ponteiros para a tabela de informações de tempo de execução (VMT). Quando testamos uma classe com o operador is (explicado acima) você está testando a referência de classe. Classes são sempre apenas para leitura e residem na memória de Leitura.
+
+Objetos
+
+Um objeto é a instância dinâmica de uma classe. É no objeto é que podemos “escrever” e executar operações, isto é, Objetos não são apenas para Leitura conforme a Classe. Você cria o objeto usando a referência da classe, chamando o seu constructor. Exemplo:
+
+oObjeto := TMinhaClasse.Create;
+
+Já a referência de Objeto é o trecho de memória onde o Delphi armazena os valores para todos os campos do Objeto, a referência de objeto é um ponteiro para o objeto. Quando criamos um Objeto dinamicamente, somos os responsáveis por liberar tal objeto, usando:
+
+oObjeto.Free;
+
+sempre envolto num bloco try...finally...end; o Delphi não possui coleta de Lixo automática (Garbage Collector) como acontece no .NET, JAVA, SmallTalk, etc.
+
+Componentes
+
+Explicar o que é um componente é o mais simples. Componente é tudo aquilo (se falando em Delphi, esqueça o COM - Component Object Model) que você pode manipular num formulário Delphi. Todo componente tem que obrigatoriamente herdar da Classe TComponent no seu mais alto nível ancestral.
+
+Conclusão
+
+A intenção do artigo era apresentar algumas palavras usadas no dia a dia do Delphi do qual não tínhamos certeza de onde as mesmas vinham e como se comportavam. Espero ter esclarecido algumas dúvidas e estou aberto à sugestão e/ou troca de idéias.
+
+Sucesso e Saúde a todos!
+
+Um Abraço.
+
+Sobre o Autor
+Anderson Haertel Rodrigues - aka AHR
+Autor do Livro: Sistemas Multicamadas com Delphi - dbExpress e DataSnap 
+Editora Visual Books -www.visualbooks.com.br
+anderson.hr@bol.com.br - anderson.hr@zipmail.com.br.
+Florianópolis - Santa Catarina - Brasil.

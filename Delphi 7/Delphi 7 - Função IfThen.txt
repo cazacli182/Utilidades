@@ -1,0 +1,10 @@
+Exemplo de uso:
+
+  ShowMessage(IfThen(1 = 1,'1','2'));
+
+Resumo:
+  Se 1 é igual a 1, retorne 1, senão 2.
+
+
+Também posso criar uma função IIF, caso necessário! 
+

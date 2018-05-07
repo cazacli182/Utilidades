@@ -1,0 +1,5 @@
+Find Error is only available when the application is running (and paused).
+Start your app, go to Run -> Program Pause
+Then Find Error will be available. 
+
+Please note that you'll only end up on the right address if the executable you are running from IDE is exactly the same is the executable which gave the original error!

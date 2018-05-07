@@ -1,0 +1,18 @@
+Kilobyte to Megabyte Conversion Example
+
+Task: Convert 3,000 Kilobytes to Megabytes (show work)
+Formula:
+Kilobytes ÷ 1,024 = Megabytes
+Calculations:
+3,000 Kilobytes ÷ 1,024 = 2.9296875 Megabytes
+Result:
+3,000 Kilobytes is equal to 2.9296875 Megabytes
+Megabyte to Kilobyte Conversion Example
+
+Task: Convert 25 Megabytes to Kilobytes (show work)
+Formula:
+Megabytes x 1,024 = Kilobytes
+Calculations:
+25 Megabytes x 1,024 = 25,600 Kilobytes
+Result:
+25 Megabytes is equal to 25,600 Kilobytes

@@ -1,0 +1,10 @@
+Uso na unit SaConv nos processos de gravação de qualquer coisa,
+por exemplo no CadastraProcessoTRec, CadastraTramitacaoTRec...
+
+      x:=1;
+      Fa.QCadPro.Connection.StartTransaction;
+
+      Fa.QCadPro.ExecSQL;
+
+      if x = 1 then
+        fa.QCadPro.Connection.Commit;

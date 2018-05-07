@@ -1,0 +1,7 @@
+Mudar tempo do hintCódigo
+
+//no evento on create do form coloque
+//o tempo é em milesimo de segundo
+
+Application.HintPause     := 1000;  //um segundo pra mostrar o hint
+Application.HintHidePause := 10000; //mostra durante cinco segundos

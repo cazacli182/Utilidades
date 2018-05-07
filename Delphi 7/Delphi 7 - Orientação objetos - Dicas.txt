@@ -1,0 +1,255 @@
+Boas práticas de programação em Delphi #6 – Diretivas de binding
+Publicado em 27 de fevereiro de 2014 por Breno Martinusso
+O Delphi nos possibilita tratar métodos com uma série de diretivas de amarrações (binding).
+
+dynamic Permite que um método possa ser substituído em classes derivadas
+virtual Permite que um método possa ser substituído em classes derivadas
+abstract Define um método para ser implementado apenas nas classes derivadas
+override Define um método como substituto a um método virtual ou dinâmico da classe pai
+reintroduce Reintroduz os métodos virtuais declarados na superclasse
+overload Permite que dois ou mais métodos tenham o mesmo nome
+override
+
+A diretiva override define um método como substituto do mesmo método declarado em uma classe pai.
+
+Importante: Os métodos só podem ser redeclarados usando a diretiva override se forem derivados de métodos virtuais (virtual) ou dinâmicos (dynamic). Caso contrário, será gerado um erro em tempo de compilação:
+
+[DCC Error] Cannot override a non-virtual method
+
+Veremos mais detalhes do seu uso.
+
+dynamic e virtual
+
+As diretivas virtual e dynamic são semanticamente equivalentes. A diferença é que a diretiva virtual otimiza a velocidade e a diretiva dynamic o uso da memória.
+
+Essas diretivas permitem que um método possa ser substituído (usando a diretiva override) numa classe derivada.
+
+  TClassePai = class
+  public
+    procedure FazAlgo(); virtual;
+  end;
+ 
+  TClasseFilho = class(TClassePai)
+  public
+    procedure FazAlgo(); override;
+  end;
+ 
+implementation
+ 
+{ TClassePai }
+ 
+procedure TClassePai.FazAlgo;
+begin
+  // faz algo na classe Pai
+end;
+ 
+{ TClasseFilho }
+ 
+procedure TClasseFilho.FazAlgo;
+begin
+  // faz algo na classe Filho
+end;
+abstract
+
+A diretiva abstract define um método (obrigatoriamente virtual ou dynamic) que não possui implementação na classe onde foi declarado, delegando sua implementação em todas as classes derivadas.
+
+  TClassePai = class
+  public
+    procedure FazAlgo(); virtual; abstract;
+  end;
+ 
+  TClasseFilho = class(TClassePai)
+  public
+    procedure FazAlgo(); override;
+  end;
+ 
+implementation
+ 
+{ TClasseFilho }
+ 
+procedure TClasseFilho.FazAlgo;
+begin
+  // faz algo
+end;
+Importante: Métodos usando a diretiva abstract devem ser virtual ou dynamic. Caso contrário, será gerado um erro em tempo de compilação:
+
+[DCC Error] Abstract methods must be virtual or dynamic
+
+reintroduce
+
+A diretiva reintroduce oculta as mensagens do compilador sobre os métodos virtuais declarados na superclasse. Uma diferença significativa entre as diretivas override e reintroduce é que o reintroduce permite declarar um método com mesmo nome da superclasse com parâmetros diferentes.
+
+  TClassePai = class
+  public
+    procedure FazAlgo(); virtual;
+  end;
+ 
+  TClasseFilho = class(TClassePai)
+  public
+    procedure FazAlgo(const S: string); reintroduce;
+  end;
+ 
+implementation
+ 
+{ TClassePai }
+ 
+procedure TClassePai.FazAlgo;
+begin
+  // faz algo na classe Pai
+end;
+ 
+{ TClasseFilho }
+ 
+procedure TClasseFilho.FazAlgo(const S: string);
+begin
+  // faz algo na classe Filho
+end;
+overload
+
+A diretiva overload permite a sobrecarga de métodos. Com ele é possível declarar métodos de mesmo nome, desde que tenham parâmetros diferentes.
+
+  TClasse = class
+  public
+    procedure FazAlgo(); overload;
+    procedure FazAlgo(const S: string); overload;
+  end;
+Importante: Você deve codificar a diretiva de sobrecarga overload antes de quaisquer outras.
+
+
+
+
+
+*************************************************************************
+/////////////////////////////////////////////////////////////////////////
+*************************************************************************
+
+
+
+Override é uma palavra usada p/ o compilador entender que vc esta querendo sobreescrever um método(ou função ou procedure) por outro.
+
+tipo
+
+vc declara na classe pai
+function teste()...
+
+ae na filha vc quer sobre escrever ela, como vc faz?
+redeclara ela indicando na frente esta palavrinha ´feia´ rs...
+ae o compilador vai analizar e ver q por herança vc tem a função declarada na pai + vc esta escolhendo sobreescrever ela por esta nova.!! blz?
+
+******************************************************
+A diretiva Virtual permite que um método de uma classe seja Overrided, ou seja, substituído por um método de mesmo nome em uma subclasse, ou classe derivada.
+
+Quando você quiser que outro programador possa reprogramar uma função de uma classe que você desenvolveu, você marca a função ou procedimento como Virtual. 
+
+A diretiva Virtual pode ser seguida pela diretiva Abstract, o que irá modificar o efeito da diretiva Virtual, pois significará que o método não será implementado na classe atual, mas só nas suas subclasses (ou classes derivadas).
+
+Já a diretiva Override significa exatamente que você está sobrescrevendo o método original de mesmo nome da classe pai.
+
+Você pode, por exemplo, querer substituir o construtor da sua classe para inserir novas operações ou modificar algumas coisas ao passo que o objeto é instanciado. Lembrando que, se você usou a diretiva Abstract, você é obrigado a usar Override nas classes ´filhas´.
+
+Um exemplo em código de tudo isso:
+
+interface
+ 
+uses
+  Forms, Dialogs, Classes, Controls, StdCtrls, SysUtils;
+ 
+type
+  // Definir uma classe base TPolígono:
+  // Esta classe será um triângulo se tiver 3 lados, um quadrilátero
+  // se tiver 4, assim por diante.
+ 
+  TPoligono = class
+  private
+    sideCount  : Integer;  // Quantos lados?
+    sideLength : Integer;  // Qual o comprimento do lado?
+    shapeArea  : Double;   // Area do poligono
+  protected
+     procedure setArea; Virtual; Abstract;  // So sera implementado no herdado
+    property count  : Integer read sideCount;
+    property length : Integer read sideLength;
+    property area   : Double  read shapeArea;
+    constructor Create(sides, length : Integer);
+  end;
+ 
+  // Definir os descendentes: triangulo e quadrilatero.
+  TTriangulo = class(TPoligono)
+  protected
+    procedure setArea; override;   // Substituindo o metodo em abstract
+  end;
+ 
+  TQuadrilatero = class(TPoligono)
+  protected
+    procedure setArea; override;   // Substituindo o metodo em abstract
+  end;
+ 
+  // Define the form class used by this unit
+  TForm1 = class(TForm)
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+ 
+var
+  Form1: TForm1;
+ 
+implementation
+{$R *.dfm} 
+ 
+// Criando o objeto TPoligono
+constructor TPoligono.Create(sides, length : Integer);
+begin
+  // Guardar o numero e tamanho dos lados
+  sideCount := sides;
+  sideLength := length;
+ 
+  // Calcular a area chamando o metodo setArea :
+  // Essa chamada só será feita por uma subclasse.
+  setArea;
+end;
+ 
+// Implementar o metodo abstrato setArea para o triangulo.
+procedure TTriangulo.setArea;
+begin
+  // Calcular e salvar a area do triangulo
+  shapeArea := (sideLength * sideLength) / 2;
+end;
+ 
+// Implementar o metodo abstrato setArea para o quadrilátero.
+procedure TQuadrilatero.setArea;
+begin
+  // Calcular e salvar a area do quadrilatero
+  shapeArea := sideLength * sideLength;
+end;
+ 
+// Código principal
+procedure TForm1.FormCreate(Sender: TObject);
+var
+  triangulo : TTriangulo;
+  quadrado : TQuadrilatero;
+begin
+  // Criando o triangulo e o quadrilatero
+  triangulo := TTriangulo.Create(3, 10);
+  quadrado := TQuadrilatero.Create(4, 10);
+ 
+  // Mostrar a área dos polígonos:
+  ShowMessageFmt(´Área do triângulo = ¬f´,[triangulo.area]);
+  ShowMessageFmt(´Square   area = ¬f´,[quadrado.area]);
+end;
+ 
+end.
+
+
+*********************************************************************
+Não confunda o override com o overload (eu apanhei demais disso no ínicio). No caso do overload, você usa para marcar funções ou procedimentos que tenham nomes iguais mas parâmetros diferentes, ex:
+
+Procedure Teste(X : String); overload;
+Procedure Texte(X : Integer); overload;
+
+No caso o compilador distingue uma da outra pelos parâmetros e você não sobrescreve a função ou procedimento, já que apesar do mesmo nome elas são diferentes.
+
+Espero ter ajudado,
+Barcelos
+osbarcelos@hotmail.com

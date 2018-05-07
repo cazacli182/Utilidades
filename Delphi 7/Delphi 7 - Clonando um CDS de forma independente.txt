@@ -1,0 +1,10 @@
+    ### - Dica do Rubens - ### - Clono o que tenho no CDSArquivo no CDSGenerico2 utilizando um método onde eu posso manipular o CDSGenerico2 sem 
+   influenciar no conteúdo do CDSArquivo. Caso eu precise deletar algo do CDSGenerico2 eu consigo sem afetar o CDSArquivo...}
+  
+    {Clone do CDSArquivo. Esta clonagem traz as informações ordenadas por: REQUEST, CADASTRO, }
+    //CDSGenerico3.Data := CDSArquivo.Data;      
+    //CDSGenerico3.IndexFieldNames := 'REQUEST; CADASTRO';  
+
+
+
+   

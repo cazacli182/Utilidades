@@ -1,0 +1,25 @@
+var
+F : TextFile;
+sText: string;
+begin
+AssignFile(F, 'c:\file.txt');
+Reset(F);
+Readln(F, sText);
+CloseFile(F);
+end;[/DELPHI]
+
+********************************************************************
+Try:
+
+[DELPHI].................................................. .........
+var
+sText : String;
+oFile : TStringlist;
+begin
+oFile := TStringlist.Create.
+oFile.LoadFromFile('c:\file.txt');
+
+sText := oFile.Text;
+
+oFileFree;
+end;[/DELPHI]

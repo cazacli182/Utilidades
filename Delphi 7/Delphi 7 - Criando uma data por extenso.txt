@@ -1,0 +1,39 @@
+function TfrmTelaPrincipal.DataPorExtenso(dt: TDateTime): string;
+var
+    Semana: array [1..7] of string;
+    Mes: array [1..12] of string;
+    D, M, A: Word;
+
+begin
+  Semana[1] := 'Domingo';
+  Semana[2] := 'Segunda';
+  Semana[3] := 'Terça';
+  Semana[4] := 'Quarta';
+  Semana[5] := 'Quinta';
+  Semana[6] := 'Sexta';
+  Semana[7] := 'Sábado';
+
+  Mes[1] := 'Janeiro';
+  Mes[2] := 'Fevereiro';
+  Mes[3] := 'Março';
+  Mes[4] := 'Abril';
+  Mes[5] := 'Maio';
+  Mes[6] := 'Junho';
+  Mes[7] := 'Julho';
+  Mes[8] := 'Agosto';
+  Mes[9] := 'Setembro';
+  Mes[10] := 'Outubro';
+  Mes[11] := 'Novembro';
+  Mes[12] := 'Dezembro';
+
+  DecodeDate(dt, A, M, D);
+  result := Semana[ DayOfWeek(dt) ] + ', ' +
+            IntToStr(D) + ' de ' +
+            Mes[M] + ' de ' +
+            IntToStr(A);
+end;
+
+
+depois de criar a função basta usar a mesma passando uma variável que contenha a data...
+
+DataPorExtenso(date);

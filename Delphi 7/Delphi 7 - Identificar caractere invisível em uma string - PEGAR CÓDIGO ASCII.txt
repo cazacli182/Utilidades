@@ -1,0 +1,12 @@
+by CMA
+A string 'EMBRASIL EMPRESA BRASILEIRA DE SEGURANCA LTDA ' está vindo com um espaço no fim. 
+Porém não é um espaço, e sim o caractere cujo código ascii é 160. O interessante é que este
+caractere é "invisível", então um stringreplace procurando vazio não funciona. Para descobrir
+qual é o código ascii do caractere basta ir na variável que contém a informação, CTRL + F7 e pesquisar
+pela posição da mesma, que no caso é a 46!
+
+ord(snomeclienteprincipal [46])  ==> a posição 46 seria desse vazio indetectável!!!
+
+O resultado é o código 160!!!
+
+Procurando no GExperts seu código ascii descobri que é um caractere invisível...

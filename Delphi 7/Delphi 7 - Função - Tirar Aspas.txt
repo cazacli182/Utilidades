@@ -1,0 +1,10 @@
+function TFormIni.TiraAspa(Str:String):String;
+var
+  I : Integer;
+begin
+  Result:='';
+  for I:=1 to Length(Str) do
+  begin
+    if Str[I] <> Char(39) then Result:=Result+Str[I];
+  end;
+end;

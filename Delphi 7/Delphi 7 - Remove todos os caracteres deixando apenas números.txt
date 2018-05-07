@@ -1,0 +1,26 @@
+Remove caracteres de uma string deixando apenas números. Lembre-se de converter a string num número, inteiro, por exemplo.
+
+function SoNumeros(Const Texto:String):String;
+//
+// Remove caracteres de uma string deixando apenas numeros
+//
+var
+I: integer;
+S: string;
+begin
+S := '';
+for I := 1 To Length(Texto) Do
+begin
+if (Texto[I] in ['0'..'9']) then
+begin
+S := S + Copy(Texto, I, 1);
+end;
+end;
+result := S;
+end;
+
+Assim você pode evitar erros ao converter ou manipular dados, além de poder alertar o usuário.
+
+Marcos Elias
+Códigos fornecidos por Mep Sites
+http://www.mepsites.cjb.net

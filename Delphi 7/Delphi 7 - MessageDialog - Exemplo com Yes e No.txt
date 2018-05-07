@@ -1,0 +1,6 @@
+if MessageDlg('Deseja excluir o registro',mtConfirmation,[mbYes,mbNo],0) = IdYes then
+    begin
+      Q.Delete;
+      if Q.CachedUpdates then Q.ApplyUpdates;
+      Result:=True;
+    end;

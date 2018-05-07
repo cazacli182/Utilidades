@@ -1,0 +1,9 @@
+  function StrIsInteger(const S: string): boolean;
+  begin
+    try
+      StrToInt(S);
+      Result := true;
+    except
+      Result := false;
+    end;
+  end;

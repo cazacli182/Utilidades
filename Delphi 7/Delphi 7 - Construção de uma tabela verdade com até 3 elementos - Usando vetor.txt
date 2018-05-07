@@ -1,0 +1,96 @@
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  L,
+  C,
+  I,
+  divisor,
+  Metade,
+  contador,
+  MudarACada,
+  QtdElementos: Integer;
+
+  anterior: String;
+
+  {Criar uma estrutura de matriz que será dinamica, ou seja, não terá valor definido...}
+  MatrizDinamica: array of array of String;
+
+begin
+  {Descobrir o número de Linhas e de Colunas. O número de linhas é referente à 2 elevado ao número de elementos.
+   Por exemplo: Se são 2 elementos então: 2^2 ==> 4 linhas e 2 colunas.
+                0 0
+                0 1
+                1 0
+                1 1
+
+                Se são 4 elementos então: 2^3 ==> 8 linhas e 3 colunas.
+                0 0 0
+                0 0 1
+                0 1 0
+                0 1 1
+                1 0 0
+                1 0 1
+                1 1 0
+                1 1 1
+
+                E assim por diante...
+   }
+  divisor      := 2;
+  QtdElementos := 0; {Para ir incrementando no loop}
+  L            := Trunc(IntPower(2, StrToInt(edtNumElementos.Text)));  {IntPower faz x elevado a y}
+  C            := StrToInt(edtNumElementos.Text);
+
+  //SetLength(MatrizDinamica, L, 1);
+  //MatrizDinamica[0,0] := '0';
+  //MatrizDinamica[1,0] := '0';
+  //MatrizDinamica[2,0] := '0';
+  //MatrizDinamica[3,0] := '1';
+
+  {Criei o tamanho da matriz conforme o número de linhas e de colunas}
+  SetLength(MatrizDinamica, L, C);
+
+  {Exemplo de preenchimento e exibição do conteúdo de uma posição da Matriz}
+  //MatrizDinamica[0,0] := '0';
+  //MatrizDinamica[0,1] := '0';
+  //MatrizDinamica[1,0] := '0';
+  //MatrizDinamica[1,1] := '1';
+  //MatrizDinamica[2,0] := '1';
+  //MatrizDinamica[2,1] := '0';
+  //MatrizDinamica[3,0] := '1';
+  //MatrizDinamica[3,1] := '1';
+
+  {Dependendo do número da coluna do loop, preciso encontrar o "meio" da tabela. Se for a primeira coluna divide-se por 2. Se
+   existir uma segunda coluna a divisão será por 4, se existir uma terceira coluna a divisão será por 8 e assim por diante. Assim
+   eu encontro o número de repetições de 0 e 1 que ocorrerão.}
+  Metade     := Trunc(L/divisor);
+  MudarACada := Metade;
+  contador   := 0;
+  anterior   := '0';
+
+  {Enquanto não acabarem as colunas faça:}
+  while QtdElementos <> C do
+  begin
+    contador := 0;
+    anterior := '0';
+    for i := 0 to L-1 do
+    begin
+      if contador < MudarACada then
+        MatrizDinamica[i, QtdElementos] := anterior
+      else
+      begin
+        contador := 0;
+        if anterior = '0' then anterior := '1' else anterior := '0';
+        MatrizDinamica[i, QtdElementos] := anterior;
+      end;
+      contador := contador + 1;
+    end;
+
+    {Pulo para a próxima coluna e recalculo o MudarACada}
+    QtdElementos := QtdElementos + 1;
+    MudarACada   := Trunc(Metade / 2); //Trunc(L / (divisor * 2));  {deverá virar 4!!!}
+    Metade := MudarACada;
+    divisor := divisor + 2;
+  end;
+
+  {Destrói a Matriz...}
+  Finalize(MatrizDinamica);
+end;

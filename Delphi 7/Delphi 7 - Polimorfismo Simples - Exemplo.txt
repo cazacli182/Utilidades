@@ -1,0 +1,70 @@
+unit uCalculadora;
+
+interface
+
+uses SysUtils;
+
+type
+TCalculadora = class
+public
+  function Calcular (ValueA, ValueB:Real): Real; virtual; abstract;
+end;
+
+TMultiplicar = class(TCalculadora)
+public
+function Calcular (ValueA, ValueB:Real): Real; override;
+end;
+
+TSomar = class(TCalculadora)
+public
+function Calcular (ValueA, ValueB:Real): Real; override;
+end;
+
+TSubtrair = class(TCalculadora)
+public
+function Calcular (ValueA, ValueB:Real): Real; override;
+end;
+
+TDividir = class(TCalculadora)
+public
+function Calcular (ValueA, ValueB:Real): Real; override;
+end;
+
+implementation
+
+{ TMultiplicar }
+
+function TMultiplicar.Calcular(ValueA, ValueB: Real): Real;
+begin
+Result := ValueA * ValueB;
+end;
+
+{ TSomar }
+
+function TSomar.Calcular(ValueA, ValueB: Real): Real;
+begin
+Result := ValueA + ValueB;
+end;
+
+{ TSubtrair }
+
+function TSubtrair.Calcular(ValueA, ValueB: Real): Real;
+begin
+Result := ValueA - ValueB;
+end;
+
+{ TDividir }
+
+function TDividir.Calcular(ValueA, ValueB: Real): Real;
+begin
+try
+Result := ValueA / ValueB;
+except on E: Exception do
+begin
+if Pos('BY ZERO', UpperCase(E.Message)) > 0 then
+Raise Exception.Create('Não é permitido divisão por zero.');
+end;
+end;
+end;
+
+end.

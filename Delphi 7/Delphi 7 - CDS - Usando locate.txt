@@ -1,0 +1,10 @@
+O locate localiza a posição do que foi procurado em um cds. Ele não retorna o valor, apenas pesquisa se existe. 
+Com o código abaixo o locate acha o que procurei e através do fieldbyname eu pego o conteúdo do posicionamento do locate.
+
+
+                    if dmCLI.QAPensosAux.FieldByName('NOME_COMARCA').AsString <> '' then
+                      { Deixando de usar o GetDePara e passando a usar o Locate em um CDS que já contém os dados dos juízos que foram
+                        cadastrados previamente no CPJ. Esta alteração evita constantes selects no banco de dados pois já está tudo em memória.
+                        Juizo    := Conv.GetDePara(NomeBanco, dmCLI.QAPensosAux.FieldByName('cod_comarca').AsString,'comarca',False);}
+                      if FCDSJuizo.Locate('cod_juizoAPJ', dmCli.QAPensosAux.FieldByName('cod_comarca').AsString, [loCaseInsensitive]) then
+                        Juizo := FCDSJuizo.FieldByname('cod_juizoCPJ').AsString;

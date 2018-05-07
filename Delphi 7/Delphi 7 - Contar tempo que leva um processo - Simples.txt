@@ -1,0 +1,9 @@
+Contar tempo de um procedimento
+
+var
+Tempo: Integer;
+begin
+Tempo := GetTickCount;
+// procedimento...
+Showmessage(IntToStr(GetTickCount - Tempo));
+end. 

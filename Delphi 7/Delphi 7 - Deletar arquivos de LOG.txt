@@ -1,0 +1,6 @@
+  deletefile(ExtractFilePath(ParamStr(0))+'MIGLOG_busca.LOG');
+  deletefile(ExtractFilePath(ParamStr(0))+'MIGLOG_bv.LOG');
+  deletefile(ExtractFilePath(ParamStr(0))+'MIGLOG_credifibra.LOG');
+  deletefile(ExtractFilePath(ParamStr(0))+'MIGLOG_demaisclientes.LOG');
+  deletefile(ExtractFilePath(ParamStr(0))+'MIGLOG_reccredito.LOG');
+  deletefile(ExtractFilePath(ParamStr(0))+'MIGLOG_trabalhista.LOG');

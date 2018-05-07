@@ -1,0 +1,6 @@
+Quando um form começa a ser exibido atrás de 
+outras telas, existe uma forma de contornar isto usando:
+
+Form1.FormStyle := fsStayOnTop;
+
+Esta propriedade pode ser definida também no object inspector.

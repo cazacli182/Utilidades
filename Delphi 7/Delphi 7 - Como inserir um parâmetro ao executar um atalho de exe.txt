@@ -1,0 +1,17 @@
+Colocar no código fonte:
+  if ParamStr(1) = '/S' then
+  begin
+    ShowMessage('Leu parâmetro');
+  end
+  else
+  begin
+    ShowMessage('Não leu parâmetro');
+    halt(0);
+  end;
+
+
+
+Criar um atalho do executável, ir em propriedades e colocar o 
+parâmetro após o final do destino do executável: (inserido o /S)
+
+"E:\...\ArqDoc.exe" /S

@@ -1,0 +1,42 @@
+Formatando a visualização do tamanho de um arquivo
+Fonte: www.activedelphi.com.br
+
+Quando se trabalha com arquivos no Delphi pode ser necessário exibir o tamanho de um arquivo, como é feito no Explorer, onde o valor não é mostrado em bytes, mas sim de acordo com o seu tamanho atual. Para a maioria, "45.678.123 Bytes" é confuso, mas "43,56 MB" não!
+A seguir, temos uma função chamada FormatByteSize, que converte um valor em bytes para uma String que representa o número expressado em Bytes, Kilobytes Megabytes ou Gigabytes, dependendo do seu tamanho:
+
+//Formata o tamanho de um arquivo
+function FormatByteSize(const bytes: Longint): string;
+const
+  B = 1; //byte
+  KB = 1024 * B; //kilobyte
+  MB = 1024 * KB; //megabyte
+  GB = 1024 * MB; //gigabyte
+begin
+  if bytes > GB then
+    result := FormatFloat('#.## GB', bytes / GB)
+  else
+    if bytes > MB then
+      result := FormatFloat('#.## MB', bytes / MB)
+    else
+      if bytes > KB then
+        result := FormatFloat('#.## KB', bytes / KB)
+      else
+        result := FormatFloat('#.## bytes', bytes) ;
+end;
+Para usá-la, basta fazer no evento onClick de um button, por exemplo:
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  TamanhoEmBytes: Longint;
+begin
+  with TFileStream.Create(
+    'C:\Windows\System32\calc.exe',
+    fmOpenRead or fmShareExclusive)
+  do try
+    TamanhoEmBytes := Size;
+  finally
+    Free;
+  end;
+ 
+  ShowMessage( FormatByteSize(TamanhoEmBytes) );
+end;

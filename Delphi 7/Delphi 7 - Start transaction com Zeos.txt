@@ -1,0 +1,9 @@
+try
+    CPJWDB.StartTransaction;
+
+
+    CPJWDB.Commit;
+
+  except
+    CPJWDB.Rollback;
+  end;

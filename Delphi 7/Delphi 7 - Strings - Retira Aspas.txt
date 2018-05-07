@@ -1,0 +1,22 @@
+function TiraAspas(Texto:String):String;
+var
+  i,
+  j: integer;
+begin
+  result:='';
+  if Texto='' then
+  begin
+    result:='';
+    exit;
+  end;
+  i:=0;
+  j:=Length(Texto);
+  result:='';
+  while i<j+1 do
+  begin
+    if Texto[i]='"' then
+      Texto[i]:=' ';
+    inc(i);
+  end;
+  result:=Texto;
+end;

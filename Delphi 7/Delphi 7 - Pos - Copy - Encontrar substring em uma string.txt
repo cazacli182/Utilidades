@@ -1,0 +1,2 @@
+if Pos('às', Aux) > 0 then
+    Aux := Copy(Aux, 1, Pos('às', Aux) -1);

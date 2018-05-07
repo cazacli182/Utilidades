@@ -1,0 +1,66 @@
+Fazer o programa de Migração chamar o programa de Arquivar Docs:
+
+No programa de Migração:
+- Em ucliente1 
+  - Em procedure TForm1.sbProcessaClick(Sender: TObject);
+    
+    1 - Criar a variável conforme abaixo:
+    var
+      sCaminho: String;
+
+    2 - Alterar o final do procedimento para:
+    //Showmessage('Migração Finalizada!');
+    lblEtapasMigracao.Caption := 'Migração Finalizada - (' + FormatDateTime('hh:nn:ss', Now) + ')';
+    Form1.Repaint;
+
+    {Chamar outra aplicação delphi...}
+    //WinExec('E:\Prog\Migracao\SQL Server\24219 - Nelson Wilians Advogados Associados\Arquivar_Doc_Mono_Tudo_Em_1_Procedimento_Otimizado\Exe\ArqDoc.exe', 0);
+    Porém para rodar no servidor desabilitar a linha acima e fazer um extractfilepath abaixo...
+    sCaminho := ExtractFilePath(Application.ExeName)+'\ArqDoc.exe';
+    WinExec(PChar(sCaminho), 0);
+
+
+No programa que arquiva Documentos:
+- Em CPJWLOG
+  - Colocar um componente Timer e deixar enabled = false;
+  - No evento ontimer colocar o código:
+    SpeedButton1.Click;
+    Timer1.Enabled := False;
+
+  - No FormShow colocar:
+    Timer1.Enabled := True;
+
+
+- Em CPJWINI
+  - Colocar um componente Timer e deixar enabled = false;
+  - No FormCreate colocar   Timer1.Enabled        := True;
+  - No evento ontimer colocar o código:
+    tbSIN.Click;
+    Timer1.Enabled := False;
+
+- Em ArqDocIni
+  - Colocar um componente Timer e deixar enabled = false;
+  - No evento FormCreate colocar   Timer1.Enabled := True;
+  - No evento ontimer colocar o código:
+    btnArquivarNW.Click;
+    Timer1.Enabled := False;
+
+  - No clique do botão btnArquivarNW colocar:
+    - Na primeira linha: 
+      {CAZ - Timer}
+      if Timer1.Enabled = True then Timer1.Enabled := False;
+
+      {CAZ - Timer}
+
+      {Avisa ao usuário sobre o tamanho da tabela documentos e se ele deseja continuar o processo sem utilizar intervalos de PKs}
+      //if ckbIntervaloDocumento.Checked = False then
+      //  PodeArquivar :=  Application.MessageBox('A tabela de documentos contém muitos registros. Tem certeza de que deseja continuar com o procedimento '+
+      //                                          'sem selecionar um intervalo de documentos?', 'Confirmação', MB_ICONQUESTION + MB_YESNO) = IDYES;
+      PodeArquivar := True;
+
+
+
+
+
+
+

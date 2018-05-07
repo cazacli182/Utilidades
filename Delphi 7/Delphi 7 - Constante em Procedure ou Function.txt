@@ -1,0 +1,10 @@
+procedure TForm1.Button1Click(Sender: TObject);
+
+  function X(idade: String; const Param2: String = 'Carlos'): String;
+  begin
+    Result := Idade + '-' + Param2;
+  end;
+
+begin
+  ShowMessage(X('32')); // ==> só passei a variável... a constante já está implícita.
+end;

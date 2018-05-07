@@ -1,0 +1,10 @@
+function SaConvFicha(Ficha:String):String;
+var
+  x:word;
+begin
+  for x:=1 to Length(Ficha) do
+    if Ficha[x]=' ' then
+      Delete(Ficha,x,1);
+  while Length(Ficha) < 6 do Ficha:='0'+Ficha;
+  SaConvFicha:=Ficha;
+end;

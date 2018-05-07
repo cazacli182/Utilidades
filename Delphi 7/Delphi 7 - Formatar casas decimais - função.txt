@@ -1,0 +1,32 @@
+{ *** função não testada... testar antes de usar ***
+
+  A função TxFloatToStrFmtSped abaixo arredonda um valor real e fixa o número de casas decimais.
+
+  Caso as casas decimais fixadas (à direita) sejam iguais à zero, o a função
+  deliberadamente elimina as casas, através da transformação do resultado em
+  numero real novamente (limpar mantissa infinita) formatando o número
+  somente com casas decimais significativas. Exemplos de uso:
+
+  TxFloatToStrFmtSped(20.60)           ==> '20,6'
+  TxFloatToStrFmtSped(20.98)           ==> '20,98'
+  TxFloatToStrFmtSped(19,700004, 2)    ==> '19,7'
+  TxFloatToStrFmtSped(19,000567, 2)    ==> '19'
+  TxFloatToStrFmtSped(14.719998)       ==> '14,72'
+  TxFloatToStrFmtSped(14.719998, 4)    ==> '14,7200'
+  TxFloatToStrFmtSped(14.714448, 3)    ==> '14,714'
+
+}
+
+
+function TxFloatToStrFmtSped(AValor: Real; ADecimais: Byte = 2): String;
+var
+  S, M: String;
+  R: Real;
+begin
+  M := '%0.' + Format('%d',[ADecimais]) + 'f'; { vai ficar em algo parecido com '%0.2f' };
+  S := Format(M, [AValor]);
+  R := StrToFloatDef(S, 0);
+  { vou aproveitar S porque não vou mais precisar do valor armazenado nele }
+  S := FloatToStr(R);
+  Result := S;
+end;

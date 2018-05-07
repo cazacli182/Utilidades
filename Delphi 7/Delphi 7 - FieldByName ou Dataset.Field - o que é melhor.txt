@@ -1,0 +1,122 @@
+Para aqueles que utilizam FieldByName.
+Fonte: www.activedelphi.com.br
+
+Isto é para ser mais um ponto de discussão entre nós, desenvolvedores Delphi.
+Sempre fui fã do FieldByName(). Sempre achei que o código ficava muito mais claro com expressões do tipo FieldByName('nome_do_campo').asAlgumaCoisa do que Fields[indice].asAlguma coisa...
+Há pouco tempo, em um projeto que estou trabalhando, um amigo do trabalho me pediu que evitasse a utilização de FieldByName e de imediato questionei o porquê de tal decisão. O mesmo me pediu para que eu desse uma olhada na implementação do FieldByName nos fontes da VCL do Delphi. Vou colar aqui função para vocês:
+function TDataSet.FieldByName(const FieldName: string): TField;
+begin
+  Result := FindField(FieldName);
+  if Result = nil then DatabaseErrorFmt(SFieldNotFound, [FieldName], Self);
+end;
+
+Bom, até agora nada. Mas vamos olhar como é implementado o método FindField: 
+function TDataSet.FindField(const FieldName: string): TField;
+begin
+  Result := FFields.FindField(FieldName);
+  if (Result = nil) and ObjectView then
+    Result := FieldList.Find(FieldName);
+  if Result = nil then
+    Result := FAggFields.FindField(FieldName);
+end;
+
+Até agora ainda não temos nada de concreto sobre o motivo da não utilização do FieldByName a mim solicitada. Sendo um pouco mais persistente, vamos ver o método FindField do objeto FFields que é do tipo TField: 
+function TFields.FindField(const FieldName: string): TField;
+var
+  I: Integer;
+  begin
+    for I := 0 to FList.Count - 1 do
+    begin
+      Result := FList.Items[I];
+      if AnsiCompareText(Result.FFieldName, FieldName) = 0 then Exit;
+    end;
+    Result := nil;
+end;
+
+Agora sim podemos concluir alguma coisa. Observando o código à cima, vamos pensar na seguinte situação. Imaginem que temos um dataset com 60 campos e temos na posição 60 um campo valorado com o qual precisamos fazer uma soma do tipo: 
+valor := 0;
+while not DataSet.Eof do
+  begin
+    Valor := valor + DataSet.FieldByName('campo_valorado').asCurrency;
+    DataSet.Next;
+end;
+
+Se tivermos neste DataSet 100000 registros, teremos que passar pela linha de código 
+
+... 
+Valor := valor + DataSet.FieldByName('campo_valorado').asCurrency;
+...
+
+100000 vezes. Um processamento rasoável. Mas e o FieldByName? Observem que na implementação do método FindField da classe TField é utilizado um for de 0 até o número de campos para se encontrar o campo desejado e assim retornar o valor. Sendo, o nosso campo desejado, o campo de número 60, cada chamada de FieldByName - em nosso caso - ocasionaria um processamento de uma repetição 60 vezes até que o campo seja encontrado. Agora vamos fazer uma conta simples: 
+
+100000 registros x 60 vezes (FieldByname) = 6000000 instruções processadas. 
+
+Poxa, chegamos a um valor alto né. 
+
+Mas qual a solução? Fields[60]? 
+
+Vamos ver a implementação da classe TFields para ver como o mesmo processa a instrução Fields[indice]: 
+TFields = class(TObject)
+private
+FList: TList;
+... 
+protected
+...
+function GetField(Index: Integer): TField;
+...
+public
+...
+property Fields[Index: Integer]: TField read GetField write SetField; default;
+end;
+
+Já podemos ver que Fields é uma property indexada. Opá, algo já nos mostra que isto pode ser mais rápido que a pesquisa com o for do método FieldByName mas vamos mais a fundo. Vamos dar uma olhadinha no método de acesso GetField: 
+if FSparseFields > 0 then
+begin
+  if Index >= FSparseFields then
+    DatabaseError(SListIndexError, DataSet);
+  Result := FList[0];
+  Result.FOffset := Index;
+end else
+  Result := FList[Index];
+
+Reparem quem em nosso caso, que apenas a linha Result := FList[Index]; será acionada utilizando um TList onde são armazenados os campos de um DataSet. E como será a implementação da propriedade que define os itens de um TList? 
+TList = class(TObject)
+private
+FList: PPointerList;
+...
+protected
+function Get(Index: Integer): Pointer;
+...
+public
+...
+property Items[Index: Integer]: Pointer read Get write Put; default;
+...
+end;
+
+Por fim chegamos ao método de acesso Get da property items da classe TList: 
+function TList.Get(Index: Integer): Pointer;
+begin
+  if (Index < 0) or (Index >= FCount) then
+    Error(@SListIndexError, Index);
+  Result := FList^[Index];
+end;
+
+Observem a diferença. Aqui se trabalha com Ponteiros para a localização do campo desejado. Sendo assim, o processamento desta instrução terá peso 1, mesmo que tenhamos 60 campos em nosso DataSet. Vamos voltar a conta que fizemos anteriormente:
+
+100000 registros x 1 vez (Fields[indice]) = 100000 instruções processadas. 
+
+Olha que diferença entre executar 6000000 de instruções e 100000. Por isto digo, dentro de Loops envolvendo um campo de um DataSet com vários campos, pensem bem se vale a pena utilizar 
+valor := 0;
+while not DataSet.Eof do
+begin
+  Valor := valor + DataSet.FieldByName('campo_valorado').asCurrency;
+  DataSet.Next;
+end;
+
+ou 
+valor := 0;
+while not DataSet.Eof do
+begin
+  Valor := valor + DataSet.Fields[60].asCurrency; //campo_valorado
+  DataSet.Next;
+end;

@@ -1,0 +1,316 @@
+Nunca utilizei o método abaixo, porém existem várias possibilidades interessantes.
+
+
+Trabalhando com Excel Código {
+Exemplo de como gerar um arquivo em excel formatado e pronto para a impressão.
+
+Peço a todos que lerem esta dica e que tem algo a acrescentar, por favor mande
+para o email que segue abaixo.
+
+
+Roberto
+rcdslf@gmail.com
+11/09/2008
+}
+
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+uses ComObj;
+
+{$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+Excel, Sheet : Variant;
+Nome         : String;
+begin
+//nome da planílha
+Nome  := 'Lacre';
+
+//cria a aplicação
+Excel := CreateOleObject('Excel.Application');
+
+//mostra a tabela
+Excel.Visible := true;
+
+//adiciona pasta de trabalho
+Excel.WorkBooks.Add;
+
+//deleta as planilhas que sobraram
+Excel.WorkBooks[1].Sheets[2].Delete;
+Excel.WorkBooks[1].Sheets[2].Delete;
+
+//planilha recebendo variável nome
+Excel.WorkBooks[1].WorkSheets[1].Name := Nome;
+
+//Repassando variável
+Sheet := Excel.WorkBooks[1].WorkSheets[Nome];
+
+(*----------------------------------------------------------------------------*)
+
+//Largura das colunas
+Sheet.Range['A1'].ColumnWidth    := 1;
+Sheet.Range['B1:D1'].ColumnWidth := 21.71;
+Sheet.Range['E1'].ColumnWidth    := 1;
+
+(*----------------------------------------------------------------------------*)
+
+//altura das células
+Sheet.Range['A1'].RowHeight  := 9;
+Sheet.Range['A2'].RowHeight  := 23.25;
+Sheet.Range['A3'].RowHeight  := 7.5;
+Sheet.Range['A4'].RowHeight  := 20.25;
+Sheet.Range['A5'].RowHeight  := 12;
+Sheet.Range['A6'].RowHeight  := 20.25;
+Sheet.Range['A7'].RowHeight  := 18;
+Sheet.Range['A8'].RowHeight  := 18;
+Sheet.Range['A9'].RowHeight  := 18;
+Sheet.Range['A10'].RowHeight := 9;
+
+(*----------------------------------------------------------------------------*)
+
+//Mesclando Células
+Sheet.Range['B2:D2'].MergeCells := true;
+Sheet.Range['B4:D4'].MergeCells := true;
+Sheet.Range['B6:D6'].MergeCells := true;
+
+(*----------------------------------------------------------------------------*)
+
+//Escrevendo nas células
+Sheet.Range['B2'] := 'Cliente: Roberto Fodão';
+Sheet.Range['B4'] := 'Material: 1,5 x 14mm';
+Sheet.Range['B6'] := 'Referência: 3665';
+Sheet.Range['B8'] := 'Para cortar tam.:';
+Sheet.Range['C8'] := 'Usar Ref.:';
+Sheet.Range['D8'] := 'Tam.:';
+Sheet.Range['B9'] := 145;
+Sheet.Range['C9'] := 4065;
+Sheet.Range['D9'] := 143;
+
+(*----------------------------------------------------------------------------*)
+
+//Formatando células escritas
+{Cliente}
+Sheet.Range['B2'].Font.Name      := 'Arial';
+Sheet.Range['B2'].Font.Bold      := true;
+Sheet.Range['B2'].Font.Underline := true;
+Sheet.Range['B2'].Font.Size      := 18;
+
+{Material}
+Sheet.Range['B4'].Font.Name := 'Arial';
+Sheet.Range['B4'].Font.Bold := true;
+Sheet.Range['B4'].Font.Size := 16;
+
+{Referência}
+Sheet.Range['B6'].Font.Name := 'Arial';
+Sheet.Range['B6'].Font.Bold := true;
+Sheet.Range['B6'].Font.Size := 16;
+
+{Para cortar tam / Usar ref / Tam}
+Sheet.Range['B8:D8'].Font.Name := 'Arial';
+Sheet.Range['B8:D8'].Font.Bold := true;
+Sheet.Range['B8:D8'].Font.Size := 14;
+
+{Itens}
+Sheet.Range['B9:D9'].Font.Name := 'Arial';
+Sheet.Range['B9:D9'].Font.Size := 14;
+
+(*----------------------------------------------------------------------------*)
+
+//Formatação Células contornos
+
+        (* ==== Espessura da linha ==== *)
+{
+        xlHairline = $00000001 - Super-Fino
+        xlMedium   = $FFFFEFD6 - Médio
+        xlThick    = $00000004 - Grosso
+        xlThin     = $00000002 - Padrão(Normal)
+}
+
+
+          (* ==== Tipos de Contornos ==== *)
+{
+          xlInsideHorizontal = $0000000C
+          xlInsideVertical   = $0000000B
+          xlDiagonalDown     = $00000005
+          xlDiagonalUp       = $00000006
+          xlEdgeBottom       = $00000009
+          xlEdgeLeft         = $00000007
+          xlEdgeRight        = $0000000A
+          xlEdgeTop          = $00000008
+}
+
+//linha na esq. espessura padrão
+Sheet.Range['A1:A10'].Borders.Item[$00000007].Weight  := $00000002;//externo
+Sheet.Range['B2:B9'].Borders.Item[$00000007].Weight   := $00000002;//interno
+
+//linha em baixo espessura padrão
+Sheet.Range['A10:E10'].Borders.Item[$00000009].Weight := $00000002;//externo
+Sheet.Range['B9:D9'].Borders.Item[$00000009].Weight   := $00000002;//interno
+
+//linha lado direito espessura padrão
+Sheet.Range['E1:E10'].Borders.Item[$0000000A].Weight  := $00000002;//externo
+Sheet.Range['D2:D9'].Borders.Item[$0000000A].Weight   := $00000002;//interno
+
+//linha em cima espessura padrão
+Sheet.Range['A1:E1'].Borders.Item[$00000008].Weight   := $00000002;//externo
+Sheet.Range['B2:D2'].Borders.Item[$00000008].Weight   := $00000002;//interno
+
+(*----------------------------------------------------------------------------*)
+
+//Alinhamento das células
+
+      (* ==== Tipos de Alinhamentos Verticais ==== *)
+{
+      Sheet.Range['B2'].VerticalAlignment := 1 - Top
+      Sheet.Range['B2'].VerticalAlignment := 2 - Center
+      Sheet.Range['B2'].VerticalAlignment := 3 - Bottom
+}
+
+{alinhamento vertical no centro}
+Sheet.Range['B2'].VerticalAlignment := 2;
+Sheet.Range['B4'].VerticalAlignment := 2;
+Sheet.Range['B6'].VerticalAlignment := 2;
+Sheet.Range['B8'].VerticalAlignment := 2;
+Sheet.Range['C8'].VerticalAlignment := 2;
+Sheet.Range['D8'].VerticalAlignment := 2;
+Sheet.Range['B9'].VerticalAlignment := 2;
+Sheet.Range['C9'].VerticalAlignment := 2;
+Sheet.Range['D9'].VerticalAlignment := 2;
+
+      (* ==== Tipos de Alinhamentos Horizontais ==== *)
+{
+      Sheet.Range['B2'].HorizontalAlignment := 3 - Center
+      Sheet.Range['B2'].HorizontalAlignment := 4 - Right
+
+}
+
+{alinhamento horizontal no centro}
+Sheet.Range['B2'].HorizontalAlignment := 3;
+Sheet.Range['B4'].HorizontalAlignment := 3;
+Sheet.Range['B6'].HorizontalAlignment := 3;
+Sheet.Range['B8'].HorizontalAlignment := 3;
+Sheet.Range['C8'].HorizontalAlignment := 3;
+Sheet.Range['D8'].HorizontalAlignment := 3;
+Sheet.Range['B9'].HorizontalAlignment := 3;
+Sheet.Range['C9'].HorizontalAlignment := 3;
+Sheet.Range['D9'].HorizontalAlignment := 3;
+
+(*----------------------------------------------------------------------------*)
+
+//Adicionando grade nas células
+
+    (* ==== Formatação de Tipos de linhas do contorno ===== *)
+{
+    LineStyle := 1 - Normal
+    LineStyle := 2 - Tracejado
+    LineStyle := 3 - Pontilhado
+    LineStyle := 4 - Seccionada Traço
+    LineStyle := 5 - Duplo Seccionada
+}
+
+    (* ==== Formatação da Espessura linha contorno ==== *)
+{
+     Weight := 1 - Super Fina
+     Weight := 2 - Fina
+      Weight := 3 - Média
+      Weight := 4 - Grossa
+}
+
+        (* ==== Formatação Cor da linha contorno ==== *)
+{
+         ColorIndex := 1 - Preto
+         ColorIndex := 2 - Branco
+         ColorIndex := 3 - Vermelho
+         ColorIndex := 4 - Verde Claro
+         ColorIndex := 5 - Azul
+         ColorIndex := 6 - Amarelo
+         ...
+         ColorIndex := 56 - Cinza Escuro
+}
+
+Sheet.Range['B8:D9'].Borders.LineStyle  := 1;//Estilo da linha: Normal
+Sheet.Range['B8:D9'].Borders.Weight     := 2;//espessura da linha: Fina
+Sheet.Range['B8:D9'].Borders.ColorIndex := 1;//Cor da linha: Preto
+
+(*----------------------------------------------------------------------------*)
+{
+- Adicionar figura
+Esta dica pode ser meio inconviniente pois ela não direciona um lugar específico
+para a colocação da imagem, mas nm por isso deixa de ser importante.
+
+  Sheet.Pictures.Insert('lugar_onde_se_encontra_a_figura');
+
+
+- Adicionar um Replace
+Serve como um find / replace, ele procura e substiui a string por outra q deseja.
+Ele subtitiu apenas o conteúdo q vc deseja o restante da string não muda.
+
+  Sheet.Range['A1:Z70'].Replace('Tam.:', 'Num.:');
+                ||                    ||
+Onde:     local da pesquisa / ('Texto_Procurado', 'Subtituir_Por')
+}
+(*----------------------------------------------------------------------------*)
+
+(* ==== A configuração da folha deve vir antes do preview da folha === *)
+
+//Configuração da folha
+Sheet.PageSetup.BottomMargin := 10;
+Sheet.PageSetup.LeftMargin   := 10;
+Sheet.PageSetup.RightMArgin  := 10;
+Sheet.PageSetup.TopMargin    := 10;
+
+
+//Marcação da página no rodapé
+Sheet.PageSetup.CenterFooter := '&P';
+
+//Alinhamento centralizado do conteúdo na horizontal
+Sheet.PageSetup.CenterHorizontally := true;
+
+//Alinhamento centralizado do conteúdo na horizontal
+Sheet.PageSetup.CenterVertically := true;
+
+{Para salvar existem duas opções:
+ - Se for salvar a aplicação totalmente criada:
+    Sheet.SaveAs('destino_onde_quer_salvar');
+
+ - Se for salvar uma aplicação que foi criada a partir de um arquivo aberto
+    Sheet.Save;}
+
+
+//Print Preview
+Sheet.Range['A1:E10'].PrintPreview;
+
+{Para imprimir na impressora padrão do seu computador
+  Sheet.PrintOut;
+}
+
+(*----------------------------------------------------------------------------*)
+
+
+Sheet := Unassigned; //liberar da memória
+
+end;
+
+end.

@@ -1,0 +1,57 @@
+procedure RemoveNull (var str : string);
+var
+  n : integer;
+begin
+n := 1;
+while n <= Length(str) do begin
+  if str[n] = #0 then begin
+    Delete(str, n, 1);
+    Continue;
+  end;
+  inc(n);
+end;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+var
+  s : string;
+begin
+s := 'one'#0'two'#0'three';
+//s := StringReplace(s, #0, '', [rfReplaceAll]); // doesn't work >>>>>> NÃO FUNCIONA STRING REP.
+RemoveNull(s); // works fine
+ShowMessage(s);
+end;
+
+
+
+
+
+
+
+OU UTILIZAR A MESMA ESTRUTURA SÓ QUE TRANSFORMADA PRA FUNCTION: MELHOR OPÇÃO!!!!
+
+  function RemoveNull (var str : string): String;
+  var
+    n : integer;
+  begin
+    n := 1;
+    while n <= Length(str) do
+    begin
+      if str[n] = #0 then
+      begin
+        Delete(str, n, 1);
+        Continue;
+      end;
+      inc(n);
+    end;
+    Result := str;
+  end;
+
+
+
+
+
+
+OU utilizar a dica do Gerson
+
+Função FONETIZA, porém ela talvez altere acentuação também!!!

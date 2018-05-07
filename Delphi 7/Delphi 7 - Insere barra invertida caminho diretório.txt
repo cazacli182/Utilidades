@@ -1,0 +1,11 @@
+function BarraInvert(value:string):string;
+begin
+ if (value[length(value)]<>'\') then
+begin
+ result := value + '\';
+end
+else
+begin
+  result := value;
+ end;
+end;

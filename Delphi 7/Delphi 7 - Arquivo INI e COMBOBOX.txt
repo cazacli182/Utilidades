@@ -1,0 +1,13 @@
+Para usar em combobox:
+
+  Na leitura: 
+ 
+  if ArquivoINI.ReadString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]) = '=' then
+    ckbCondicaoWhere.ItemIndex := 0
+  else if ArquivoINI.ReadString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]) = 'in' then
+    ckbCondicaoWhere.ItemIndex := 1
+  else if ArquivoINI.ReadString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]) = '>=' then
+    ckbCondicaoWhere.ItemIndex := 2;
+
+  Na escrita:
+  ArquivoINI.WriteString('Checkbox', 'CondicaoWhere', ckbCondicaoWhere.Items[ckbCondicaoWhere.ItemIndex]);

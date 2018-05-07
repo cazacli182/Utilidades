@@ -1,0 +1,44 @@
+function AsciiToInt(Caracter: Char): Integer;
+var
+  i: Integer;
+begin
+  i := 32;
+  while i < 255 do begin
+    if Chr(i) = Caracter then
+      Break;
+    i := i + 1;
+  end;
+  Result := i;
+end;
+
+function FDEncript(sAux: String): String; 
+var 
+  iChave, iCont: Integer;
+  sRetorno: String;
+        
+begin                       
+  iChave   := 13;
+  sRetorno := '';
+  
+  for iCont := 1 to length(sAux) do 
+  begin
+    sRetorno := sRetorno + chr(AsciiToInt(sAux[iCont]) + iChave);
+  end;
+  Result := sRetorno;
+end;
+             
+function FDDecript(sAux: String): String;
+var 
+  iChave, iCont: Integer;
+  sRetorno: String;
+
+begin     
+  iChave   := 13;
+  sRetorno := '';
+  
+  for iCont := 1 to length(sAux) do 
+  begin                       
+    sRetorno := sRetorno + chr(AsciiToInt(sAux[iCont]) - iChave);
+  end;
+  Result := sRetorno;
+end;

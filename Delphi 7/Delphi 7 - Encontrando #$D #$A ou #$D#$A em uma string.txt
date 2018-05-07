@@ -1,0 +1,22 @@
+constantes criadas:
+  cstCR                 = chr(13);
+  cstLF                 = chr(10);
+  cstCRLF               = cstCR + cstLF;
+
+
+  Quando o conteúdo de uma variável é '#$D' que significa o mesmo que um chr(13) pode-se fazer uma comparação usando a lógica abaixo.
+
+if (TextoBlob = cstCR) then 
+  ShowMessage('lslslslslslsl');
+
+
+
+  Também funciona para '#$A' que é referente ao chr(10). Isso ajuda quando vem sujeira do banco de dados e precisa ser feito um if para
+não considerar a mesma, como no exemplo abaixo:
+
+        if ((TextoBlob <> '') and (TextoBlob <> cstCR)) then
+        begin
+          {...} 
+        end; 
+
+  Pode ainda existir uma terceira combinação, sendo '#$D#$A' que é o cstCRLF.

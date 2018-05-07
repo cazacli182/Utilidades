@@ -1,0 +1,16 @@
+{Cria StringList para ver conteúdo da query, que é muito grande!!!}
+
+CriaStringList(dmcli.QPessoa4.Sql.Text, ExtractFilePath(Application.ExeName) + 'StringListQryPessoas.txt');
+
+
+
+  procedure CriaStringList(texto, diretorioENomeArquivo: String);
+  begin
+    SL := TStringList.Create;
+    SL.Clear;
+    SL.Add(texto);
+    SL.SaveToFile(diretorioENomeArquivo);
+    FreeAndNil(SL);
+  end;
+
+

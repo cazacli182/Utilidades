@@ -1,0 +1,11 @@
+037 - Traduzindo a mensagem "Delete Record ?"
+
+
+Quando clicamos sobre o botão de deleção no DBNavigator (o do sinal de menos) surge uma box com a mensagem "Delete Record?" com botões Ok e Cancel. 
+
+Para fazer aparecer a mensagem em português deverá selecionar o componente Table e mudar a propriedade ConfirmDelete para False e no evento da tabela BeforeDelete colocar o seguinte:
+
+procedure TForm1.Table1BeforeDelete(DataSet:TDataSet);
+begin
+  if MessageDlg('Eliminar o Registro?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then Abort;
+end

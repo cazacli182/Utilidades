@@ -1,0 +1,6 @@
+REM Esse arquivo bat server para fazer a limpeza de arquivos gerados pelo Delphi.
+REM Este arquivo foi baixado do site www.dicasdelphi.com.br
+REM 12/11/2008
+del *.dcu
+del *.~??
+del *.bak

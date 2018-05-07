@@ -1,0 +1,183 @@
+if sIntimacao <> '' then
+  LocalizaEValidaNumerosDeProcesso(sIntimacao);
+
+{Se opção do checkbox está ativada, preciso verificar a possibilidade de gravar o Log. Se estiver desabilitada,
+                 sempre irei escrever o número de processo quando for único.}  
+                if ckbUtilizaProcesso.Checked then
+                begin
+                  {Se a variável não está vazia e contém pelo menos 1 ponto e vírgula, então já sei que existem mais de um número
+                   de processo dentro do texto. Caso contrário, caso exista só um, ele será gravado no XML. Não gravarei no Log.}
+                  if FListaDeProcessosEncontrados <> '' then
+                    if Pos(';', FListaDeProcessosEncontrados) > 0 then
+                      GravaLog('Foram encontrados mais de um processo válido no texto da Intimação da linha "' + IntToStr(R) + '": ' + FListaDeProcessosEncontrados);
+                end;
+-----------------------------------------------
+procedure TfrmAASP.LocalizaEValidaNumerosDeProcesso(sIntimacao: String);
+var
+  i: Integer;
+  Aux: String;
+
+begin
+  {Inicializo as variáveis}
+  Aux := '';
+  //FListaDeProcessosEncontrados := ''; {==> Já limpo lá fora...}
+  //FPrimeiroProcessoEncontrado  := ''; {==> Já limpo lá fora...}
+
+  for i := 0 to length(sIntimacao)-1 do
+  begin
+    if sIntimacao[i] in ['0'..'9','-','/','.'] then
+    begin
+      {Vai concatenando os números, traços e pontos até encontrar um caractere diferente do esperado...}
+      Aux := Aux + sIntimacao[i];
+    end
+    else
+    begin
+      {Se caiu aqui é porque não é um dos caracteres que preciso concatenar.
+       Se a variável Aux estiver preenchida é porque encontrei um número anteriormente,
+       e neste momento será validado se o número coletado está no formato CNJ.}
+      if Aux <> '' then
+      begin
+        {Validar CNJ}
+        FListaDeProcessosEncontrados := FListaDeProcessosEncontrados + verifica_preechimento_NU(Aux);
+      end;
+
+      {Esvazio conteúdo de Aux para continuar procurando...}
+      Aux := '';
+    end;
+  end;
+
+  if FListaDeProcessosEncontrados <> '' then
+  begin
+    {Verifica se o primeiro dígito é um ponto e vírgula. Se for, elimino!}
+    if Copy(FListaDeProcessosEncontrados,1,1) = ';' then
+      Delete(FListaDeProcessosEncontrados,1,1);
+
+    {Se checkbox não está ativado:
+     - Ao encontrar mais de uma ocorrência, gravar vazio no xml e não gerar log.
+     - Ao encontrar uma ocorrência, gravá-la. Não gerar log.}
+    if not ckbUtilizaProcesso.Checked then
+    begin
+      {Se existe uma vírgula, já sei que existe mais de um processo. Gravar vazio e não gerar log}
+      if Pos(';', FListaDeProcessosEncontrados) > 0 then
+        FPrimeiroProcessoEncontrado := ''
+      {Se não existe uma vírgula, só existe uma ocorrência. Segundo LS devo gravá-la mesmo com check desmarcado}
+      else
+        FPrimeiroProcessoEncontrado := FListaDeProcessosEncontrados;
+    end
+    {Se checkbox está ativado:
+     - Ao encontrar mais de uma ocorrência, gravar a primeira e gerar log.
+     - Ao encontrar uma ocorrência gravá-la. Gerar log.}
+    else
+    begin
+      {Se existe uma vírgula, copio do início até encontrá-la. Caso contrário copio do início ao fim, pois as vezes só
+       um processo é encontrado.}
+      if Pos(';', FListaDeProcessosEncontrados) > 0 then
+        FPrimeiroProcessoEncontrado := Copy(FListaDeProcessosEncontrados, 1, Pos(';', FListaDeProcessosEncontrados)-1)
+      else
+        FPrimeiroProcessoEncontrado := FListaDeProcessosEncontrados;
+    end;
+  end;
+end;
+
+-----------------------------------------------------------------
+
+function TfrmAASP.verifica_preechimento_NU(NumeroProcesso: String): String;
+
+  function valida_mascara(pArg :String):boolean;
+  var
+    I: Integer;
+    S: String;
+
+  begin
+    Result := False;
+    S      := '';
+
+    for I := 1 To Length(pArg) Do
+    begin
+      if (pArg[I] = '-') then
+        S := S + Copy(pArg, I, 1);
+    end;
+
+    if S = '-----' then
+      Result :=true;
+  end;
+
+var
+  sNumeroProcesso,
+  Numero,
+  Digito,
+  Ano,
+  Orgao,
+  Tribunal,
+  Unidade: String;
+
+begin
+  Result          := '';
+  sNumeroProcesso := Trim(NumeroProcesso);
+
+  {CAZ - Elimino o primeiro caractere caso seja diferente de número!}
+  if ((Copy(sNumeroProcesso,1,1) = '-') or
+      (Copy(sNumeroProcesso,1,1) = '.') or
+      (Copy(sNumeroProcesso,1,1) = '/') or
+      (Copy(sNumeroProcesso,1,1) = '\')) then
+  begin
+    Delete(sNumeroProcesso,1,1);
+  end;
+
+  {CAZ - Elimino o último caractere caso seja diferente de número!}
+  if ((Copy(sNumeroProcesso,Length(sNumeroProcesso),1) = '-') or
+      (Copy(sNumeroProcesso,Length(sNumeroProcesso),1) = '.') or
+      (Copy(sNumeroProcesso,Length(sNumeroProcesso),1) = '/') or
+      (Copy(sNumeroProcesso,Length(sNumeroProcesso),1) = '\')) then
+  begin
+    Delete(sNumeroProcesso,Length(sNumeroProcesso),1);
+  end;
+
+  if (Pos('-',sNumeroProcesso)>0) and (sNumeroProcesso<>'') then
+  begin
+    sNumeroProcesso := StringReplace(sNumeroProcesso,'.','-',[rfReplaceAll, rfIgnoreCase]);
+
+    if valida_mascara(sNumeroProcesso) then
+    begin
+      try
+        Numero   := Copy(sNumeroProcesso,1,Pos('-',sNumeroProcesso)-1);
+        Numero   := Trim(Numero);
+        Delete(sNumeroProcesso,1,Pos('-',sNumeroProcesso));
+
+        Digito   := Copy(sNumeroProcesso,1,Pos('-',sNumeroProcesso)-1);
+        Digito   := Trim(Digito);
+        Delete(sNumeroProcesso,1,Pos('-',sNumeroProcesso));
+
+        Ano      := Copy(sNumeroProcesso,1,Pos('-',sNumeroProcesso)-1);
+        Ano      := Trim(Ano);
+        Delete(sNumeroProcesso,1,Pos('-',sNumeroProcesso));
+
+        Orgao    := Copy(sNumeroProcesso,1,Pos('-',sNumeroProcesso)-1);
+        Orgao    := Trim(Orgao);
+        Delete(sNumeroProcesso,1,Pos('-',sNumeroProcesso));
+
+        Tribunal := Copy(sNumeroProcesso,1,Pos('-',sNumeroProcesso)-1);
+        Tribunal := Trim(Tribunal);
+        Delete(sNumeroProcesso,1,Pos('-',sNumeroProcesso));
+
+        if Numero='' then
+          Numero :='0';
+
+        Unidade := sNumeroProcesso;
+        Unidade := Trim(Unidade);
+
+        if Unidade='' then
+          Unidade :='0';
+
+        Unidade := FormatFloat('0000', StrToInt(Unidade));
+
+        if (Numero<>'') and (Ano<>'') and (Digito<>'') and (Unidade<>'') then
+          Result := ';' + Numero + Digito + Ano + Orgao + Tribunal + Unidade;
+      except
+        {Result já está False se cair aqui!}
+      end;
+    end;{Result já está False se cair aqui!}
+  end;  {Result já está False se cair aqui!}
+end;
+
+

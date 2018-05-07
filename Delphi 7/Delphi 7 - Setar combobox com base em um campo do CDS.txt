@@ -1,0 +1,1 @@
+  cbxCondicao1.ItemIndex     := cbxCondicao1.Items.IndexOf(CDSRegras.FieldByName('c_nc1').AsString);

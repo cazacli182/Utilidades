@@ -1,0 +1,9 @@
+Usando as transformações abaixo os números são formatados eliminando zeros à direita, por exemplo:
+
+R$20,60     fica R$20,6
+R$20,98     fica R$20,98
+R$19,700004 fica R$19,7
+R$14,719998 fica R$14,72
+
+Linha := Linha + Format('%s', [FloatToStr( StrToFloatDef( Format('%0.2f', [FDataSet.CDS.FieldByName('vl_item').AsFloat]), 0) )]) + '|';    {26}
+

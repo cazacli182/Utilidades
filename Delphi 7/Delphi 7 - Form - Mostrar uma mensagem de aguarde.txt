@@ -1,0 +1,35 @@
+Mostrar uma mensagem durante um processamento
+
+Problema:
+
+Um processamento em meu sistema é bastante demorado e por isto
+colocar apenas o cursor de ampulheta continua deixando o 
+usuário confuso, pensando que o sistema travou. É possível
+exibir uma mensagem enquanto um processamento demorado ocorre?
+
+Sim. E é fácil. Vejamos:
+
+- Crie um form com a mensagem. Um pequeno form com um 
+  Label já é suficiente. Aqui vou chamá-lo de FormMsg.
+- Vá em Project|Options e passe o FormMsg de 
+  "Auto-create forms" para "Available forms".
+- Abaixo vou simular um processamento demorado, usando a
+  API Sleep:
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Form: TFormMsg;
+  I: integer;
+begin
+  Form := TFormMsg.Create(Self);
+  try
+    Form.Label1.Caption := 'Processamento demorado...';
+    Form.Show;
+    for I := 1 to 5 do begin
+      Form.UpDate;
+      Sleep(1000); { Aguarda um segundo }
+    end;
+  finally
+    Form.Free;
+  end;
+end;

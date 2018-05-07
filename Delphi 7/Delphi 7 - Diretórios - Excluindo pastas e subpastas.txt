@@ -1,0 +1,52 @@
+Testado e funcionando na versão 1.0.0.7 PA PROJUDI2CPJ!!!!
+
+Uses: ShellAPI
+
+Criar a função abaixo:
+  function DelTree(hHandle: THandle; sPath: String): boolean;
+
+O código da função é:
+
+function TXMLOYSTR.DelTree(hHandle: THandle; sPath: String): boolean;
+var
+  OpStruc: TSHFileOpStruct;
+  FromBuffer, ToBuffer: Array[0..255] of Char;
+
+  begin
+  //Apaga Pasta, Sub-Pastas e Arquivos
+
+  result := false;
+  sPath := Trim(sPath);
+
+  if DirectoryExists(sPath) then
+  begin
+    if sPath[Length(sPath)] = '\' then
+    Delete(sPath, Length(sPath), 1);
+
+    fillChar(OpStruc, Sizeof(OpStruc), 0);
+    FillChar(FromBuffer, Sizeof(FromBuffer), 0);
+    FillChar(ToBuffer, Sizeof(ToBuffer), 0);
+    StrPCopy(FromBuffer, sPath);
+
+    OpStruc.Wnd := hHandle;
+    OpStruc.wFunc := FO_DELETE;
+    OpStruc.pFrom := @FromBuffer;
+    OpStruc.pTo := @ToBuffer;
+    {Com o flag abaixo igual a zero, será perguntado ao usuário se deseja deletar a pasta...
+    OpStruc.fFlags := 0;
+    }
+    {Com o flag abaixo igual a FOF_NOCONFIRMATION, será excluído o diretório sem perguntar nada...}
+    OpStruc.fFlags := FOF_NOCONFIRMATION;
+    OpStruc.fAnyOperationsAborted := False;
+    OpStruc.hNameMappings := nil;
+
+    Result := ((ShFileOperation(OpStruc) = 0) and (not OpStruc.fAnyOperationsAborted));
+  end;
+end;
+
+
+
+Para usá-la:
+  DelTree(Self.Handle, Trim(Edit1.Text));
+
+

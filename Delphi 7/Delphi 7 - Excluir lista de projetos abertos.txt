@@ -1,0 +1,8 @@
+Run Regedit 
+find the key: 
+
+HKEY_CURRENT_USER\Software\Borland\delphi\<Version>\Closed Files 
+  then delete what is in it. 
+
+HKEY_CURRENT_USER\Software\Borland\delphi\<Version>\Closed Projects 
+  then delete what is in it. 

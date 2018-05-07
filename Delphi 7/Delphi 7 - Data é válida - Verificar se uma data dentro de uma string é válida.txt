@@ -1,0 +1,9 @@
+function StrIsTime(const S: string): boolean;
+begin
+  try
+    StrToTime(S);
+    Result := true;
+  except
+    Result := false;
+  end;
+end;

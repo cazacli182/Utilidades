@@ -1,0 +1,6 @@
+Após o trecho: implementation / uses XXX; / {$R *.dfm} escrever:
+ 
+const
+  cstCR = chr(13);
+  cstLF = chr(10);
+  cstCRLF = cstCR + cstLF;

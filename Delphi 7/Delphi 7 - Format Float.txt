@@ -1,0 +1,22 @@
+Format Float:
+lblPercent.Caption := Formatfloat('#,###.#0',nPercent)+'%';
+
+FormatFloat('#,##0.00',(StrSToFloat(StringReplace(LinhaStr[39],'.',',',[rfReplaceAll]))))
+
+
+************************
+
+Formatar um campo float
+
+var sValorCausa : string;
+
+
+      if not dmCLI.QProcesso1.FieldByName('Valorpedido').IsNull then
+      begin
+        if dmCLI.QProcesso1.FieldByName('Valorpedido').AsString <> '' then
+        begin
+          sValorCausa := SubstituiCaracteresDaStringPorVazio('BRL ' ,dmCLI.QProcesso1.FieldByName('Valorpedido').AsString);
+          sValorCausa := SubstituiCaracteresDaStringPorVazio('.' ,sValorCausa);
+          Valor_causa := StrToFloat(Trim(sValorCausa));
+        end;
+      end;

@@ -1,0 +1,9 @@
+Exemplo de uso do locate
+********************************************************************************************************************
+
+if not FCDSProcessosJaCadastrados.Locate('numeroDoProcesso', numerodoProcesso, [loCaseInsensitive]) then
+
+********************************************************************************************************************
+
+if FCDSJuizo.Locate('cod_juizoAPJ', dmCli.QM_Processo.FieldByName('cod_comarca').AsString, [loCaseInsensitive]) then
+  Juizo := FCDSJuizo.FieldByname('cod_juizoCPJ').AsString;

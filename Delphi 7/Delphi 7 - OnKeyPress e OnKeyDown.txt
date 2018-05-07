@@ -1,0 +1,23 @@
+O evento OnKeyPress só "percebe" as teclas do codigo ASCII. Porisso, teclas especias (Control, Shift, F1...F12, etc) não são ´percebidas´ pelo OnKeyPress.
+
+Portanto:
+
+ESC / F1 / F2 etc: OnKeyDown.
+ENTER: OnKeyPress.
+
+**************************************************************************
+procedure TemaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if Key = Vk_Escape then
+    Close; 
+    
+  if key = VK_F2 then
+    edtCodigoDblClick(Sender);
+end;          
+**************************************************************************
+procedure Form13KeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+    btnSalvarClick(Sender);
+end;
+**************************************************************************

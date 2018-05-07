@@ -1,0 +1,6 @@
+      {As aspas '''' do string replace se tornam um ' (simples), por isso funciona!}
+      CPFCGC := StringReplace(CPFCGC, '''', '', [rfReplaceAll, rfIgnoreCase]);
+
+
+
+'''' = A primeira e a última são abre e fecha. As duas do meio se transformam em '. Por isso funciona!

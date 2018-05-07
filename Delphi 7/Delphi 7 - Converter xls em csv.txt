@@ -1,0 +1,24 @@
+function TFormImportacao.ConvertXLS2CSV(ArqXLS:AnsiString):String;
+var
+  ArqCSV :ansiString;
+  Excel, Excelworkbook : olevariant;
+begin
+  Result:='';
+  try
+    try
+      ArqCSV := ExtractFileDir(EditArq.text) + '\layout_import.csv';
+      if FileExists(ArqCSV) then
+        DeleteFile(ArqCSV);
+      Excel := CreateOleObject('Excel.Application');
+      Excelworkbook := Excel.workbooks.open(ArqXLS);
+      Excelworkbook.SaveAs(ArqCSV,xlCSV);
+      Excelworkbook:=UnAssigned;
+      Result:=ArqCSV;
+    except
+      raise EDataBaseError.create('Erro ao abrir o arquivo do Excel.');
+    end;
+  finally
+    Excel.DisplayAlerts := False;
+    Excel.Quit;
+  end;
+end;
