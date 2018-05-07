@@ -1,0 +1,11 @@
+//Enquanto o site não é carregado totalmente fica no loop até o estado //do ReadyState for ‘completo’ 
+while WebBrowser1.ReadyState <> READYSTATE_COMPLETE do 
+begin 
+  Application.ProcessMessages; 
+  Sleep(0); 
+end; 
+
+
+- See more at: http://www.dicasdelphi.com.br/dica-vizualizando-html-no-componente-memo/#sthash.vtmQYAuQ.dpuf
+
+
