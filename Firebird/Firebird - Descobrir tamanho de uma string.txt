@@ -1,0 +1,8 @@
+select
+cod_processo, num_processo, identificador, CHAR_LENGTH(identificador)
+from
+processo
+where
+CHAR_LENGTH(identificador) >= 20
+order by
+CHAR_LENGTH(identificador)

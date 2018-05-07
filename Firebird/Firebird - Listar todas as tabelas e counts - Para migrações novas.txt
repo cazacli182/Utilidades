@@ -1,0 +1,28 @@
+Firebird: Listar todas as tabelas e quantidade de registros via SQL
+
+18 de dezembro de 2015 programadordecodigo
+/* first update the statistics */
+UPDATE RDB$INDICES SET RDB$STATISTICS = -1;
+COMMIT;
+
+/* Display table names and record counts */
+SELECT RDB$RELATIONS.RDB$RELATION_NAME,
+CASE 
+WHEN RDB$INDICES.RDB$STATISTICS = 0 THEN 0 
+ELSE CAST(1 / RDB$INDICES.RDB$STATISTICS AS INTEGER) 
+END 
+FROM RDB$RELATIONS 
+LEFT JOIN RDB$RELATION_CONSTRAINTS 
+ ON RDB$RELATIONS.RDB$RELATION_NAME = RDB$RELATION_CONSTRAINTS.RDB$RELATION_NAME 
+ AND RDB$CONSTRAINT_TYPE = 'PRIMARY KEY'
+LEFT JOIN RDB$INDICES 
+  ON RDB$RELATION_CONSTRAINTS.RDB$INDEX_NAME = RDB$INDICES.RDB$INDEX_NAME 
+WHERE RDB$VIEW_BLR IS NULL AND RDB$RELATION_ID >= 128 
+ORDER BY 1;
+
+
+
+OBS:
+This solution only returns an approximate record count. As Ann W. Harrison kindly explains: Any record that has had its primary key modified will appear twice if the old version has not been garbage collected and deleted records will continue in the count until they are garbage collected.
+
+This will only work on tables that have a primary key.

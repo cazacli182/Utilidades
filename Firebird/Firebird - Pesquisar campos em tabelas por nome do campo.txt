@@ -1,0 +1,4 @@
+select rdb$relation_name, rdb$field_name
+from rdb$relation_fields
+where rdb$field_name = 'BAIRRO_ID'
+order by rdb$relation_name, rdb$field_name;

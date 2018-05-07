@@ -1,0 +1,7 @@
+select
+  cod_processo,obs_processo, sin1_processo, sin2_processo, sin3_processo, sin4_processo,cast(sin1_processo as varchar(32000))
+from
+  processo
+where
+
+CHARACTER_LENGTH(cast(sin2_processo as varchar(32000))) > 20000

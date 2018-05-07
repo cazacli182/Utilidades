@@ -1,0 +1,3 @@
+Ativar ou desativar um índice:
+http://marcosalles.wordpress.com/2011/02/05/como-reconstruir-um-indice-no-firebird/
+

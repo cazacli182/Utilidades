@@ -1,0 +1,40 @@
+Colocar o banco a ser analisado em C:\Program Files\Firebird\Firebird_1_5\bin.
+
+Abrir o prompt do dos em C:\Program Files\Firebird\Firebird_1_5\bin e executar o
+seguinte comando:
+
+   gstat -h Firebird_Vazio_1_5.FDB
+
+Será exibido o número do ODS. Comparando com a tabela abaixo será possível descobrir em qual
+versão do Firebird o Banco de Dados foi criado.
+
+Firebird 1.0 - ODS 10
+Firebird 1.5 - ODS 10.1
+Firebird 2.0 - ODS 11.0
+Firebird 2.1 - ODS 11.1
+Firebird 2.5 - ODS 11.2
+
+****************************************************************************
+
+Explicação retirada em http://www.firebase.com.br/fb/artigo.php?id=2242
+
+
+Qual a ODS de cada versão do FB?
+
+Data da última atualização: 12/10/2011
+
+ODS significa On Disc Structure, que nada mais é do que o número da versão da estrutura do arquivo de banco de dados Firebird/InterBase. Sempre que há uma alteração na estrutura básica do arquivo de banco de dados (geralmente quando uma nova versão do FB é lançada), a ODS muda.
+
+Abaixo segue uma lista das versões da ODS para cada versão do Firebird:
+
+Firebird 1.0 - ODS 10
+Firebird 1.5 - ODS 10.1
+Firebird 2.0 - ODS 11.0
+Firebird 2.1 - ODS 11.1
+Firebird 2.5 - ODS 11.2
+
+Quando a mudança na estrutura não é significativa, apenas o minor number é alterado.
+
+Até a versão 2.5, o Firebird é capaz de acessar bancos de dados com ODS de versões anteriores.
+
+Atualmente, existe uma incompatibilidade da numeração das ODS entre o InterBase e o Firebird, ou seja, a ODS 11 do InterBase é incompatível com a ODS 11 do Firebird, etc.

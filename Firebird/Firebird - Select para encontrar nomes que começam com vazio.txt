@@ -1,0 +1,3 @@
+select * from cliente where (substring( nome_cliente from 1 for 1) = ' ');
+
+select * from advogado where (substring( nome_advogado from 1 for 1) = ' ');
