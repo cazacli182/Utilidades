@@ -1,0 +1,18 @@
+Descobrir duplicidade de registros em uma tabela
+
+select
+  nome_acao, count(nome_acao) as quantidade
+from
+  acao
+group by
+  nome_acao
+having count
+  (nome_acao) > 1;
+
+resultado:
+xxx - 2
+yyy - 3
+zzz - 2
+
+************************************************
+

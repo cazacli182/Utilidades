@@ -1,0 +1,7 @@
+Descobrir um pk existente em duas tabelas distintas... 
+
+Comando funciona a partir do SQL 2008R2
+
+select idprocesso from parte -- order by idProcesso
+intersect
+select idProcesso from recurso order by idProcesso

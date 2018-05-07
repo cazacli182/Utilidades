@@ -1,0 +1,1 @@
+update cad_tramitacao set data_exportacao = null where arquivo = 'N' and ficha = '019730' and incidente = '0'

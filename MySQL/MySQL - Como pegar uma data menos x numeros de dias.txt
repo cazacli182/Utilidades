@@ -1,0 +1,5 @@
+ select * from cad_cpr 
+where pessoa = 16163
+and data_baixa is null 
+ and data_vencimento < (SELECT date_add(curDATE(),interval -30 day))
+and valor > 0

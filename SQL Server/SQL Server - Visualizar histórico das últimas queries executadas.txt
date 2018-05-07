@@ -1,0 +1,9 @@
+O SQL Server não tem uma ferramenta que vai logando as queries igual ao MySQL... então dá para pegar os comandos executados com a seguinte query:
+
+SELECT DMExQryStats.last_execution_time AS [Executed At], DMExSQLTxt.text AS [Query] FROM sys.dm_exec_query_stats AS DMExQryStats CROSS APPLY sys.dm_exec_sql_text(DMExQryStats.sql_handle) AS DMExSQLTxt ORDER BY DMExQryStats.last_execution_time DESC 
+
+
+
+
+Outra forma: No SQL Server ir em: Ferramentas/Opções/Ambiente/AutoRecuperação e verificar se a opção está ativada e com poucos minutos para salvamento.
+Depois um pouco mais abaixo em Resultados da Consulta e verificar se a opção "Destino padrão dos resultados" está setado para Resultados em texto. Verificar também onde o arquivo está sendo gravado, normalmente seria em C:\Users\usuário do pc\Documents. Caso a pasta esteja vazia, deve-se exibir ARQUIVOS OCULTOS. Provavelmente irá aparecer um .sql com nome aleatório contendo os comandos SQL.

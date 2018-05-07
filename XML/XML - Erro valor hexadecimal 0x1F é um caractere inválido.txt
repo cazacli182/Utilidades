@@ -1,0 +1,2 @@
+Este erro ocorre quando dentro de algum texto do xml, existe o caractere código ascii 31 chamado de US, Unit Separator. Basta retirá-lo do texto do XML.
+

@@ -1,0 +1,101 @@
+var
+  FFlagAtivaLog,               
+  ArquivoLog,
+  DiretorioLog,         
+  FNomeLogOperacional,         {==> Contém apenas o nome do log, sem diretório e datahora}
+  FNomeLogImportados,          {==> Contém apenas o nome do log, sem diretório e datahora}
+  FNomeLogOperacionalCompleto, {==> Contém o nome e caminho completo do Log criado para a sessão do robô}
+  FNomeLogImportadosCompleto,  {==> Contém o nome e caminho completo do Log criado para a sessão do robô}
+  FGetNomeLog: String;         {==> Contém a datahora gerada pela função GetNomeLog. Guarda o que gerou.}
+
+function GetNomeLog:String;
+var
+  D, M, A,
+  Hour, Min, Sec, 
+  MSec: Word;
+  strNomeArq : String;
+
+begin
+  DecodeDate(Now,A, M, D);
+  strNomeArq := '_'+Formatfloat('00',D)+ '_'+Formatfloat('00',M) + '_'+Formatfloat('0000',A);
+  DecodeTime(Now,Hour, Min, Sec, MSec);
+  strNomeArq  := strNomeArq + '_'+ Formatfloat('00',Hour)+'_'+Formatfloat('00',Min)+'_'+ Formatfloat('00',Sec)+ '.txt';
+  FGetNomeLog := '';
+  FGetNomeLog := strNomeArq;
+  Result      := strNomeArq;
+end;
+
+procedure GravaLog(NomeDoLog, Texto: String; GravaDataHora: Boolean);
+{Enquanto o Robô estiver em execução, somente 1 log será criado. Se fechar e reabrir o robô
+ um novo log será gerado devido à atualização de hhnnss, que faz parte do nome do mesmo...}
+var
+  Arquivo: TextFile;
+
+begin
+  if FFlagAtivaLog = True then
+  begin
+    try
+      {Carrega o caminho do diretório em uma variável global. Assim ela poderá ser utilizada em vários procedimentos}
+      DiretorioLog := ExtractFilePath(ParamStr(0)); {Uses em System e SysUtils}
+
+      {Se a gravação do texto for no log Operacional:}
+      if NomeDoLog = '1_RoboPrestacaoContaEBaixa_Operacional' then
+      begin
+        {Se o caminho do respectivo Log ainda não foi gerado:}
+        if FNomeLogOperacionalCompleto = '' then
+        begin
+          try
+            FNomeLogOperacionalCompleto := DiretorioLog + NomeDoLog + GetNomeLog;
+          except
+            {...}
+          end;
+        end
+        else
+        begin
+          {Variáveis já foram criadas pois já passaram aqui anteriormente e estão prontas para o uso...}
+        end;
+        {Coloca o caminho + log que foi montado e atualiza a variável global ArquivoLog}
+        ArquivoLog := FNomeLogOperacionalCompleto;
+      end
+      {Se a gravação do texto for no log de Erros:}
+      else if NomeDoLog = '1_RoboPrestacaoContaEBaixa_Importados' then
+      begin
+        {Se o caminho do respectivo Log ainda não foi gerado:}
+        if FNomeLogImportadosCompleto = '' then
+        begin
+          try
+            FNomeLogImportadosCompleto := DiretorioLog + NomeDoLog + GetNomeLog;
+            //ShowMessage('FNomeLogImportadosCompleto: ' + FNomeLogImportadosCompleto);
+          except
+            {...}
+          end;
+        end
+        else
+        begin
+          {Variáveis já foram criadas pois já passaram aqui anteriormente e estão prontas para o uso...}
+        end;
+        {Coloca o caminho + log que foi montado e atualiza a variável global ArquivoLog}
+        ArquivoLog := FNomeLogImportadosCompleto;
+      end;
+
+      {Grava os dados no Log posicionado pelo procedimento anterior:}
+      AssignFile(Arquivo, ArquivoLog);
+
+      if FileExists(ArquivoLog) then
+        Append(arquivo)   {se existir, apenas adiciona linhas}
+      else
+        ReWrite(arquivo); {cria um novo se não existir}
+
+      try
+        if GravaDataHora then
+          WriteLn(arquivo, texto + ' - '+ FormatDateTime('hh:nn:ss:zzz', Now))
+        else
+          WriteLn(arquivo, texto);
+      finally
+        CloseFile(arquivo);
+      end;
+    except
+      Application.MessageBox('Ocorreu um erro ao gerar os arquivos de LOG, verifique...', 'Preâmbulo - CPJ informa:', 0);
+    end;
+  end;
+end;

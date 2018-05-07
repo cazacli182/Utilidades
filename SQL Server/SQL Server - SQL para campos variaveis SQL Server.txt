@@ -1,0 +1,14 @@
+select f.descricao, variavel,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('A',variavel),CHARINDEX('B',variavel)-CHARINDEX('A',variavel)),3,800) var1,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('B',variavel),CHARINDEX('C',variavel)-CHARINDEX('B',variavel)),3,800) var2,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('C',variavel),CHARINDEX('D',variavel)-CHARINDEX('C',variavel)),3,800) var3,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('D',variavel),CHARINDEX('E',variavel)-CHARINDEX('D',variavel)),3,800) var4,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('E',variavel),CHARINDEX('F',variavel)-CHARINDEX('E',variavel)),3,800) var5,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('F',variavel),CHARINDEX('G',variavel)-CHARINDEX('F',variavel)),3,800) var6,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('G',variavel),CHARINDEX('H',variavel)-CHARINDEX('G',variavel)),3,800) var7,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('H',variavel),CHARINDEX('I',variavel)-CHARINDEX('H',variavel)),3,800) var8,
+SUBSTRING(SUBSTRING(variavel,CHARINDEX('I',variavel),CHARINDEX('J',variavel)-CHARINDEX('I',variavel)),3,800) var9
+--SUBSTRING(SUBSTRING(variavel,CHARINDEX('J',variavel),CHARINDEX('K',variavel)-CHARINDEX('J',variavel)),3,800) var10
+from cad_processo p left join tab_formato f on f.codigo = p.formato
+WHERE FORMATO>0 and variavel is not null 
+and p.formato=11

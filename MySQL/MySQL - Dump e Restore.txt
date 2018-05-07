@@ -1,0 +1,20 @@
+MySQL
+
+Restaurar script que veio do cliente:
+- Abrir o cmd e em c:\Users\meu usuario digitar:
+  - mysql -uroot -proot ENTER
+    - create database xxx;
+    - mysql -uroot -proot xxx < d:\scriptqueveiodocliente.sql
+	CTRL + C para sair do Mysql
+
+Fazer o mesmo com o script do banco CPJ vazio (que é para onde irão as informações da migração)
+
+************************
+
+Após migrar os dados e realizar os testes, é necessário colocar uma cópia do .sql gerado na pasta "Para análise".
+
+Para gerar o script que será validado pelo cliente:
+Abrir o cmd e digitar:
+- mysqldump -uroot -proot nomedoBDasergeradoosql > D:\Prog|nomedoscriptqueseracriado. sql ENTER
+
+Pronto!

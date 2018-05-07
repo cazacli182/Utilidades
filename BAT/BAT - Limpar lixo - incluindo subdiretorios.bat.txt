@@ -1,0 +1,9 @@
+REM Esse arquivo bat server para fazer a limpeza de arquivos gerados pelo Delphi.
+REM Este arquivo foi baixado do site www.dicasdelphi.com.br
+REM 12/11/2008
+del 1_Importa_XML*.*
+del 2_SL_CDS*.*
+del 2_SL_FCDS*.*
+del 2_LOG*.*
+del 1_XML*.*
+del /s abc*.*

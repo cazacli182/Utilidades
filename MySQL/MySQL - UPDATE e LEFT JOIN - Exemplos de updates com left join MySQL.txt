@@ -1,0 +1,50 @@
+-- Autor cliente = Ação Ativa --22192 casos
+start transaction;
+update cad_processo pro 
+-- select pro.pj, pro.acao_ativa_passiva 
+-- from cad_processo pro
+left join cad_pessoa aut
+	on aut.codigo=pro.primeiro_autor
+left join cad_pessoa reu
+	on reu.codigo=pro.primeiro_reu
+set acao_ativa_passiva = 1
+where aut.cliente = 1
+and reu.cliente = 0;
+commit;
+
+-- Réu cliente = Ação Passiva --204550
+update cad_processo pro 
+-- select pro.pj, pro.acao_ativa_passiva 
+-- from cad_processo pro
+left join cad_pessoa reu
+	on reu.codigo=pro.primeiro_reu
+left join cad_pessoa aut
+	on aut.codigo=pro.primeiro_autor
+set acao_ativa_passiva = 2	
+where aut.cliente = 0
+and reu.cliente = 1
+
+-- Autor e Réu cliente = Ação Outros -- 297
+update cad_processo pro
+-- select pro.pj, pro.acao_ativa_passiva 
+-- from cad_processo pro
+left join cad_pessoa reu
+	on reu.codigo=pro.primeiro_reu
+left join cad_pessoa aut
+	on aut.codigo=pro.primeiro_autor
+set acao_ativa_passiva = 3		
+where aut.cliente = 1
+and reu.cliente = 1
+
+-- Autor e Réu NÃO cliente = Ação Outros -- 13805
+update cad_processo pro
+-- select pro.pj, pro.acao_ativa_passiva 
+-- from cad_processo pro
+left join cad_pessoa reu
+	on reu.codigo=pro.primeiro_reu
+left join cad_pessoa aut
+	on aut.codigo=pro.primeiro_autor
+set acao_ativa_passiva = 3			
+where aut.cliente = 0
+and reu.cliente = 0
+

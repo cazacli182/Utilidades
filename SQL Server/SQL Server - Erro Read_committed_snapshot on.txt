@@ -1,0 +1,2 @@
+Executar a seguinte query:
+ ALTER DATABASE cpjwcs_es SET READ_COMMITTED_SNAPSHOT ON;

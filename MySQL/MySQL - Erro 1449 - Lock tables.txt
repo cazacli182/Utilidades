@@ -1,0 +1,12 @@
+Quando ocorrer o seguinte erro:
+
+mysqldump: Got error: 1449: The user specified as a definer('CPJ'@'10.1.0.10') does not exist when using LOCK TABLES
+
+A base restaurada foi manipulada pelo usuário CPJ e este usuário não existe na minha instância de SQL. Neste caso precisa
+criar um usuário CPJ no Heidi.
+
+- Logar no Heidi
+- Clicar no ícone de pessoas (gerencia a autenticação dos usuários e privilégios)
+- Clicar em adicionar e informar CPJ, do servidor "acessar de qualquer local" root e root
+- Selecionar a opção "Privilégios globais" e salvar.
+- Depois ir em ferramentas / Flush / Privilégios.

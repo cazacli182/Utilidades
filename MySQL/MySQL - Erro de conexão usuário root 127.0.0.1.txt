@@ -1,0 +1,7 @@
+Quando ou se ocorrer o erro "SQL Error: The user specified as a definer ('root'@'127.0.0.1') does not exist"
+
+==> Provavelmente foi criada alguma trigger no banco de dados a ser restaurado/utilizado, e 
+este usuário não existe ou não tem permissão no MySQL.
+
+Solução: Através do Heidi será necessário criar o usuário root e servidor 127.0.0.1.
+Após criar basta fazer um Flush previleges e um flush servidor. Desta forma o problema foi resolvido. 

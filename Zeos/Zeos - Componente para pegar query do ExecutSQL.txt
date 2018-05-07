@@ -1,0 +1,35 @@
+TZSQLMonitor
+Using the TZSQLMonitor component you may log certain actions or events of the ZEOS database
+components. The journal may be written as file or collected in a TMemo object or something like that. 
+Writing the actions or events to a logfile only needs a few settings: 
+: 
+  sqlMonitor.FileName := 'C:\Log\MyAppLog.log'; 
+  sqlMonitor.Active := True; 
+  sqlMonitor.AutoSave := True; 
+:
+To collect the logged actions or events in a TMemo object you have to implement the OnLogTrace event as
+follows: 
+
+Procedure Tfrm_MyApp.sqlMonitorLogTrace (Sender: TObject; 
+Event: TZLoggingEvent); 
+Begin 
+  If Trim (Event.Error) > '' Then 
+    memMontor.Lines.Add (DateTimeToStr (Event.Timestamp) + ': ' + 
+    Event.Message + #13#10 + ' Error: ' + Event.Error) 
+  Else 
+    memMontor.Lines.Add (DateTimeToStr (Event.Timestamp) + ': ' + 
+    Event.Message); 
+  End; // sqlMonitorLogTrace
+
+The OnLogTrace event is always triggered when an action or event was logged by sqlMonitor.LogEvent
+(oEvent). The oEvent parameter stands for an instance of a TZLoggingEvent class object. 
+
+
+
+
+Só colocar o componente na tela, ativar a propriedade active e digitar o código abaixo no evento Onlogtrace:
+
+
+  ZSQLMonitor1.FileName := 'D:\Prog\Lybor.log';
+  ZSQLMonitor1.Active := True;
+  ZSQLMonitor1.AutoSave := True;

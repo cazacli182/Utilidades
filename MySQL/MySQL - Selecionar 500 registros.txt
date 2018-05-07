@@ -1,0 +1,5 @@
+select pj from cad_processo limit 500
+
+ou
+
+select * from cad_processo limit 500

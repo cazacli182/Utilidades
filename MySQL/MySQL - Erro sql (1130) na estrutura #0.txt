@@ -1,0 +1,16 @@
+Na máquina onde está instalado o server do MySQL:
+
+abrir o prompt de comando:
+mysql -uroot -proot
+
+grant all privileges on *.* to root@192.168.1.85 identified by 'root';
+
+O ip final 85 é o da minha máquina!!!! Ela é quem deve ter liberação no servidor do mysql.
+
+Para atualizar pode rodar o comando:
+flush privileges;
+
+
+CASO NÃO FUNCIONE:
+- VERIFICAR SE FIREWALL NA MÁQUINA SERVIDORA ESTÁ DESABILITADO!
+- VERIFICAR EXCEÇÕES DA PORTA 3306 NAS REGRAS DE ENTRADA E SAÍDA DO FIREWALL.

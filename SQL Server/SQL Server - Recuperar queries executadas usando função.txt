@@ -1,0 +1,61 @@
+Função para capturar o comando SQL
+
+Code Snippet
+CREATE FUNCTION dbo.udfRetornaComandoSQL(@spid AS INT)
+
+RETURNS VARCHAR(8000)
+
+AS
+
+BEGIN
+
+DECLARE @comandoSQL VARCHAR(8000)
+
+SET @comandoSQL = (SELECT CAST([TEXT] AS VARCHAR(8000))
+
+FROM ::fn_get_sql((SELECT [sql_handle] FROM sysprocesses where spid = @spid)))
+
+RETURN @comandoSQL
+
+END
+
+ 
+
+ 
+
+Função aplicada a sua necessidade
+
+Code Snippet
+Select
+
+spid,
+
+db_name(dbid) as [Database],
+
+Open_tran as 'Transacoes Abertas',
+
+Hostname as 'Estacao Trabalho',
+
+nt_username as 'Usuario Windows',
+
+loginame as 'Usuário SQL',
+
+program_name as Aplicacao,
+
+login_time as Hora_Login,
+
+waittime as 'Tempo de Duração',
+
+status as 'Status',
+
+--As páginas possuem 8 kb de tamanho
+
+--memusage * 8 as 'Memória Alocada no Processo KB',
+
+dbo.udfRetornaComandoSQL(spid) as cmd
+
+From sysProcesses
+
+where Hostname <> '' --and Open_tran >= 1
+
+order by Hostname, db_name(dbid),login_time desc

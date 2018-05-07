@@ -1,0 +1,38 @@
+procedure TFormImportacao.grava_log(pTexto:String);
+var
+  Arquivo   :TextFile;
+  Novo      :Boolean;
+begin
+  if not DirectoryExists(ExtractFilePath(Application.ExeName)+'Log\') then
+    CreateDir(ExtractFilePath(Application.ExeName)+'Log\');
+  NomeDoLog     := ExtractFilePath(Application.ExeName)+'Log\'+ NomeDoArquivo;
+
+  AssignFile(Arquivo, NomeDoLog);
+  if FileExists(NomeDoLog) then
+  begin
+    Append(arquivo);
+    Novo := false;
+  end
+  else
+  begin
+    ReWrite(arquivo);
+    Novo := true;
+  end;
+  try
+    if Novo then
+    begin
+      WriteLn(arquivo, '----------------------------------------------------------------');
+      WriteLn(arquivo, 'Importação do arquivo: '+ EditArq.text );
+      WriteLn(arquivo, '----------------------------------------------------------------');
+    end;
+
+    WriteLn(arquivo, pTexto);
+
+  finally
+    CloseFile(arquivo)
+  end;
+end;
+
+
+Para usar:
+    grava_log('Valor da causa deve ser numérico.');

@@ -1,0 +1,24 @@
+SQL Server:
+
+select idProcesso,count(*) qtde
+ from fullprocesso
+ group by idProcesso
+ having COUNT (*) >1 
+ order by COUNT(*) desc
+--where idProcesso = 14554
+--select 227713-212285
+
+except
+
+select count(*) from processo where idProcesso = 129327 --select 212285+16837-11628
+
+select count(*) from fullprocesso where idProcesso = 129327 --227713
+
+select * from recurso where idProcesso = 129327 --16837
+
+***********************************
+
+
+
+
+

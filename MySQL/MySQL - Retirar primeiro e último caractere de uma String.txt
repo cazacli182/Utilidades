@@ -1,0 +1,28 @@
+Retirar o primeiro ou último elemento de uma string em Mysql
+Para realizar essa tarefa você pode usar a função TRIM do mysql, cuja sintaxe é
+
+TRIM ( [[BOTH | LEADING | TRAILING] [str_rem] FROM ] string1)
+
+Essa função retira espaços em branco ou uma outra sequencia de caracteres conforme as opções informadas.
+
+Se nenhum parâmetro for informado, o MySql removerá os espaços em branco do início e do final da string informada. Se str_rem for informado, retira os caracteres informados da string1. Se LEADING for informado, retira apena do início da string, Se TRAILING for informado retira do final e BOTH retira de ambos (início e fim).
+
+
+Ex: Retirar um caractere(BARRA) do início da string;
+string -->/ Grandes Marcas / Forever 21 / Oculos /
+
+UPDATE 'tabela' set string= TRIM(LEADING '/ ' FROM string)
+
+resultado --> Grandes Marcas / Forever 21 / Oculos /
+
+
+
+
+Ex: Retirar um caractere do final da string;
+string -->Grandes Marcas / Forever 21 / Oculos /
+
+UPDATE 'tabela' set string= TRIM(TRAILING '/ ' FROM string)
+
+resultado --> Grandes Marcas / Forever 21 / Oculos
+
+Lembrando que SELECT mostra que retirou mas conserva sem alteração na base. E UPDATE retira de fato alterando a base.

@@ -1,0 +1,1 @@
+New-PSDrive -Name "K" -PSProvider FileSystem -Root "\\M026-TEC\Repositórios-M026-TEC" -Persist

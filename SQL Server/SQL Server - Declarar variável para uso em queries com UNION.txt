@@ -1,0 +1,3 @@
+declare @nome as varchar(60);
+set @nome='ANA PAULA REIS CHARNECA';
+select ADV_CONTRARIO, TEL_ADV_CONTRARIO, TEL_COMPL_ADV_CONTRARIO from pln_SP_C.dbo.processo_ficha where ADV_CONTRARIO=@nome

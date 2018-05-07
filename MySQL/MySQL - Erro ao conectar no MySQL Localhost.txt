@@ -1,0 +1,28 @@
+O erro "Database connection error: 'Client does not support authentication protocol requested by server; consider upgrading MySQL client'" é um problema que pode ocorrer com esta versão do Mysql devido a versão do cliente utilizado pelo Publique.
+
+A página http://dev.mysql.com...old-client.html apresenta várias maneiras de contornar esse problema.
+
+A maneira mais simples é executar no cliente mysql:
+SET PASSWORD FOR 'some_user'@'some_host' = OLD_PASSWORD('newpwd');
+
+substituindo:
+'some_user' pelo usuário que o Publique está utilizando para conectar,
+'some_host' provavelmente é 'localhost'( se a conexão é local ) ou '%'(se a conexão é remota),
+'newpwd' pela senha.
+
+basicamente fiz:
+
+mysql -uroot -proot ==> enter
+SET PASSWORD FOR 'root'@'localhost' = OLD_PASSWORD('root'); ==> enter
+ou com troca de senha:
+SET PASSWORD FOR 'root'@'localhost' = OLD_PASSWORD('toor');
+
+FUNCIONOU!!!
+
+
+
+O código no site da Preâmbulo é:
+
+update mysql.user set password = old_password ('root')
+where User = 'root';
+flush privileges;

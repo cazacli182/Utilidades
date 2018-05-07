@@ -1,0 +1,56 @@
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  NomeArq: string;
+  Arq    : TextFile;
+  novo   : Boolean;
+
+begin
+  try
+    novo := True;
+    NomeArq:=ExtractFileDir(Application.ExeName)+'\log.txt';
+
+    {Criação do arquivo}
+    AssignFile(Arq,NomeArq);
+    if novo then
+      Rewrite(Arq)
+    else
+      Append(Arq);
+
+    {Escrita do arquivo}
+    WriteLn(Arq,'Carlos Alberto Zacliclevsky');
+
+    {Esvaziamento da memória e fechamento do arquivo}
+    Flush(arq); {Flush empties the buffer of a text file opened for output.}
+    CloseFile(Arq);
+
+    ShowMessage('Arquivo criado com sucesso!!!');
+
+  finally
+    ShowMessage('Erro na criação do arquivo, verifique...');
+  end;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  NomeArq: string;
+  Arq    : TextFile;
+  novo   : Boolean;
+begin
+  novo := True;
+  NomeArq:=ExtractFileDir(Application.ExeName)+'\log.txt';
+
+  {Criação do arquivo}
+  AssignFile(Arq,NomeArq);
+  if novo then
+    Rewrite(Arq)
+  else
+    Append(Arq);
+
+  {Escrita do arquivo}
+  WriteLn(Arq,'Carlos Alberto Zacliclevsky');
+
+  {Esvaziamento da memória e fechamento do arquivo}
+  Flush(arq); {Flush empties the buffer of a text file opened for output.}
+  CloseFile(Arq);
+  ShowMessage('Arquivo criado com sucesso!!!');
+end;

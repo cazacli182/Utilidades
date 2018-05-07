@@ -1,0 +1,46 @@
+Resumo:
+- Iniciar e clicar com botão direito em computador - Propriedades;
+- Configurações avançadas de sistema;
+- Entrar em variáveis de ambiente;
+- Em variáveis de sistema clicar em novo;
+- Em nome da variável colocar MySQL;
+- Em valor da variável colocar C:\Program Files\MySQL\MySQL Server 5.1\bin.
+- OK!
+
+****************************************************
+
+
+https://www.java.com/en/download/help/path.xml
+
+Setting Path on Windows
+
+Windows 8
+Drag the Mouse pointer to the Right bottom corner of the screen
+Click on the Search icon and type: Control Panel
+Click on -> Control Panel -> System -> Advanced
+Click on Environment Variables, under System Variables, find PATH, and click on it.
+In the Edit windows, modify PATH by adding the location of the class to the value for PATH. If you do not have the item PATH, you may select to add a new variable and add PATH as the name and the location of the class as the value.
+Close the window.
+Reopen Command prompt window, and run your java code.
+
+Windows 7
+Select Computer from the Start menu
+Choose System Properties from the context menu
+Click Advanced system settings > Advanced tab
+Click on Environment Variables, under System Variables, find PATH, and click on it.
+In the Edit windows, modify PATH by adding the location of the class to the value for PATH. If you do not have the item PATH, you may select to add a new variable and add PATH as the name and the location of the class as the value.
+Reopen Command prompt window, and run your java code.
+
+Windows XP
+Start -> Control Panel -> System -> Advanced
+Click on Environment Variables, under System Variables, find PATH, and click on it.
+In the Edit windows, modify PATH by adding the location of the class to the value for PATH. If you do not have the item PATH, you may select to add a new variable and add PATH as the name and the location of the class as the value.
+Close the window.
+Reopen Command prompt window, and run your java code.
+
+Windows Vista
+Right click My Computer icon
+Choose Properties from the context menu
+Click Advanced tab (Advanced system settings link in Vista)
+In the Edit windows, modify PATH by adding the location of the class to the value for PATH. If you do not have the item PATH, you may select to add a new variable and add PATH as the name and the location of the class as the value.
+Reopen Command prompt window, and run your java code.

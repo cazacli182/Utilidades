@@ -1,0 +1,4 @@
+As vezes desabilitando o cursor que mostra a ampulheta do SQL torna o processo mais ágil, porque não ficam ocorrendo trocas de cursores a cada interação com o banco de dados. Para desabilitar esta opção no Zeos:
+
+- Encontrar o componente de Conexão TZConnection.
+- Neste componente existe uma propriedade chamada SQLHourGlass que provavelmente vai estar como TRUE. Alterar para FALSE.

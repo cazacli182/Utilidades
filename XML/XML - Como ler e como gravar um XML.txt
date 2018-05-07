@@ -1,0 +1,337 @@
+Unit completa. Basta olhar o que vai ocorrendo:
+
+unit untPrincipalXML;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, xmldom, XMLIntf, msxmldom, XMLDoc, StdCtrls, IdCoderMIME, IdBaseComponent;
+
+type
+  TForm1 = class(TForm)
+    XMLDocument: TXMLDocument;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    FNomeDoArquivoXML: String;
+    FAberta: Boolean;
+    FProcesso: String;
+    FDataPostagem: String;
+    FLeitor: String;
+    FId: String;
+    FNomeDoAnexo: String;
+    FConteudoDoAnexo: String;
+    //FData: String;
+    FConteudoDoArquivoEmAnexo: String;
+    FNomeDoArquivoEmAnexo: String;
+
+    FContadorAbertas: Integer;
+    FContadorFechadas: Integer;
+    FContadorDeAnexos: Integer;
+
+    FxmlRoot: IXMLNode;
+    FxmlNode: IXMLNode;
+    FxmlDados: IXMLNode;
+    FxmlAnexo: IXMLNode;
+    FxmlAnexos: IXMLNode;
+
+    procedure EscreveLog(Conteudo: String);
+    procedure LimpaPropriedades;
+    procedure CriarPastaESalvarAnexos(NumeroSequenciaAnexo: Integer);
+
+    function ConverterDataPorExtensoParaResumida(DataPorExtenso: String): String;
+    function Base64Decode(const s: String) : String;
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+uses untArquivoTextoBase;
+
+{$R *.dfm}
+
+const
+  cstCR = chr(13);
+  cstLF = chr(10);
+  cstCRLF = cstCR + cstLF;
+
+procedure TForm1.LimpaPropriedades;
+begin
+  FAberta := False;
+  FId := '';
+  FLeitor := '';
+  FProcesso := '';
+  FNomeDoAnexo := '';
+  FDataPostagem := '';
+  FConteudoDoAnexo := '';
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  I, J: Integer;
+  vXMLDoc: TXMLDocument;
+  NodeNivelA,
+  NodeNivelB: IXMLNode;
+
+begin
+  FContadorAbertas := 0;
+
+  FNomeDoArquivoXML := 'C:\Users\renan\Desktop\Carlos Z\Fontes Exemplos\Exemplos de XML\XML - Como realizar a Leitura e Escrita\Importar.xml';
+  XMLDocument.FileName := FNomeDoArquivoXML;
+  XMLDocument.Active   := True;
+
+  if FNomeDoArquivoXML <> '' then
+  begin
+    EscreveLog('*********************************************' + cstCRLF +
+               'Log de processos com status fechado:' + cstCRLF + cstCRLF +
+               'Inicio da geração do log: ' + FormatDateTime('dd/mm/yyyy hh:nn:ss:zzz', Now) + cstCRLF + cstCRLF +
+               'Arquivo selecionado para análise: ' + FNomeDoArquivoXML + cstCRLF + cstCRLF);
+
+
+    FxmlRoot  := XMLDocument.DocumentElement;
+    FxmlNode  := FxmlRoot.ChildNodes.FindNode('response');
+    FxmlDados := FxmlNode.ChildNodes.FindNode('intimacoes');
+
+    try
+      vXMLDoc := TXMLDocument.Create(self);
+      with vXMLDoc do
+      begin
+        Active   := True;
+        Version  := '1.0';
+        Encoding := 'ISO-8859-1';
+        AddChild('OYSTR');
+        NodeNivelA := DocumentElement;
+
+      { Está posicionado no nó "intimacoes". Aqui neste exemplo existem 2 filhos "intimacao". Isto está provado no ShowMessage abaixo:
+        ShowMessage(IntToStr(FxmlDados.ChildNodes.Count));
+      }
+      {FxmlDados está posicionado no nó Intimações do XML... Enquanto não acabar seu conteúdo faça:}
+      for I := 0 to FxmlDados.ChildNodes.Count - 1 do
+      begin
+        with FxmlDados.ChildNodes[I] do
+        begin
+          FAberta := StrToBool(ChildNodes['aberta'].Text);
+          if FAberta then
+          begin
+            FContadorAbertas := FContadorAbertas + 1;
+            FDataPostagem := ConverterDataPorExtensoParaResumida(ChildNodes['dataPostagem'].Text);
+            FId   := ChildNodes['ID'].Text;
+            FProcesso := ChildNodes['processo'].Text;
+            FLeitor := ChildNodes['leitor'].Text;
+
+            FxmlAnexos := nil;
+            FxmlAnexos := FxmlDados.ChildNodes[I].ChildNodes.FindNode('anexos');
+
+            {FxmlAnexos está posicionado no nó Anexos...}
+            if FxmlAnexos <> nil then
+            begin
+              {Enquanto não acabar o nó Anexos faça:}
+              for J := 0 to FxmlAnexos.ChildNodes.Count - 1 do
+              begin
+                {Aqui já está posicionado em um dos filhos para pegar seus dados... Enquanto
+                 não acabarem e a cada passada ele carrega valores e cria pastas necessárias...}
+                with FxmlAnexos.ChildNodes[J] do
+                begin
+                  FxmlAnexo := nil;
+                  FxmlAnexo := FxmlAnexos.ChildNodes.FindNode('anexo');
+                  {Se teve anexo no XML realiza os procedimentos abaixo:}
+                  if FxmlAnexo <> nil then
+                  begin
+                    FContadorDeAnexos := FContadorDeAnexos + 1;
+                    FNomeDoArquivoEmAnexo := FxmlAnexos.ChildNodes[J].ChildNodes['nome'].Text;
+                    FConteudoDoArquivoEmAnexo := Base64Decode(FxmlAnexos.ChildNodes[J].ChildNodes['arquivo'].Text);
+
+                    CriarPastaESalvarAnexos(FContadorDeAnexos);
+                  end;
+                end;
+              end;
+              FContadorDeAnexos := 0;
+            end;
+          end
+          else
+          begin
+            { Se está fechado apenas realizo contagem e adiciono ao log o nº do processo:}
+            FContadorFechadas := FContadorFechadas + 1;
+            FProcesso := FxmlDados.ChildNodes[I].ChildNodes['processo'].Text + cstCRLF;
+            EscreveLog(IntToStr(FContadorFechadas) + ' - Número do processo: ' + FProcesso);
+          end;
+
+          if FAberta then
+          begin
+            {Insiro o nó Publicacoes no novo arquivo e já vou escrevendo as demais propriedades como filho deste nó...}
+            with NodeNivelA.AddChild('Publicacoes') do
+            begin
+              AddChild('Data').NodeValue     := FDataPostagem;
+              AddChild('Id').NodeValue       := FId;
+              AddChild('Processo').NodeValue := FProcesso;
+              AddChild('leitor').NodeValue   := FLeitor;
+            end;
+          end;
+          LimpaPropriedades;
+        end;
+      end;
+      {Escreve o total de intimações com status aberta encontradas...}
+      with NodeNivelA.AddChild('Total_de_Publicacoes') do
+      begin
+        AddChild('Total').NodeValue := FContadorAbertas;
+      end;
+
+      vXMLDoc.SaveToFile('_XmlCriado.xml');
+    end;
+    finally
+      vXMLDoc.Free;
+      EscreveLog(cstCRLF + 'Fim do processo: ' + FormatDateTime('dd/mm/yyyy hh:nn:ss:zzz', Now) + cstCRLF);
+      ShowMessage('Fim do processo! XML gerado com sucesso.');
+    end;
+  end
+  else
+    ShowMessage('Arquivo não foi selecionado, verifique...');
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+  LimpaPropriedades;
+end;
+
+function TForm1.ConverterDataPorExtensoParaResumida(DataPorExtenso: String): String;
+var
+  Aux: String;
+  
+begin
+  Aux := StringReplace(DataPorExtenso, ' de ', '/', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, ' ', '', [rfReplaceAll, rfIgnoreCase]);
+
+  if Pos('às', Aux) > 0 then
+    Aux := Copy(Aux, 1, Pos('às', Aux) -1);
+
+  Aux := StringReplace(Aux, 'Janeiro',  '01', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Fevereiro','02', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Março',    '03', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Abril',    '04', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Maio',     '05', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Junho',    '06', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Julho',    '07', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Agosto',   '08', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Setembro', '09', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Outubro',  '10', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Novembro', '11', [rfReplaceAll, rfIgnoreCase]);
+  Aux := StringReplace(Aux, 'Dezembro', '12', [rfReplaceAll, rfIgnoreCase]);
+
+  Result := Aux;
+end;
+
+function TForm1.Base64Decode(const s: String): String;
+var
+  IdDecoderMIME1: TIdDecoderMIME;
+
+begin
+  IdDecoderMIME1 := TIdDecoderMIME.Create(Nil);
+  try
+    Result := IdDecoderMIME1.DecodeString(s);
+  finally
+    IdDecoderMIME1.Free;
+  end;
+end;
+
+procedure TForm1.EscreveLog(Conteudo: String);
+var
+  Obj: TLog;
+
+begin
+  Obj := TLog.Create;
+  try
+    Obj.EscreveNoArquivo(Conteudo);
+  finally
+    FreeAndNil(Obj);
+  end;
+end;
+  
+procedure TForm1.CriarPastaESalvarAnexos(NumeroSequenciaAnexo: Integer);
+var
+  Diretorio: String;
+  SL: TStringlist;
+
+  function MontaStringDoDiretorio: String;
+  begin
+    Result := ExtractFilePath(Application.ExeName) +
+              FormatDateTime('yyyymmdd', StrToDate(FDataPostagem)) + '\' +
+              FProcesso + '_' +
+              FId       + '_' +
+              IntToStr(NumeroSequenciaAnexo);
+  end;
+
+begin
+  try
+    SL := TStringList.Create;
+
+    Diretorio := MontaStringDoDiretorio;
+    if not DirectoryExists(Diretorio) then
+    begin
+      {Cria os diretórios conforme regras para nome (Data + Num Processo + Id + quantidade por data)}
+      ForceDirectories(Diretorio);
+      
+      {Salva os anexos no diretório criado...}
+      FNomeDoArquivoEmAnexo := StringReplace(FNomeDoArquivoEmAnexo, '/tmp/attachment-', '',[rfReplaceAll, rfIgnoreCase]);
+      SL.Add(FConteudoDoArquivoEmAnexo);
+      SL.SaveToFile(Diretorio + '\' + FNomeDoArquivoEmAnexo);
+    end
+  finally
+    FreeAndNil(SL);
+  end;
+end;
+
+end.
+
+{ Exemplo da arquitetura do XML:
+
+<?xml version="1.0"?>
+<oystr id = '20140818.144559-KVHm71BC4Xuz2SQ8">
+  -<request class="oystr.projudi.pr.monitor.ProcessMonitorRequest">
+     <date>2014-08-18 14:45:59.845 BRT</date>
+     <user>pr21612</user>
+     <readCount>1</readCount>
+   </request>
+   <response class="oystr.projudi.pr.monitor.ProcessMonitorResponse" total="120" error="false">
+     -<intimacoes class="java.util.ArrayList">
+       -<intimacao>
+         <processo>0001</processo>
+         <dataPostagem>18 de Agosto de 2014 às 14:15</dataPostagem>
+         <leitor>Mauricio Kavinski</leitor>
+         <ID>0001</ID>
+         <aberta>true</aberta>
+         -<anexos class="java.util.ArrayList">
+           -<anexo>
+             <nome>Arquivo_01_Anexo.pdf</nome>
+             <arquivo> criptografado.... enorme... </arquivo>
+           </anexo>
+         </anexos>
+       </intimacao>
+       -<intimacao>
+         <processo>0002</processo>
+         <dataPostagem>18 de Agosto de 2014 às 14:15</dataPostagem>
+         <leitor>Carlos Alberto</leitor>
+         <ID>0002</ID>
+         <aberta>true</aberta>
+         -<anexos class="java.util.ArrayList">
+           -<anexo>
+             <nome>Arquivo_01_Anexo.pdf</nome>
+             <arquivo> criptografado.... enorme... </arquivo>
+           </anexo>
+           -<anexo>
+             <nome>Arquivo_02_Anexo.pdf</nome>
+             <arquivo> criptografado.... enorme... </arquivo>
+           </anexo>
+           -<anexo>
+             <nome>Arquivo_03_Anexo.pdf</nome>
+             <arquivo> criptografado.... enorme... </arquivo>
+           </anexo>
+         </anexos>
+       </intimacao>
+     </intimacoes>
+   </response>
+</oystr>
+}

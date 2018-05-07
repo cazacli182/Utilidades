@@ -1,0 +1,10 @@
+Abrir o regedit e ir até:
+HKEY_CLASSES_ROOT\Directory\Background\shell\
+
+Botão direito - Novo Chave e coloca o nome do programa.
+
+ExamDiff\
+
+Botão direito na nova chave criada e cria mais uma chave com o nome de command
+
+Botão direito em command e vai no valor padrão e cola o caminho do executável.

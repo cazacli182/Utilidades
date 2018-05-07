@@ -1,0 +1,4 @@
+SELECT OBJECT_NAME(OBJECT_ID) TableName --, st.row_count
+ FROM sys.dm_db_partition_stats st
+ WHERE index_id < 2 and st.row_count = 0
+ ORDER BY TableName -- st.row_count DESC

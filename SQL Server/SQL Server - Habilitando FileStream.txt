@@ -1,0 +1,28 @@
+Habilitando FILESTREAM
+Para habilitar e alterar configurações de FILESTREAM
+No menu Iniciar , aponte para Todos os Programas, aponte para SQL Server 2014, aponte para Ferramentas de Configuração e clique em SQL Server Configuration Manager.
+Na lista de serviços, clique com o botão direito do mouse em Serviços do SQL Servere clique em Abrir.
+No snap-in SQL Server Configuration Manager , localize a instância do SQL Server na qual deseja habilitar o FILESTREAM.
+Clique com o botão direito do mouse na instância e clique em Propriedades.
+Na caixa de diálogo Propriedades do SQL Server , clique na guia FILESTREAM .
+Marque a caixa de seleção Habilitar FILESTREAM para acesso a Transact-SQL .
+Se você quiser ler e gravar dados FILESTREAM no Windows, clique em Habilitar FILESTREAM para acesso de streaming de E/S de arquivos. Insira o nome do compartilhamento do Windows na caixa Nome de Compartilhamento do Windows .
+Se os clientes remotos precisarem acessar os dados do FILESTREAM armazenados em seu compartilhamento, selecione Permitir que os clientes remotos tenham acesso de streaming aos dados de FILESTREAM.
+Clique em Aplicar.
+No SQL Server Management Studio, clique em Nova Consulta para exibir o Editor de Consultas.
+No Editor de Consultas, insira o seguinte código Transact-SQL :
+Transact-SQL
+EXEC sp_configure filestream_access_level, 2  
+RECONFIGURE  
+
+Clique em Executar.
+Reinicie o serviço SQL Server.
+
+***********************************************************
+
+Depois, no Management Studio:
+
+clicar com botão direito na instância do sql server, propriedades, avançado. Na opção FILESTREAM colocar a opção "Acesso completo habilitado".
+Salvar e tentar restaurar. 
+
+Se der erro tentar reiniciar novamente o serviço. 

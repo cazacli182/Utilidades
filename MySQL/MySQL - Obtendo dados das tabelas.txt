@@ -1,0 +1,74 @@
+Introdução
+Ao desenvolver um framework ou um sistema que possui uma "porta dos fundos" para o BD, onde é possível acessar a base de dados diretamente através de uma interface genérica, podemos precisar obter informações sobre as tabelas, colunas, relacionamentos, etc. No MySQL, estas informações ficam em um banco reservado chamado information_schema, que possui diversas VIEWS para consulta de dados.
+
+Este artigo apresenta algumas SQLs úteis para se obter informações a respeito de tabelas, colunas, índices, chaves e relacionamentos entre tabelas, no SGBD MySQL.
+
+SQLs úteis para MySQL
+1 - Obter informações sobre as tabelas de um banco de dados ou de uma tabela específica:
+
+SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'nome_do_bd';
+SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'nome_do_bd' AND TABLE_NAME = 'nome_da_tabela';
+Valores retornados:
+
+TABLE_CATALOG - Catálogo (caso exista)
+TABLE_SCHEMA - Nome do BD
+TABLE_NAME - Nome da tabela
+TABLE_TYPE - Tipo de tabela, que pode ser "BASE TABLE" (tabela convencional) ou "VIEW" (visão)
+ENGINE - Engine usada pela tabela (por exemplo: MyISAM ou InnoDB)
+VERSION - Versão da estrutura da tabela
+ROW_FORMAT - Formato da linha
+TABLE_ROWS - Número de linhas
+AVG_ROW_LENGTH - Tamanho médio das linhas (em bytes)
+DATA_LENGTH - Tamanho dos dados da tabela (em bytes)
+MAX_DATA_LENGTH - Tamanho máximo da tabela ou zero, caso não esteja definido
+INDEX_LENGTH - Tamanho dos dados de índices (em bytes)
+DATA_FREE - Bytes alocados, mas não utilizados ainda
+AUTO_INCREMENT - Valor do próximo número de auto-incremento
+CREATE_TIME - Data de criação
+UPDATE_TIME - Data da última modificação
+CHECK_TIME - Data da última verificação
+TABLE_COLLATION - Colation padrão
+CHECKSUM - Valor do checksum para determinar a integridade dos dados (caso disponível)
+CREATE_OPTIONS - Opções extras usadas no CREATE TABLE
+TABLE_COMMENT - Comentário da tabela
+2 - Obter as colunas (campos) de uma tabela de um banco de dados:
+
+SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = 'nome_do_bd' AND TABLE_NAME = 'nome_da_tabela';
+Valores retornados:
+
+TABLE_CATALOG - Catálogo
+TABLE_SCHEMA - Nome do BD
+TABLE_NAME - Nome da tabela
+COLUMN_NAME - Nome da coluna (campo da tabela)
+ORDINAL_POSITION - Posição numérica na tabela
+COLUMN_DEFAULT - Valor padrão da coluna
+IS_NULLABLE - Valor pode ser nulo ou não (YES ou NO)
+DATA_TYPE - Tipo de valor aceitado (exemplo: mediumint, char, varchar)
+CHARACTER_MAXIMUM_LENGTH - Número máximo de caracteres
+CHACACTER_OCTET_LENGTH - Número máximo de bytes (já que algumas codificações de caracteres usam mais de um byte para representar um único símbolo).
+NUMERIC_PRECISION - Precisão de campos numéricos
+NUMERIC_SCALE - Precisão de casas decimais de campos numéricos
+CHARACTER_SET_NAME - Nome da codificação (encoding) de caracteres para campos textuais
+COLLATION_NAME - Colation usado para campos textuais
+COLUMN_TYPE - Nome completo do tipo
+COLUMN_KEY - Tipo de chave (caso seja)
+EXTRA - Informações extras da coluna
+PRIVILAGES - Privilégios do usuário sobre a coluna
+COLUMN_COMMENT - Comentário sobre a coluna
+3 - Obter os relacionamentos entre tabelas (chaves estrangeiras) de uma tabela:
+
+SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'nome_do_bd' AND TABLE_NAME = 'nome_da_tabela' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Valores retornados:
+
+CONSTRAINT_CATALOG - Catálogo
+CONSTRAINT_SCHEMA - Nome do BD
+CONSTRAINT_NAME - Nome da relação (nome usado ao criar a foreign key)
+TABLE_CATALOG - Catálogo da Tabela
+TABLE_SCHEMA - Nome do BD da tabela
+TABLE_NAME - Nome da tabela
+COLUMN_NAME - Nome da coluna (chave estrangeira / foreign key)
+ORDINAL_POSITION - Número da relação na tabela
+POSITION_IN_UNIQUE_CONSTRAINT - ??? (eu não sei, você sabe?)
+REFERENCED_TABLE_SCHEMA - Nome do BD da tabela referenciada
+REFERENCED_TABLE_NAME - Nome da tabela rerefenciada (de onde veio a chave)
+REFERENCED_COLUMN_NAME - Nome da chave da tabela referenciada

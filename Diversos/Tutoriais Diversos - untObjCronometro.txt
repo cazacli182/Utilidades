@@ -1,0 +1,86 @@
+unit untObjCronometro;
+
+{ Para fazer uso desta classe:
+
+  1º - Criar uma variável private do objeto no form da aplicação. (não esquecer do uses untObjCronometro)
+    TForm1 = class(TForm)
+    private
+      ObjCronometro: TCronometro;
+
+
+  2º - No form principal da aplicação ir no evento OnCreate (TForm1.FormCreate) e inserir:
+    ObjCronometro              := TCronometro.Create;
+    ObjCronometro.TempoAtual   := 0;
+    ObjCronometro.TempoInicial := 0;
+
+  3º - Para iniciar a contagem colocar em algum lugar do código:
+    ObjCronometro.Iniciar(Timer1);
+
+  4º - Para parar a contagem colocar em algum lugar do código:
+    ObjCronometro.Parar(Timer1);
+
+  5º - Para resetar a contagem colocar em algum lugar do código e fazer  o
+       label da tela receber o retorno desta função:
+    lblDisplay.Caption := ObjCronometro.Resetar(Timer1);
+
+  6º - Para calcular a contagem dos segundos colocar em algum lugar do código
+       e fazer o label da tela receber o retorno desta função:
+    lblDisplay.Caption := ObjCronometro.Calcular;
+
+  7º - Ao final do processo inserir a seguinte linha abaixo para liberar o obj da memória:
+    FreeAndNil(ObjCronometro);
+
+  8º - Tem que ter um timer no form principal da aplicação, se possível com nome Timer1.  
+}
+
+interface
+
+uses
+  Controls, ExtCtrls, SysUtils;
+
+type
+  TCronometro = class
+  private
+    FTempoInicial:  TTime;
+    FTempoAtual:    TTime;
+    FTempoAnterior: TTime;
+  public
+    property TempoInicial: TTime read FTempoInicial write FTempoInicial;
+    property TempoAtual: TTime read FTempoAtual write FTempoAtual;
+    property TempoAnterior: TTime read FTempoAnterior write FTempoAnterior;
+    procedure Iniciar(timer: TTimer);         {usar Controls, ExtCtrls, SysUtils}
+    procedure Parar(timer: TTimer);           {usar Controls, ExtCtrls, SysUtils}
+    function Resetar(timer: TTimer): String;  {usar Controls, ExtCtrls, SysUtils}
+    function Calcular: String;
+  end;
+
+implementation
+
+{ TCronometro }
+
+procedure TCronometro.Iniciar(timer: TTimer);
+begin
+  TempoInicial  := 0;
+  TempoAnterior := Now;
+  timer.Enabled := True;
+end;
+
+function TCronometro.Calcular: String;
+begin
+  TempoAtual := TempoInicial + Now - TempoAnterior;
+  Result     := FormatDateTime('hh:mm:ss:zz',TempoAtual);
+end;
+
+procedure TCronometro.Parar(timer: TTimer);
+begin
+  timer.Enabled := False;
+end;
+
+function TCronometro.Resetar(timer: TTimer): String;
+begin
+  TempoAtual   := 0;
+  TempoInicial := 0;
+  result := FormatDateTime('hh:mm:ss:zzz', TempoAtual);
+end;
+
+end.

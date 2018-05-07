@@ -1,0 +1,73 @@
+Criar variáveis globais:
+var                                        
+  {Variáveis para INI e LOG}
+  ArquivoLog,                                            
+  DiretorioLog: String;     
+  FIni        : TIniFile;
+
+No Create do form colocar:
+procedure Form1_2_8Create(Sender: TObject);
+begin
+  DiretorioLog := '';
+  ArquivoLog   := '';
+end;
+
+
+procedure GravaLog(texto : string; EscreveNoMemo: Boolean);
+var            
+  Arquivo: TextFile;  
+         
+begin                                    
+  if FFlagAtivaLog then
+  begin                    
+    
+    if (DiretorioLog = '') and (ArquivoLog = '') then
+    begin
+      try
+        DiretorioLog := ExtractFilePath(ParamStr(0));   
+        ArquivoLog   := DiretorioLog + GetNomeLog;           
+      finally 
+        {...}
+      end;
+    end
+    else
+    begin
+      {Variáveis já foram criadas pois já passaram aqui anteriormente e estão prontas para o uso...}
+    end;                         
+  
+    AssignFile(Arquivo, ArquivoLog);
+
+    if FileExists(ArquivoLog) then
+      Append(arquivo)   {se existir, apenas adiciona linhas}
+    else                      
+      ReWrite(arquivo); {cria um novo se não existir}
+    try
+    begin
+      WriteLn(arquivo, texto + ' - '+ FormatDateTime('hh:nn:ss:zzz', Now)); {escreve no arquivo com base no parâmetro}  
+      if EscreveNoMemo then Memo1.Lines.Add(texto); 
+    end;  
+    finally                                  
+      CloseFile(arquivo);          
+    end;
+  end;                                                      
+end;      
+
+function GetNomeLog:String;
+var      
+  D, M, A,                                                                        
+  Hour, Min, Sec,                                                              
+  MSec: Word;
+  strNomeArq : String;   
+  
+begin
+  DecodeDate(Now,A, M, D);
+  strNomeArq := '2_LOG_ROBO_'+Formatfloat('00',D)+ '_'+Formatfloat('00',M) + '_'+Formatfloat('0000',A);   
+  DecodeTime(Now,Hour, Min, Sec, MSec);  
+  strNomeArq := strNomeArq + '_'+ Formatfloat('00',Hour)+'_'+Formatfloat('00',Min)+'_'+ Formatfloat('00',Sec)+ '.txt';
+  Result     := strNomeArq;
+end;      
+
+
+Para utilizar:
+
+    GravaLog(cstCRLF + '==> ERRO: Nenhuma opção de filtro foi selecionada, verifique...', true);

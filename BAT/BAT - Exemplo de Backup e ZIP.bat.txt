@@ -1,0 +1,33 @@
+@echo off
+REM ### Inicio das declarações de variáveis ###
+REM se quiser o backup seja compactado, troque o valor de "zip" para 1 se não quiser, troque para 0.
+set zip=0
+REM troque localhost pelo ip do servidor.
+set servidor=des155
+REM troque root pelo usuário do banco de dados.
+set usuario=root
+REM troque root pela senha do banco de dados.
+set senha=root
+REM troque cpjwcs pelo nome da base de dados.
+set base=tarefastecnologia
+REM armazena e organiza a data do computador.
+set date=
+for /F "tokens=1-3 delims=/ " %%a in ('date /T') do set date=%%a%%b%%c
+REM armazena e organiza a hora do computador.
+set time=
+for /F "tokens=1-3 delims=: " %%a in ('time /T') do set time=%%c%%a%%b
+REM armazena e organiza a data e hora do computador em apenas uma variavel.
+set date_time=%date%_%time%
+REM ### Fim das declarações de variáveis ###
+
+REM efetua backup usando os valores das variaveis preenchidas acima.
+mysqldump -h%servidor% -u%usuario% -p%senha% %base% > \\servidor2\tecbkpsd\BKP_TarefasTecnologia\%base%_%date_time%.sql
+
+copy "D:\Emerson Ricardo\ERF_docs\Tarefas_Tecnologia.xls" R:\%base%_%date_time%.xls
+
+REM verifica se a variavel zip é igual a 1, se for, a base é compactada.
+IF [%zip%] EQU [1] (
+7za.exe a -tzip -mmt %base%_%date_time%.zip %base%_%date_time%.sql
+del %base%_%date_time%.sql
+)
+

@@ -1,0 +1,28 @@
+Logging Errors
+Most of the time, you don't know which operation will raise an exception, and you cannot (and should not) wrap each and every piece of code in a try/except block. The general approach is to let Delphi handle all the exceptions and eventually pass them to you, by handling the OnException event of the global Application object. You can do so rather easily with the ApplicationEvents component.
+
+In the ErrorLog example, I've added to the main form an instance of the ApplicationEvents component and written a handler for its OnException event: 
+
+procedure TFormLog.LogException(Sender: TObject; E: Exception);
+var
+  Filename: string;
+  LogFile: TextFile;
+begin
+  // prepares log file
+  Filename := ChangeFileExt (Application.Exename, '.log');
+  AssignFile (LogFile, Filename);
+  if FileExists (FileName) then
+    Append (LogFile) // open existing file
+  else
+    Rewrite (LogFile); // create a new one
+  try
+    // write to the file and show error
+    Writeln (LogFile, DateTimeToStr (Now) + ':' + E.Message);
+    if not CheckBoxSilent.Checked then
+      Application.ShowException (E);
+  finally
+    // close the file
+    CloseFile (LogFile);
+  end;
+end;
+

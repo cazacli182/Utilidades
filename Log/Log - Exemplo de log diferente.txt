@@ -1,0 +1,21 @@
+var
+  SalvarLog:TSaveDialog;
+  sAux:String;
+begin                        
+  sAux:=datetimetostr(now);                     
+  sAux:=StringReplace(sAux, '/', '_',3);
+  sAux:=StringReplace(sAux, ':', '_',3);        
+  sAux:=StringReplace(sAux, ' ', '_',3);   
+  SalvarLog:=TSaveDialog.Create(nil);                   
+  SalvarLog.Ctl3D:=true;
+  SalvarLog.Filter:='Arquivo Texto|*.txt';
+  SalvarLog.FileName:='Log'+sAux;
+  SalvarLog.FilterIndex:= 1;                   
+  SalvarLog.HelpContext:= 0;
+  SalvarLog.Tag:=0;
+  SalvarLog.DefaultExt:='*.txt';
+  SalvarLog.Execute;
+  if SalvarLog.FileName <> '' then
+     Memo1.lines.SaveToFile(SalvarLog.FileName);
+                                     
+end;

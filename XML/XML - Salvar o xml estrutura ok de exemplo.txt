@@ -1,0 +1,25 @@
+begin
+  vXMLDoc := TXMLDocument.Create(self);
+  try
+    with vXMLDoc do
+    begin
+     Active := True;
+     Version := '1.0';
+     Encoding := 'ISO-8859-1'; {UTF-8???}
+     AddChild('OYSTR');
+     NodeNivelA := DocumentElement;
+
+     with NodeNivelA.AddChild('Publicacoes') do
+     begin
+       AddChild('Data').NodeValue          := FData;
+       AddChild('Processo').NodeValue      := FProcesso;
+       AddChild('Diario').NodeValue        := FDiario;
+       AddChild('Identificacao').NodeValue := FIdentificacao;
+       AddChild('Publicacao').NodeValue    := FPublicacao;
+     end;
+       vXMLDoc.SaveToFile('_NovoXML.xml');
+    end;
+  finally
+    vXMLDoc.Free;
+  end;
+end;

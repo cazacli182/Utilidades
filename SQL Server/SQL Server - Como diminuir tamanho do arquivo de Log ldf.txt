@@ -1,0 +1,8 @@
+USE g01_Pellon;
+GO
+ALTER DATABASE g01_Pellon
+SET RECOVERY SIMPLE;
+GO
+DBCC SHRINKFILE (cpjwcs_vazio_2000_Log, 1);
+GO
+

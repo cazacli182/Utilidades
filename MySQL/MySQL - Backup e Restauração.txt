@@ -1,0 +1,56 @@
+*****************************************************************************************************
+*****************************************************************************************************
+*****************************************************************************************************
+BACKUP DE UMA BASE MYSQL:
+
+Abrir o CMD
+
+  mysqldump --routines -uroot -proot nomedobd > C:\bd.sql
+
+Exemplo real:
+Servidor na rede:  mysqldump --routines -h192.168.1.176 -uroot -ppiltec1910des Bruno > C:\BrunoCarlos.sql  
+Máquina local:     mysqldump --routines -uroot -ppiltec1910des Bruno > C:\BrunoCarlos.sql  
+
+*****************************************************************************************************
+*****************************************************************************************************
+*****************************************************************************************************
+
+RESTAURAR UMA BASE MYSQL:
+
+
+Usando o comando pelo CMD:
+  
+  mysql -uroot -proot 23137BrunoVanderlei < D:\23137BrunoVanderlei.sql
+
+
+
+
+Usando um .bat:
+
+@echo off 
+set steps=2
+
+echo Restauracao de Dump MySQL - by CAZ
+echo.
+
+:: Criacao do Banco De Dados (caso o mesmo nao exista no servidor MySQL)
+echo [Etapa 1 de %steps%] - Criacao do Banco De Dados (caso o mesmo nao exista no servidor MySQL)
+mysql --routines -uroot -proot -e "CREATE DATABASE IF NOT EXISTS 23137BrunoVanderlei";
+echo [Etapa 1 de %steps%] Fim da criacao do BD...
+
+echo .
+echo .
+
+echo [Etapa 2 de %steps%] - Inicio da Restauracao do Dump MySQL...
+:: Comando padrão para restaurar um Dump MySQL
+mysql -uroot -proot 23137BrunoVanderlei < D:\23137BrunoVanderlei.sql
+echo [Etapa 2 de %steps%] - Fim da Restauracao do Dump MySQL!!!
+
+echo O procedimento de restauracao foi concluido.
+
+pause
+
+
+*****************************************************************************************************
+*****************************************************************************************************
+*****************************************************************************************************

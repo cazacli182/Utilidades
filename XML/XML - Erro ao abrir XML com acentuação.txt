@@ -1,0 +1,6 @@
+XML - Acentuação em XML
+O formato de caracteres padrão do XML não permite a acentuação que tanto usamos em nossa lingua. Para corrigirmos isso temos que, no cabeçalho do XML definir o formato de caracteres que usaremos. Veja : 
+
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+
+Com esta definição o XML passa a aceitar caracteres acentuados em seu conteúdo. 

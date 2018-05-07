@@ -1,0 +1,112 @@
+procedure TForm1.ReorganizaIndicesBD;
+{CAZ - Para descobrir o script de organização de índices no MSServer basta acessar a tabela do banco de dados utilizando o
+ Microsoft SQL Server Management, ir até a opção de Índices e clicar com o botão direito. Escolher a opção "Reorganizar
+ Tudo". No canto superior esquerdo da tela ir na opção "Script / Ação do Script para a nova janela de consulta". Após
+ copiar o script basta inserí-lo no procedimento abaixo conforme os modelos já criados. A formatação do script deve ser
+ exatamento o utilizado abaixo, ou seja, quebrando as linhas exatamente nos mesmos locais.}
+
+begin
+  if Copy(fa.CPJWDB.Protocol, 1, 5) = 'mssql' then
+  begin
+    try
+      {CAD_PROCESSO}
+      LStatus.Caption := 'Recriando índices CAD_PROCESSO';
+
+      Fa.QeAuxIndicesCPJ.Close;
+      Fa.QeAuxIndicesCPJ.SQL.Text := 'USE ['+ Fa.CPJWDB.Database + '] '+ cstCRLF +
+      'GO' + cstCRLF + 'ALTER INDEX [PK__cad_processo__75A278F5] ON [dbo].[cad_processo] REORGANIZE WITH ( LOB_COMPACTION = ON ) ' + cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_processo_k1]   ON [dbo].[cad_processo] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_processo_k2]   ON [dbo].[cad_processo] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_processo_k3]   ON [dbo].[cad_processo] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_processo_Kpj]  ON [dbo].[cad_processo] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_processo_site] ON [dbo].[cad_processo] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_processo_k4]   ON [dbo].[cad_processo] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO';
+      Fa.QeAuxIndicesCPJ.ExecSQL;
+    except
+      {... Não foi possível recriar índices da CAD_PROCESSO, verifique...}
+    end;
+
+    try
+      {CAD_ENVOLVIDO}
+      LStatus.Caption := 'Recriando índices CAD_ENVOLVIDO';
+
+      Fa.QeAuxIndicesCPJ.Close;
+      Fa.QeAuxIndicesCPJ.SQL.Text := 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF +
+      'GO' + cstCRLF + 'ALTER INDEX [PK__cad_envolvido__0A9D95DB] ON [dbo].[cad_envolvido] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_envolvido_k1] ON [dbo].[cad_envolvido] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_envolvido_k2] ON [dbo].[cad_envolvido] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO';
+      Fa.QeAuxIndicesCPJ.ExecSQL;
+    except
+      {... Não foi possível recriar índices da CAD_ENVOLVIDO, verifique...}
+    end;
+
+    try
+      {CAD_PESSOA}
+      LStatus.Caption := 'Recriando índices CAD_PESSOA';
+
+      Fa.QeAuxIndicesCPJ.Close;
+      Fa.QeAuxIndicesCPJ.SQL.Text := 'USE ['+ Fa.CPJWDB.Database + '] '+ cstCRLF +
+      'GO' + cstCRLF + 'ALTER INDEX [PK__cad_pessoa__6EF57B66] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k1] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k2] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k3] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k4] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k5] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k6] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k7] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_pessoa_k8] ON [dbo].[cad_pessoa] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO';
+      Fa.QeAuxIndicesCPJ.ExecSQL;
+    except
+      {... Não foi possível recriar índices da CAD_ENVOLVIDO, verifique...}
+    end;
+
+    try
+      {CAD_TRAMITACAO}
+      LStatus.Caption := 'Recriando índices CAD_TRAMITACAO';
+
+      Fa.QeAuxIndicesCPJ.Close;
+      Fa.QeAuxIndicesCPJ.SQL.Text := 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF +
+      'GO' + cstCRLF + 'ALTER INDEX [PK__cad_tramitacao__2180FB33] ON [dbo].[cad_tramitacao] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_tramitacao_k1]   ON [dbo].[cad_tramitacao] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_tramitacao_k2]   ON [dbo].[cad_tramitacao] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_tramitacao_k3]   ON [dbo].[cad_tramitacao] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_tramitacao_k4]   ON [dbo].[cad_tramitacao] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [CAD_TRAMITACAO_IDU1] ON [dbo].[cad_tramitacao] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [origem]              ON [dbo].[cad_tramitacao] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO';
+      Fa.QeAuxIndicesCPJ.ExecSQL;
+    except
+      {... Não foi possível recriar índices da CAD_TRAMITACAO, verifique...}
+    end;
+
+    try
+      {CAD_CC_LAN}
+      LStatus.Caption := 'Recriando índices CAD_CC_LAN';
+
+      Fa.QeAuxIndicesCPJ.Close;
+      Fa.QeAuxIndicesCPJ.SQL.Text := 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF +
+      'GO' + cstCRLF + 'ALTER INDEX [PK__cad_cc_lan__1ED998B2] ON [dbo].[cad_cc_lan] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_cc_lan_k1]       ON [dbo].[cad_cc_lan] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_cc_lan_k2]       ON [dbo].[cad_cc_lan] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_cc_lan_k3]       ON [dbo].[cad_cc_lan] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_cc_lan_k4]       ON [dbo].[cad_cc_lan] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_cc_lan_k5]       ON [dbo].[cad_cc_lan] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO' + cstCRLF + 'USE ['+ Fa.CPJWDB.Database + '] ' + cstCRLF + 'GO' + cstCRLF + 'ALTER INDEX [cad_cclan_banco_seq] ON [dbo].[cad_cc_lan] REORGANIZE WITH ( LOB_COMPACTION = ON ) '+ cstCRLF +
+      'GO';
+      Fa.QeAuxIndicesCPJ.ExecSQL;
+    except
+      {... Não foi possível recriar índices da CAD_CC_LAN, verifique...}
+    end;
+  end;
+  {else if Copy(fa.CPJWDB.Protocol, 1, 5) = 'fireb' then
+  begin
+    //...Implementar recriação de índices para BD Firebird se possível...
+  end
+  else if Copy(fa.CPJWDB.Protocol, 1, 5) = 'mysql' then
+  begin
+    //...Implementar recriação de índices para BD MySQL se possível...
+  end;}
+end;

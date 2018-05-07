@@ -1,0 +1,41 @@
+SET NOCOUNT ON
+
+DECLARE   @ViewName AS nVarChar(128)
+        , @Query AS nVarChar(500)
+
+/* Declare Cursor */
+DECLARE Cur_Views CURSOR
+    FOR
+    SELECT  name
+        FROM    [sys].[all_views] x
+        WHERE   x.schema_id = 1
+
+-- Loop through the views.
+OPEN Cur_Views
+
+-- Fetch the first view
+FETCH NEXT FROM Cur_Views
+    INTO      @ViewName
+
+WHILE   @@Fetch_Status = 0 BEGIN
+    -- Set up our dynamic sql
+    SELECT  @Query = 'SELECT ''' + @ViewName + ''' AS Name, COUNT(*) AS [Count] FROM ' + @ViewName
+    -- Print the query we're executing for debugging purposes
+    -- PRINT @Query
+    -- Execute the dynamic query
+    EXECUTE(@Query)
+
+    -- Fetch subsequent views
+    FETCH NEXT FROM Cur_Views
+        INTO      @ViewName
+
+-- Loop back to the beginning
+END -- WHILE    @@Fetch_Status = 0 BEGIN
+
+-- Close the cursor
+CLOSE Cur_Views
+
+-- Dispose of the cursor
+DEALLOCATE Cur_Views
+
+GO

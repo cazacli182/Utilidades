@@ -1,0 +1,41 @@
+BASTA PASSAR NO SEGUNDO PARÂMETRO NOMES DIFERENTES PARA O ARQUIVO TEXTO!!!!!!!!!!
+
+
+
+procedure GravaLogDocsNW(S, nomeDoArquivo: String);
+var
+  Arquivo: TextFile;
+  Novo   : Boolean;
+
+begin
+  if not DirectoryExists(ExtractFilePath(Application.ExeName)+'Log\') then
+    CreateDir(ExtractFilePath(Application.ExeName)+'Log\');
+
+  //NomeDoLogDocsNW := ExtractFilePath(Application.ExeName)+'Log\'+ 'LogDocumentosNW.txt';
+  NomeDoLogDocsNW := ExtractFilePath(Application.ExeName)+'Log\'+ nomeDoArquivo + '.txt';
+  //AssignFile(Arquivo, NomeDoLogDocsNW);
+  AssignFile(Arquivo, NomeDoLogDocsNW);
+  //if FileExists(NomeDoLogDocsNW) then
+  if FileExists(NomeDoLogDocsNW) then
+  begin
+    Append(arquivo);
+    Novo := false;
+  end
+  else
+  begin
+    ReWrite(arquivo);
+    Novo := true;
+  end;
+  try
+    if Novo then
+    begin
+      WriteLn(arquivo, '*** LOG DE IMPORTAÇÃO DE DOCUMENTOS NELSON WILIANS ***');
+    end;
+
+    {Desabilitado para diminuir linhas, e consequentemente o tamanho do arquivo:
+    WriteLn(arquivo, S + cstCRLF);}
+    WriteLn(arquivo, S);
+  finally
+    CloseFile(arquivo)
+  end;
+end;

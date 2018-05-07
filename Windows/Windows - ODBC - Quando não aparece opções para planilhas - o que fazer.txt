@@ -1,0 +1,40 @@
+A versão de 64 bits do Microsoft Windows 7 inclui as seguintes versões da
+ferramenta Administrador de fonte de dados do Microsoft Open Database
+Connectivity (ODBC):
+   A versão de 32 bits do arquivo Odbcad32.exe que está localizada na pasta
+%systemdrive%\Windows\SysWoW64
+E a versão de 64 bits do arquivo Odbcad32.exe está localizada na pasta
+%systemdrive%\Windows\System32.
+   Você está tentando adicionar uma fonte de dados e não está visualizado os drives
+do banco de dados ODBC para conexão, está exibindo a seguinte janela
+
+
+
+
+   Solução:
+   Se a fonte não estiver aparecendo é porque provavelmente seu Windows 7 é 64Bits
+e as fontes instaladas são 32Bits.
+   Faça o seguinte: Clique em Iniciar, Executa e digite: %windir
+%\SysWOW64\odbcad32.exe
+   Assim a versão de 32 bits do arquivo Odbcad32.exe será inicializada da
+pasta %systemdrive%\Windows\SysWoW64.
+   Em seguida será exibido a seguinte janela:
+
+
+   Agora é só adicionar o drive para o qual deseja configurar a fonte de dados.
+   Maiores detalhes: http://support.microsoft.com/kb/942976
+
+   O que é ODBC?
+   O ODBC é uma tecnologia que os programas usam para acessar uma ampla gama
+de bancos de dados (ou fontes de dados). Por exemplo, o ODBC pode ser usado
+para importar dados de um banco de dados MySQL para uma planilha do Microsoft
+Excel. Para isso, o computador precisa da fonte de dados e do driver ODBC corretos.
+Para programas personalizados, os desenvolvedores de software usam a Interface
+de Programação de Aplicativo (API) do ODBC para acessar fontes de dados. O ODBC
+é uma implementação da SO/IEC 9075-3 Information Technology—Database
+languages—SQL—Part 3: Call Level Interface (SQL/CLI).
+   Onde posso encontrar um driver ODBC?
+   Os programas de banco de dados geralmente incluem seus próprios drivers, e
+muitos drivers ODBC encontram-se disponíveis na lista de drivers do Administrador
+da Fonte de Dados ODBC. Você também pode tentar pesquisar a Internet ou pode
+contatar o fabricante do programa de banco de dados que deseja utilizar.

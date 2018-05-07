@@ -1,0 +1,43 @@
+procedure TfrmPrincipal.PnLerNfeClick(Sender: TObject);
+var vXMLDoc: TXMLDocument;
+    NodeNivelA, NodeNivelB: IXMLNode;
+ 
+begin
+ 
+  vXMLDoc := TXMLDocument.Create(self);
+  Try
+  With vXMLDoc do begin
+       Active := True;
+       Version := '1.0';
+       Encoding := 'UTF-8';
+       AddChild('NFe','http://www.portalfiscal.inf.br/nfe');
+       DocumentElement.Attributes['xmlns:ds'] :=
+       'http://www.w3.org/2000/09/xmldsig#';
+       DocumentElement.Attributes['xmlns:xsi'] :=
+       'http://www.w3.org/2001/XMLSchema-instance';
+       DocumentElement.Attributes['xsi:schemaLocation'] :=
+       'http://www.portalfiscal.inf.br/nfe/enviNFe_v1.12.xsd';
+ 
+       // A - Dados da Nota Fiscal eletrônica
+       NodeNivelA := DocumentElement;
+       // Adiciona a Tag
+       NodeNivelA.AddChild('infNFe');
+       // Adiciona atributo "Id" da Tag anterior
+       NodeNivelA.ChildNodes['infNFe'].Attributes['Id'] := 'NFe31232131232132131231221312312312';
+       // Adiciona atributo "versao" da Tag anterior
+       NodeNivelA.ChildNodes['infNFe'].Attributes['versao'] :=
+            DM.ClientDSLoja.FieldByName('enviNFe').AsString;
+ 
+       // B - Identificação da Nota Fiscal eletrônica
+       NodeNivelB := NodeNivelA.ChildNodes['infNFe'];
+       NodeNivelB.ChildNodes['ide'].AddChild('cUF').NodeValue := '51' ;
+       NodeNivelB.ChildNodes['ide'].AddChild('cNF').NodeValue := '000001';
+ 
+       vXMLDoc.SaveToFile('EnviNFe.xml');
+ 
+  end;
+  finally
+     vXMLDoc.Free;
+  end;
+ 
+end;

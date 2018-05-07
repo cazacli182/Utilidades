@@ -1,0 +1,6 @@
+select count (nome_fase), nome_fase from fase group by nome_fase having count (nome_fase) >1;
+
+select arquivo, ficha, incidente,numero_integracao, count(*) from cad_processo
+group by arquivo, ficha, incidente,numero_integracao
+having count(*) > 1
+order by 2 desc
