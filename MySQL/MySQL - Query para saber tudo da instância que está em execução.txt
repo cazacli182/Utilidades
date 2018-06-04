@@ -1,0 +1,14 @@
+Esta é a query executada no robô INFO MYSQL V2.0:
+
+select 
+  @@global.hostname AS HOSTNAME, @@global.version as VERSION, @@global.port as PORT, 
+  @@global.storage_engine as STORAGE_ENGINE, @@global.character_set_server as CHARSET, 
+  @@global.collation_connection AS COLLATION, @@global.basedir as BASEDIR, @@global.datadir as DATADIR, 
+  @@global.max_connections As MAX_CONNECTIONS, 
+  CONCAT( ROUND( SUM( @@global.max_allowed_packet ) /1048576, 2 ) ,'MB') As MAX_ALLOWED_PACKET, 
+  (select CONCAT( ROUND( SUM( variable_value ) /1048576, 2 ) ,'MB') 
+from 
+  information_schema.GLOBAL_STATUS 
+where 
+  variable_name="BYTES_SENT") as BYTES_SENT, 
+  (select CONCAT( ROUND( SUM( variable_value ) /1048576, 2 ) ,'MB') from information_schema.GLOBAL_STATUS where variable_name="BYTES_RECEIVED") as BYTES_RECEIVED,  @@global.binlog_format as BINLOG, (SELECT concat(floor(variable_value/86400)," dias ",floor(mod(variable_value,86400)/3600),"h ",floor(mod(mod(variable_value,86400),3600)/60),"m ",mod(mod(mod(variable_value,86400),3600),60),"s ") from information_schema.GLOBAL_STATUS where variable_name="UPTIME") as UPTIME
